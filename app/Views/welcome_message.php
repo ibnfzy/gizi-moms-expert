@@ -13,9 +13,10 @@
             <div class="relative">
                 <button id="loginToggle" class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">
                     Login
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.585l3.71-3.354a.75.75 0 111.04 1.08l-4.24 3.835a.75.75 0 01-1.02 0l-4.25-3.835a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                    </svg>
+                    <?= view('components/icon', [
+                        'name' => 'chevron-down',
+                        'class' => 'h-4 w-4',
+                    ]) ?>
                 </button>
                 <div id="loginDropdown" class="absolute right-0 mt-3 hidden w-40 overflow-hidden rounded-xl bg-white/95 text-sm font-semibold text-slate-700 shadow-xl ring-1 ring-slate-200/70 backdrop-blur">
                     <a href="#" class="block px-4 py-3 transition hover:bg-slate-100">Admin</a>
@@ -24,9 +25,10 @@
             </div>
             <a id="downloadHeader" href="#download" class="rounded-full bg-gizigreen px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/20 transition hover:scale-105 hover:shadow-green-500/40">Download APK</a>
             <button id="mobileMenuButton" class="ml-2 inline-flex items-center justify-center rounded-full border border-white/20 p-2 text-white transition hover:bg-white/10 md:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5M3.75 12h16.5m-16.5 6.75h16.5" />
-                </svg>
+                <?= view('components/icon', [
+                    'name' => 'menu',
+                    'class' => 'h-6 w-6',
+                ]) ?>
             </button>
         </div>
     </div>
@@ -54,9 +56,10 @@
             <div class="flex flex-col gap-4 sm:flex-row">
                 <a href="#features" class="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-giziblue transition hover:-translate-y-1 hover:shadow-xl hover:shadow-white/30">
                     Mulai Sekarang
-                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-3 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12l-7.5 7.5M21 12H3" />
-                    </svg>
+                    <?= view('components/icon', [
+                        'name' => 'arrow-right',
+                        'class' => 'ml-3 h-4 w-4 transition-transform group-hover:translate-x-1',
+                    ]) ?>
                 </a>
                 <a href="#download" class="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                     Download Aplikasi Android
@@ -203,23 +206,22 @@
         <p>© 2025 GiziChain. Semua Hak Dilindungi.</p>
         <div class="flex items-center gap-4">
             <a href="#" class="rounded-full bg-white/10 p-2 transition hover:bg-white/20" aria-label="Facebook">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9V5.25a2.25 2.25 0 012.25-2.25h1.5M14.25 9H12m2.25 0H18m0 0v3m0-3h3m-3 3h-3m3 0v9" />
-                </svg>
+                <?= view('components/icon', [
+                    'name' => 'facebook',
+                    'class' => 'h-5 w-5',
+                ]) ?>
             </a>
             <a href="#" class="rounded-full bg-white/10 p-2 transition hover:bg-white/20" aria-label="Instagram">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
-                    <rect x="3" y="3" width="18" height="18" rx="5" ry="5" />
-                    <path d="M16.5 7.5h.008v.008H16.5z" />
-                    <circle cx="12" cy="12" r="3.5" />
-                </svg>
+                <?= view('components/icon', [
+                    'name' => 'instagram',
+                    'class' => 'h-5 w-5',
+                ]) ?>
             </a>
             <a href="#" class="rounded-full bg-white/10 p-2 transition hover:bg-white/20" aria-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 8a6 6 0 016 6v6h-4v-6a2 2 0 00-4 0v6h-4v-6a6 6 0 016-6z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2 9h4v12H2z" />
-                    <circle cx="4" cy="4" r="2" />
-                </svg>
+                <?= view('components/icon', [
+                    'name' => 'linkedin',
+                    'class' => 'h-5 w-5',
+                ]) ?>
             </a>
         </div>
     </div>
