@@ -2,6 +2,8 @@
 
 namespace Config;
 
+use App\Filters\AdminFilter;
+use App\Filters\PakarFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -34,6 +36,8 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'adminfilter'   => AdminFilter::class,
+        'pakarfilter'   => PakarFilter::class,
     ];
 
     /**
@@ -106,5 +110,8 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'adminfilter' => ['before' => ['admin/dashboard']],
+        'pakarfilter' => ['before' => ['pakar/dashboard']],
+    ];
 }
