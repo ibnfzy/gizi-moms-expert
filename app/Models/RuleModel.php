@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Model;
 
 class RuleModel extends Model
@@ -15,9 +16,13 @@ class RuleModel extends Model
         'version',
         'effective_from',
         'is_active',
-        'created_at',
-        'updated_at',
     ];
+    protected $useTimestamps = true;
 
-    protected $useTimestamps = false;
+    public function withInferenceResults(): BaseBuilder
+    {
+        return $this->builder()
+            ->select('rules.*, inference_results.id as inference_result_id')
+            ->join('inference_results', 'inference_results.version = rules.version', 'left');
+    }
 }
