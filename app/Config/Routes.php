@@ -6,5 +6,6 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('login', 'AuthController::login');
 $routes->get('/pakar/dashboard', 'PakarDashboardController::index');
 $routes->get('/admin/dashboard', 'AdminDashboardController::index');
