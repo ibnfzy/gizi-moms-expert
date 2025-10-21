@@ -7,3 +7,4 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('/pakar/dashboard', 'PakarDashboardController::index');
+$routes->get('/admin/dashboard', 'AdminDashboardController::index');
