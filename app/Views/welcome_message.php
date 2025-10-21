@@ -59,5 +59,37 @@
             ],
         ]) ?>
     </section>
+
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-white border border-gray-200 rounded-xl shadow-sm px-6 py-5">
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900">Panduan Gizi Ibu Menyusui</h2>
+            <p class="text-sm text-gray-500">Pelajari langkah penting untuk menjaga kebutuhan gizi harian Anda.</p>
+        </div>
+        <?= view('components/modal', [
+            'id' => 'guideline-modal',
+            'title' => 'Panduan Harian',
+            'trigger' => [
+                'label' => 'Lihat Panduan',
+                'variant' => 'primary',
+            ],
+            'content' => [
+                'Pastikan asupan kalori terpenuhi dari sumber karbohidrat kompleks dan protein berkualitas.',
+                'Perbanyak konsumsi sayur dan buah sebagai sumber vitamin, mineral, serta antioksidan.',
+                'Cukupi kebutuhan cairan minimal 3 liter per hari untuk menjaga produksi ASI tetap optimal.',
+            ],
+            'actions' => [
+                [
+                    'label' => 'Hubungi Pakar',
+                    'variant' => 'primary',
+                    'href' => '#',
+                ],
+                [
+                    'label' => 'Selesai Membaca',
+                    'variant' => 'danger',
+                    'closesModal' => true,
+                ],
+            ],
+        ]) ?>
+    </div>
 </div>
 <?= $this->endSection() ?>

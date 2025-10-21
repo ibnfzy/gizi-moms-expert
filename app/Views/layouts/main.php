@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'Sistem Pakar Gizi Ibu Menyusui') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         :root {
             --primary: #3b82f6;
             --background: #f9fafb;
             --text-dark: #1f2937;
+        }
+
+        [x-cloak] {
+            display: none !important;
         }
     </style>
 </head>

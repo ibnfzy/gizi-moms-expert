@@ -21,17 +21,19 @@ $actions = $actions ?? [];
 
     <?php if (! empty($actions)) : ?>
         <div class="pt-2 flex flex-wrap gap-3">
-            <?php foreach ($actions as $action) : ?>
-                <a
-                    href="<?= esc($action['href'] ?? '#', 'attr') ?>"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm transition
-                        <?= ($action['type'] ?? '') === 'primary'
-                            ? 'bg-blue-500 text-white hover:bg-blue-600'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>"
-                >
-                    <?= esc($action['label'] ?? 'Aksi') ?>
-                </a>
-            <?php endforeach; ?>
+            <?php foreach ($actions as $action) :
+                $variantMap = [
+                    'primary' => 'primary',
+                    'danger' => 'danger',
+                ];
+                $variant = $variantMap[$action['type'] ?? ''] ?? 'secondary';
+                echo view('components/button', [
+                    'label' => $action['label'] ?? 'Aksi',
+                    'variant' => $variant,
+                    'href' => $action['href'] ?? null,
+                    'attributes' => $action['attributes'] ?? [],
+                ]);
+            endforeach; ?>
         </div>
     <?php endif; ?>
 </div>
