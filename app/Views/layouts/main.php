@@ -35,5 +35,6 @@
             </main>
         </div>
     </div>
+    <?= $this->renderSection('scripts') ?>
 </body>
 </html>
