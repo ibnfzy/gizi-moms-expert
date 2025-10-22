@@ -3,7 +3,9 @@
 namespace Config;
 
 use App\Filters\AdminFilter;
+use App\Filters\AuthFilter;
 use App\Filters\PakarFilter;
+use App\Filters\RoleFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -38,6 +40,8 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'adminfilter'   => AdminFilter::class,
         'pakarfilter'   => PakarFilter::class,
+        'auth'          => AuthFilter::class,
+        'role'          => RoleFilter::class,
     ];
 
     /**
