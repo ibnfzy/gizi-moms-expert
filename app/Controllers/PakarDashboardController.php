@@ -2,33 +2,46 @@
 
 namespace App\Controllers;
 
+use App\Libraries\MotherFormatter;
+use App\Models\MotherModel;
+
 class PakarDashboardController extends BaseController
 {
+    private MotherModel $mothers;
+    private MotherFormatter $formatter;
+
+    public function __construct()
+    {
+        $this->mothers   = new MotherModel();
+        $this->formatter = new MotherFormatter();
+    }
+
     public function index(): string
     {
-        $data = [
-            'ibuMenyusui' => [
-                [
-                    'nama' => 'Siti Rahma',
-                    'umur' => 29,
-                    'status' => 'Sehat',
-                    'warna' => 'green',
-                ],
-                [
-                    'nama' => 'Dewi Lestari',
-                    'umur' => 32,
-                    'status' => 'Perlu Pemantauan',
-                    'warna' => 'yellow',
-                ],
-                [
-                    'nama' => 'Nina Kartika',
-                    'umur' => 24,
-                    'status' => 'Butuh Tindakan',
-                    'warna' => 'red',
-                ],
-            ],
+        $records = $this->mothers
+            ->withUser()
+            ->orderBy('users.name', 'ASC')
+            ->findAll();
+
+        $mothers = array_map(fn (array $mother): array => $this->formatter->present($mother, true, true), $records);
+
+        $statusSummary = [
+            'normal'   => 0,
+            'moderate' => 0,
+            'high'     => 0,
         ];
 
-        return view('pakar/dashboard', $data);
+        foreach ($mothers as $mother) {
+            $code = $mother['status']['code'] ?? 'normal';
+
+            if (array_key_exists($code, $statusSummary)) {
+                $statusSummary[$code]++;
+            }
+        }
+
+        return view('pakar/dashboard', [
+            'mothers'       => $mothers,
+            'statusSummary' => $statusSummary,
+        ]);
     }
 }
