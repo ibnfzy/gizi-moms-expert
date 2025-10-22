@@ -1,98 +1,289 @@
 <?= $this->extend('layouts/main') ?>
 
-<?= $this->section('content') ?>
 <?php
-$badgeClasses = [
-    'green' => 'bg-green-100 text-green-800',
-    'yellow' => 'bg-yellow-100 text-yellow-800',
-    'red' => 'bg-red-100 text-red-800',
-];
+    /**
+     * @var list<array<string, mixed>> $mothers
+     * @var array<string, int> $statusSummary
+     */
+    $mothersData = $mothers ?? [];
+    $statusSummary = $statusSummary ?? ['normal' => 0, 'moderate' => 0, 'high' => 0];
+    $mothersJson = json_encode($mothersData, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
 
-$patientRows = array_map(static function ($ibu) use ($badgeClasses) {
-    $warna = $ibu['warna'] ?? 'green';
-    $statusClass = $badgeClasses[$warna] ?? $badgeClasses['green'];
-
-    return [
-        'cells' => [
-            [
-                'content' => $ibu['nama'],
-                'class' => 'font-medium text-gray-900',
-            ],
-            [
-                'content' => $ibu['umur'] . ' tahun',
-                'class' => 'text-gray-500',
-            ],
-            [
-                'raw' => true,
-                'content' => '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ' . $statusClass . '">' . esc($ibu['status']) . '</span>',
-            ],
-            [
-                'raw' => true,
-                'content' => view('components/button', [
-                    'label' => 'Lihat Detail',
-                    'variant' => 'primary',
-                    'href' => '#',
-                ]),
-                'align' => 'right',
-            ],
+    $cards = [
+        'normal' => [
+            'label' => 'Status Normal',
+            'description' => 'Ibu dengan kondisi stabil dan kebutuhan gizi terpenuhi.',
+            'color' => 'bg-emerald-500',
+        ],
+        'moderate' => [
+            'label' => 'Perlu Pemantauan',
+            'description' => 'Perlu pemantauan berkala untuk menyesuaikan pola makan.',
+            'color' => 'bg-amber-500',
+        ],
+        'high' => [
+            'label' => 'Prioritas Tinggi',
+            'description' => 'Membutuhkan tindak lanjut segera dari pakar gizi.',
+            'color' => 'bg-rose-500',
         ],
     ];
-}, $ibuMenyusui ?? []);
 ?>
 
-<div class="space-y-8">
-    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div class="space-y-1">
+<?= $this->section('content') ?>
+<div
+    x-data="pakarDashboard(<?= esc($mothersJson ?? '[]', 'js') ?>)"
+    class="space-y-8"
+>
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
             <h1 class="text-2xl font-semibold text-gray-900">Dashboard Pakar</h1>
-            <p class="text-sm text-gray-600">Pantau perkembangan ibu menyusui di bawah pengawasan Anda.</p>
+            <p class="text-sm text-gray-600">Pantau kondisi ibu menyusui dan tindak lanjuti kebutuhan gizi mereka.</p>
         </div>
-        <div class="flex flex-wrap gap-3">
-            <?= view('components/button', [
-                'label' => 'Tambah Ibu',
-                'variant' => 'primary',
-                'attributes' => [
-                    'onclick' => "alert('Form penambahan ibu akan tersedia segera.')",
-                ],
-            ]) ?>
-            <?= view('components/modal', [
-                'id' => 'status-guide-modal',
-                'title' => 'Panduan Status Monitoring',
-                'trigger' => [
-                    'label' => 'Panduan Status',
-                    'variant' => 'danger',
-                ],
-                'content' => [
-                    'Status hijau menandakan kondisi ibu stabil dan memenuhi kebutuhan gizi.',
-                    'Status kuning menunjukkan perlunya evaluasi tambahan terhadap pola makan ibu.',
-                    'Status merah mengindikasikan perhatian khusus dan tindak lanjut segera oleh pakar.',
-                ],
-                'actions' => [
-                    [
-                        'label' => 'Hubungi Tim Medis',
-                        'variant' => 'primary',
-                        'href' => '#',
-                    ],
-                    [
-                        'label' => 'Tandai Dipahami',
-                        'variant' => 'danger',
-                        'closesModal' => true,
-                    ],
-                ],
-            ]) ?>
+        <div class="flex items-center gap-3 text-sm text-gray-500">
+            <div class="hidden sm:flex items-center gap-2">
+                <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span>Status terbaru diperbarui otomatis dari hasil inferensi.</span>
+            </div>
+            <a
+                href="<?= site_url('pakar/consultations') ?>"
+                class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >Kelola Konsultasi</a>
         </div>
     </div>
 
-    <?= view('components/table', [
-        'title' => 'Ibu Menyusui',
-        'description' => 'Daftar ibu menyusui yang berada dalam pemantauan pakar gizi.',
-        'headers' => [
-            ['label' => 'Nama'],
-            ['label' => 'Umur'],
-            ['label' => 'Status'],
-            ['label' => 'Aksi', 'align' => 'right'],
-        ],
-        'rows' => $patientRows,
-        'emptyMessage' => 'Belum ada data ibu menyusui terdaftar.',
-    ]) ?>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <?php foreach ($cards as $key => $card): ?>
+            <div class="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+                <div class="absolute inset-x-0 top-0 h-1 <?= esc($card['color']) ?>"></div>
+                <div class="p-6">
+                    <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide"><?= esc($card['label']) ?></p>
+                    <div class="mt-3 flex items-end justify-between">
+                        <h2 class="text-3xl font-bold text-gray-900">
+                            <?= number_format((int) ($statusSummary[$key] ?? 0), 0, ',', '.') ?>
+                        </h2>
+                        <span class="text-xs text-gray-400">Ibu terpantau</span>
+                    </div>
+                    <p class="mt-4 text-sm leading-relaxed text-gray-600"><?= esc($card['description']) ?></p>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+        <div class="border-b border-gray-100 px-6 py-4">
+            <h2 class="text-lg font-semibold text-gray-900">Daftar Ibu Menyusui</h2>
+            <p class="text-sm text-gray-500">Status dihitung dari hasil inferensi terbaru.</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr class="text-left text-sm font-semibold text-gray-600">
+                        <th scope="col" class="px-6 py-3">Nama</th>
+                        <th scope="col" class="px-6 py-3">Umur</th>
+                        <th scope="col" class="px-6 py-3">Usia Bayi</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">Terakhir Diperbarui</th>
+                        <th scope="col" class="px-6 py-3 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    <template x-if="mothers.length === 0">
+                        <tr>
+                            <td colspan="6" class="px-6 py-6 text-center text-sm text-gray-500">
+                                Belum ada data ibu menyusui yang dapat ditampilkan.
+                            </td>
+                        </tr>
+                    </template>
+                    <template x-for="mother in mothers" :key="mother.id">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900" x-text="mother.name"></td>
+                            <td class="px-6 py-4" x-text="mother.profile?.umur ? mother.profile.umur + ' tahun' : '-' "></td>
+                            <td class="px-6 py-4" x-text="mother.profile?.usia_bayi_bln ? mother.profile.usia_bayi_bln + ' bln' : '-' "></td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                                    :class="mother.status?.badge ?? 'bg-gray-100 text-gray-600'"
+                                    x-text="mother.status?.label ?? 'Normal'"
+                                ></span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500" x-text="mother.latest_inference?.created_at_human ?? 'Belum tersedia'"></td>
+                            <td class="px-6 py-4 text-right">
+                                <button
+                                    type="button"
+                                    class="inline-flex items-center rounded-md border border-blue-600 px-3 py-2 text-xs font-semibold text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    @click="openDetail(mother)"
+                                >Lihat Detail</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <template x-if="detailOpen">
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 px-4"
+            x-transition.opacity
+        >
+            <div
+                class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl"
+                x-transition.scale
+                @click.outside="closeDetail()"
+            >
+                <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900" x-text="selectedMother?.name ?? '-' "></h3>
+                        <p class="text-sm text-gray-500" x-text="selectedMother?.email ?? 'Email belum tersedia'"></p>
+                    </div>
+                    <button
+                        type="button"
+                        class="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                        @click="closeDetail()"
+                    >
+                        <span class="sr-only">Tutup</span>
+                        &times;
+                    </button>
+                </div>
+                <div class="grid gap-6 px-6 py-6 md:grid-cols-2">
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Profil Ibu</h4>
+                        <dl class="space-y-2 text-sm text-gray-600">
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Berat Badan</dt>
+                                <dd x-text="formatValue(selectedMother?.profile?.bb, ' kg')"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Tinggi Badan</dt>
+                                <dd x-text="formatValue(selectedMother?.profile?.tb, ' cm')"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Umur</dt>
+                                <dd x-text="formatValue(selectedMother?.profile?.umur, ' tahun')"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Usia Bayi</dt>
+                                <dd x-text="formatValue(selectedMother?.profile?.usia_bayi_bln, ' bulan')"></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Tipe Laktasi</dt>
+                                <dd x-text="selectedMother?.profile?.laktasi_tipe ?? '-' "></dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Aktivitas</dt>
+                                <dd x-text="selectedMother?.profile?.aktivitas ?? '-' "></dd>
+                            </div>
+                        </dl>
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <div>
+                                <h5 class="font-medium text-gray-700">Alergi</h5>
+                                <p class="mt-1 rounded-lg bg-gray-50 px-3 py-2" x-text="listValue(selectedMother?.profile?.alergi)"></p>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-gray-700">Preferensi Makanan</h5>
+                                <p class="mt-1 rounded-lg bg-gray-50 px-3 py-2" x-text="listValue(selectedMother?.profile?.preferensi)"></p>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-gray-700">Riwayat Kesehatan</h5>
+                                <p class="mt-1 rounded-lg bg-gray-50 px-3 py-2" x-text="listValue(selectedMother?.profile?.riwayat)"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Hasil Inferensi Terbaru</h4>
+                        <div class="rounded-2xl border border-gray-100 bg-gradient-to-br from-blue-50 to-white p-4">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                                    :class="selectedMother?.status?.badge ?? 'bg-gray-100 text-gray-600'"
+                                    x-text="selectedMother?.status?.label ?? 'Normal'"
+                                ></span>
+                                <span class="text-xs text-gray-400" x-text="selectedMother?.latest_inference?.created_at_human ?? '-' "></span>
+                            </div>
+                            <ul class="mt-4 space-y-2 text-sm text-gray-700" role="list">
+                                <template x-if="(selectedMother?.latest_inference?.recommendations ?? []).length === 0">
+                                    <li class="rounded-lg bg-white/80 px-3 py-2 text-gray-500">Belum ada rekomendasi khusus.</li>
+                                </template>
+                                <template x-for="(item, index) in selectedMother?.latest_inference?.recommendations ?? []" :key="index">
+                                    <li class="rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-gray-100" x-text="item"></li>
+                                </template>
+                            </ul>
+                        </div>
+                        <div class="rounded-2xl border border-gray-100 bg-white p-4">
+                            <h5 class="text-sm font-medium text-gray-700">Fakta Dasar</h5>
+                            <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                                <template x-for="(value, key) in selectedMother?.latest_inference?.facts ?? {}" :key="key">
+                                    <li class="flex justify-between gap-4">
+                                        <span class="font-medium text-gray-500" x-text="formatKey(key)"></span>
+                                        <span class="text-right" x-text="formatDisplay(value)"></span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end border-t border-gray-100 px-6 py-4">
+                    <button
+                        type="button"
+                        class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        @click="closeDetail()"
+                    >Tutup</button>
+                </div>
+            </div>
+        </div>
+    </template>
 </div>
+
+<noscript>
+    <div class="rounded-lg bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+        Aktifkan JavaScript untuk melihat detail ibu menyusui dan informasi inferensi.
+    </div>
+</noscript>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('pakarDashboard', (initialMothers) => ({
+            mothers: initialMothers ?? [],
+            detailOpen: false,
+            selectedMother: null,
+            openDetail(mother) {
+                this.selectedMother = mother;
+                this.detailOpen = true;
+            },
+            closeDetail() {
+                this.detailOpen = false;
+                this.selectedMother = null;
+            },
+            formatValue(value, suffix = '') {
+                if (value === null || value === undefined || value === '') {
+                    return '-';
+                }
+                return `${value}${suffix}`;
+            },
+            listValue(values) {
+                if (! Array.isArray(values) || values.length === 0) {
+                    return 'Tidak ada data';
+                }
+                return values.join(', ');
+            },
+            formatKey(key) {
+                if (! key) {
+                    return '-';
+                }
+                return key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+            },
+            formatDisplay(value) {
+                if (Array.isArray(value)) {
+                    return value.join(', ');
+                }
+                if (value === null || value === undefined || value === '') {
+                    return '-';
+                }
+                if (typeof value === 'object') {
+                    return Object.values(value).join(', ');
+                }
+                return value;
+            },
+        }));
+    });
+</script>
 <?= $this->endSection() ?>

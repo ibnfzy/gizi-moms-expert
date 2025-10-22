@@ -14,6 +14,7 @@ class MessageModel extends Model
         'consultation_id',
         'sender_role',
         'text',
+        'created_at',
     ];
     protected $useTimestamps = false;
 
