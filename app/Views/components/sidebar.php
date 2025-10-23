@@ -55,15 +55,15 @@ $isPathMatched = static function (string $path, string $match): bool {
 };
 ?>
 
-<nav class="flex h-full flex-col gap-6 px-4 py-6 text-slate-600 dark:text-slate-300">
+<nav class="flex h-full flex-col gap-6 px-4 py-6 text-slate-100 dark:text-slate-200">
     <div>
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Navigasi</h2>
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-200/80 dark:text-slate-300">Navigasi</h2>
         <ul class="mt-3 space-y-2 text-sm">
             <?php foreach ($navigation as $item):
                 $isActive = $isPathMatched($currentPath, $item['match']);
                 $classes = $isActive
-                    ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-500/40 dark:bg-slate-800/80 dark:text-blue-300'
-                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/60';
+                    ? 'border-blue-400/50 bg-blue-500/20 text-white shadow-sm dark:border-blue-400/40 dark:bg-blue-500/25 dark:text-blue-100'
+                    : 'text-slate-100 hover:bg-slate-700/60 dark:text-slate-300 dark:hover:bg-slate-800/60';
             ?>
                 <li>
                     <a href="<?= esc($item['href']) ?>"
@@ -78,9 +78,9 @@ $isPathMatched = static function (string $path, string $match): bool {
         </ul>
     </div>
 
-    <div class="rounded-xl bg-blue-50 p-4 text-xs text-blue-600 dark:bg-slate-800/70 dark:text-blue-200">
+    <div class="rounded-xl bg-slate-700/60 p-4 text-xs text-slate-100 dark:bg-slate-900/60 dark:text-slate-200">
         <p class="font-semibold">Tips</p>
-        <p class="mt-1 leading-relaxed text-slate-600 dark:text-slate-300">
+        <p class="mt-1 leading-relaxed text-slate-100/90 dark:text-slate-200/80">
             <?= esc($tipsText) ?>
         </p>
     </div>

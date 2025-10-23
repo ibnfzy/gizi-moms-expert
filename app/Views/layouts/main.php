@@ -59,7 +59,7 @@
         <?= $this->include('components/navbar') ?>
 
         <div class="flex flex-1 overflow-hidden">
-            <aside class="hidden w-64 overflow-y-auto border-r border-slate-200 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:block">
+            <aside class="hidden w-64 overflow-y-auto border-r border-slate-200 bg-slate-800 text-slate-100 backdrop-blur-sm dark:border-slate-900 dark:bg-slate-950 md:block">
                 <?= $this->include('components/sidebar') ?>
             </aside>
 
