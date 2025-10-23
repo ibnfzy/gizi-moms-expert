@@ -1,4 +1,9 @@
-import { createSpinnerRow, escapeHtml, fetchJson, showNotification } from "./utils.js";
+import {
+  createSpinnerRow,
+  escapeHtml,
+  fetchJson,
+  showNotification,
+} from "./utils.js";
 
 export const initAdminMothers = () => {
   const container = document.querySelector("[data-admin-mothers]");
@@ -104,7 +109,7 @@ export const initAdminMothers = () => {
     if (!Array.isArray(items) || items.length === 0) {
       tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="border border-black px-6 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data ibu.</td>
+                    <td colspan="6" class="border border-black/40 px-6 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data ibu.</td>
                 </tr>
             `;
       return;
@@ -125,24 +130,24 @@ export const initAdminMothers = () => {
 
         return `
                 <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black px-6 py-4 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
                       mother?.name ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-gray-700 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:border-gray-300">${escapeHtml(
                       mother?.email ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
                       formatValue(mother?.umur)
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
                       formatValue(mother?.usia_bayi_bln)
                     )}</td>
-                    <td class="border border-black px-6 py-4 dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${escapeHtml(
           badgeLabel
         )}</span>
                     </td>
-                    <td class="border border-black px-6 py-4 text-right text-sm dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:border-gray-300">
                         <div class="flex flex-wrap justify-end gap-2">
                             <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50" data-action="detail" data-id="${escapeHtml(
                               mother?.id

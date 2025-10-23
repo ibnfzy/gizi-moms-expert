@@ -5,14 +5,12 @@
     class="space-y-8"
     data-admin-mothers
     data-base-endpoint="<?= site_url('api/admin/mothers') ?>"
-    data-notification-id="admin-mothers-notification"
->
+    data-notification-id="admin-mothers-notification">
     <div
         id="admin-mothers-notification"
         class="hidden rounded-lg border border-transparent px-4 py-3 text-sm font-medium transition-all duration-200"
         role="status"
-        aria-live="polite"
-    ></div>
+        aria-live="polite"></div>
 
     <section class="space-y-4">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -30,20 +28,20 @@
 
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/40 dark:ring-black/60">
             <div class="overflow-x-auto">
-                <table class="min-w-full border-collapse border border-black text-left text-sm dark:border-gray-300">
+                <table class="min-w-full border-collapse border border-black/40 text-left text-sm dark:border-gray-300">
                     <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                         <tr>
-                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Nama</th>
-                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Email</th>
-                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Umur</th>
-                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Usia Bayi (bln)</th>
-                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Status</th>
-                            <th scope="col" class="border border-black px-6 py-3 text-right dark:border-gray-300">Aksi</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Nama</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Email</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Umur</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Usia Bayi (bln)</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Status</th>
+                            <th scope="col" class="border border-black/40 px-6 py-3 text-right dark:border-gray-300">Aksi</th>
                         </tr>
                     </thead>
                     <tbody data-table-body class="text-gray-700 dark:text-slate-200">
                         <tr>
-                            <td colspan="6" class="border border-black px-6 py-8 dark:border-gray-300">
+                            <td colspan="6" class="border border-black/40 px-6 py-8 dark:border-gray-300">
                                 <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
                                     <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
                                     Memuat data ibu...
@@ -164,8 +162,7 @@
                         name="email"
                         class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="nama@email.com"
-                        required
-                    >
+                        required>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-slate-400">Pastikan email aktif dan dapat dihubungi.</p>
             </div>
@@ -199,8 +196,7 @@
                         minlength="8"
                         class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Minimal 8 karakter"
-                        required
-                    >
+                        required>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-slate-400">Bagikan password baru kepada ibu setelah disimpan.</p>
             </div>

@@ -1,4 +1,9 @@
-import { createSpinnerRow, escapeHtml, fetchJson, showNotification } from "./utils.js";
+import {
+  createSpinnerRow,
+  escapeHtml,
+  fetchJson,
+  showNotification,
+} from "./utils.js";
 
 export const initAdminUsers = () => {
   const container = document.querySelector("[data-admin-users]");
@@ -83,7 +88,7 @@ export const initAdminUsers = () => {
     if (!Array.isArray(items) || items.length === 0) {
       tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="border border-black px-6 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data pengguna.</td>
+                    <td colspan="5" class="border border-black/40 px-6 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data pengguna.</td>
                 </tr>
             `;
       return;
@@ -109,21 +114,21 @@ export const initAdminUsers = () => {
 
         return `
                 <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black px-6 py-4 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       user?.name ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-gray-700 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       user?.email ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${escapeHtml(
           roleLabel
         )}</span>
                     </td>
-                    <td class="border border-black px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       createdAt
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-right text-sm dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:border-gray-300">
                         <div class="flex flex-wrap justify-end gap-2">
                             <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" data-action="edit" data-id="${escapeHtml(
                               user?.id
@@ -148,7 +153,11 @@ export const initAdminUsers = () => {
   const handleEdit = (id) => {
     const user = userStore.get(String(id));
     if (!user) {
-      showNotification(notificationId, "error", "Data pengguna tidak ditemukan.");
+      showNotification(
+        notificationId,
+        "error",
+        "Data pengguna tidak ditemukan."
+      );
       return;
     }
 
@@ -172,7 +181,11 @@ export const initAdminUsers = () => {
   const handlePassword = (id) => {
     const user = userStore.get(String(id));
     if (!user) {
-      showNotification(notificationId, "error", "Data pengguna tidak ditemukan.");
+      showNotification(
+        notificationId,
+        "error",
+        "Data pengguna tidak ditemukan."
+      );
       return;
     }
 
@@ -190,7 +203,11 @@ export const initAdminUsers = () => {
   const handleDelete = async (id) => {
     const user = userStore.get(String(id));
     if (!user) {
-      showNotification(notificationId, "error", "Data pengguna tidak ditemukan.");
+      showNotification(
+        notificationId,
+        "error",
+        "Data pengguna tidak ditemukan."
+      );
       return;
     }
 
@@ -296,7 +313,11 @@ export const initAdminUsers = () => {
       const password = createPasswordInput?.value ?? "";
 
       if (!name || !email || !role || !password) {
-        showNotification(notificationId, "error", "Mohon lengkapi seluruh data pengguna.");
+        showNotification(
+          notificationId,
+          "error",
+          "Mohon lengkapi seluruh data pengguna."
+        );
         return;
       }
 
@@ -309,7 +330,11 @@ export const initAdminUsers = () => {
           body: JSON.stringify({ name, email, role, password }),
         });
         closeCreateModal();
-        showNotification(notificationId, "success", "Pengguna berhasil ditambahkan.");
+        showNotification(
+          notificationId,
+          "success",
+          "Pengguna berhasil ditambahkan."
+        );
         await loadUsers();
       } catch (error) {
         showNotification(
@@ -336,7 +361,11 @@ export const initAdminUsers = () => {
       }
 
       if (!name || !email || !role) {
-        showNotification(notificationId, "error", "Mohon lengkapi seluruh data pengguna.");
+        showNotification(
+          notificationId,
+          "error",
+          "Mohon lengkapi seluruh data pengguna."
+        );
         return;
       }
 
@@ -349,7 +378,11 @@ export const initAdminUsers = () => {
           body: JSON.stringify({ name, email, role }),
         });
         closeEditModal();
-        showNotification(notificationId, "success", "Pengguna berhasil diperbarui.");
+        showNotification(
+          notificationId,
+          "success",
+          "Pengguna berhasil diperbarui."
+        );
         await loadUsers();
       } catch (error) {
         showNotification(
@@ -374,7 +407,11 @@ export const initAdminUsers = () => {
       }
 
       if (!password || password.length < 8) {
-        showNotification(notificationId, "error", "Password minimal 8 karakter.");
+        showNotification(
+          notificationId,
+          "error",
+          "Password minimal 8 karakter."
+        );
         return;
       }
 
@@ -387,7 +424,11 @@ export const initAdminUsers = () => {
           body: JSON.stringify({ password }),
         });
         closePasswordModal();
-        showNotification(notificationId, "success", "Password pengguna berhasil diperbarui.");
+        showNotification(
+          notificationId,
+          "success",
+          "Password pengguna berhasil diperbarui."
+        );
         await loadUsers();
       } catch (error) {
         showNotification(

@@ -96,7 +96,7 @@ export const fetchJson = async (url, options = {}) => {
 
 export const createSpinnerRow = (colspan, message) => `
     <tr>
-        <td colspan="${colspan}" class="border border-black px-6 py-8 dark:border-gray-300">
+        <td colspan="${colspan}" class="border border-black/40 px-6 py-8 dark:border-gray-300">
             <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
                 <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
                 ${escapeHtml(message)}

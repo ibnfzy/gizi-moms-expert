@@ -1,4 +1,9 @@
-import { createSpinnerRow, escapeHtml, fetchJson, showNotification } from "./utils.js";
+import {
+  createSpinnerRow,
+  escapeHtml,
+  fetchJson,
+  showNotification,
+} from "./utils.js";
 
 export const initAdminRules = () => {
   const container = document.querySelector("[data-admin-rules]");
@@ -79,7 +84,7 @@ export const initAdminRules = () => {
     if (!Array.isArray(rules) || rules.length === 0) {
       tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4" class="border border-black px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data rule.</td>
+                    <td colspan="4" class="border border-black/40 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data rule.</td>
                 </tr>
             `;
       return;
@@ -95,16 +100,16 @@ export const initAdminRules = () => {
 
         return `
                 <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black px-4 py-3 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-4 py-3 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
                       rule.name
                     )}</td>
-                    <td class="border border-black px-4 py-3 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-4 py-3 text-gray-600 dark:border-gray-300">${escapeHtml(
                       rule.version
                     )}</td>
-                    <td class="border border-black px-4 py-3 dark:border-gray-300">
+                    <td class="border border-black/40 px-4 py-3 dark:border-gray-300">
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${badgeLabel}</span>
                     </td>
-                    <td class="border border-black px-4 py-3 text-right text-sm dark:border-gray-300">
+                    <td class="border border-black/40 px-4 py-3 text-right text-sm dark:border-gray-300">
                         <button type="button" class="mr-2 inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100" data-action="edit" data-id="${escapeHtml(
                           rule.id
                         )}">Edit</button>

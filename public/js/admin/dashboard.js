@@ -90,18 +90,18 @@ export const initAdminDashboard = () => {
           rule.status_label || (rule.is_active ? "Aktif" : "Tidak Aktif");
         return `
                 <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black px-6 py-4 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       rule.id ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 text-gray-700 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       rule.name ?? "-"
                     )}</td>
-                    <td class="border border-black px-6 py-4 dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${escapeHtml(
           badgeLabel
         )}</span>
                     </td>
-                    <td class="border border-black px-6 py-4 text-right text-sm text-gray-500 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm text-gray-500 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
                       rule.updated_human ?? rule.updated_at ?? "-"
                     )}</td>
                 </tr>
