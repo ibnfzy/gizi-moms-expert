@@ -129,12 +129,18 @@
                         </span>
                         <span class="text-xs text-gray-400"><?= esc($latestInference['created_at_human'] ?? '-') ?></span>
                     </div>
-                    <ul class="mt-4 space-y-2 text-sm text-gray-700" role="list">
+                    <p class="mt-4 text-sm leading-relaxed text-gray-600">
+                        Rekomendasi berikut dirangkum dari hasil analisis terbaru agar mudah diikuti secara bertahap.
+                    </p>
+                    <ul class="mt-3 space-y-3" role="list">
                         <?php if ($recommendations === []): ?>
-                            <li class="rounded-lg bg-white/80 px-3 py-2 text-gray-500">Belum ada rekomendasi khusus.</li>
+                            <li class="rounded-lg bg-white/80 px-3 py-2 text-sm text-gray-500">Belum ada rekomendasi khusus.</li>
                         <?php else: ?>
-                            <?php foreach ($recommendations as $item): ?>
-                                <li class="rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-gray-100"><?= esc($item) ?></li>
+                            <?php foreach ($recommendations as $index => $item): ?>
+                                <li class="rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-gray-100">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-blue-500">Langkah <?= esc($index + 1) ?></span>
+                                    <p class="mt-1 text-sm leading-relaxed text-gray-700"><?= esc($item) ?></p>
+                                </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </ul>
