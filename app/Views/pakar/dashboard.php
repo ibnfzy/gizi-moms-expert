@@ -2,7 +2,10 @@
 
 <?= $this->section('content') ?>
 <div
-    x-data="pakarDashboard()"
+    x-data="pakarDashboard({
+        initialMothers: <?= htmlspecialchars(json_encode($mothers, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>,
+        initialSummary: <?= htmlspecialchars(json_encode($statusSummary, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>,
+    })"
     data-mothers-endpoint="<?= site_url('api/mothers') ?>"
     data-mother-detail-endpoint="<?= site_url('api/mothers') ?>"
     data-notification-id="pakar-dashboard-notification"

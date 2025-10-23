@@ -80,7 +80,7 @@ const fetchJson = async (url, options = {}) => {
 };
 
 document.addEventListener('alpine:init', () => {
-    Alpine.data('pakarDashboard', () => ({
+    Alpine.data('pakarDashboard', (config = {}) => ({
         cards: [
             {
                 key: 'normal',
@@ -101,9 +101,15 @@ document.addEventListener('alpine:init', () => {
                 color: 'bg-rose-500',
             },
         ],
-        mothers: [],
-        summary: { normal: 0, moderate: 0, high: 0 },
-        loading: true,
+        mothers: Array.isArray(config.initialMothers) ? config.initialMothers : [],
+        summary: (() => {
+            const baseSummary = { normal: 0, moderate: 0, high: 0 };
+            if (config.initialSummary && typeof config.initialSummary === 'object') {
+                return { ...baseSummary, ...config.initialSummary };
+            }
+            return baseSummary;
+        })(),
+        loading: !Array.isArray(config.initialMothers) || config.initialMothers.length === 0,
         detailOpen: false,
         detailLoading: false,
         selectedMother: null,
@@ -112,7 +118,12 @@ document.addEventListener('alpine:init', () => {
             this.mothersEndpoint = dataset.mothersEndpoint || '/api/mothers';
             this.motherDetailEndpoint = dataset.motherDetailEndpoint || '/api/mothers';
             this.notificationId = dataset.notificationId;
-            this.fetchMothers();
+            if (this.mothers.length > 0) {
+                this.computeSummary();
+                this.loading = false;
+            } else {
+                this.fetchMothers();
+            }
         },
         async fetchMothers() {
             this.loading = true;
