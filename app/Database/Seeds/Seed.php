@@ -11,5 +11,6 @@ class Seed extends Seeder
         $this->call('User');
         $this->call('Mother');
         $this->call('Rules');
+        $this->call('PakarPanel');
     }
 }
