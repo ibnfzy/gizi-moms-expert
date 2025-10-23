@@ -27,8 +27,8 @@ export const showNotification = (target, type, message, timeout = 4000) => {
     "rounded-lg border px-4 py-3 text-sm font-medium shadow-sm transition-all duration-200";
   const variantClass =
     type === "success"
-      ? "bg-green-100 text-green-800 border-green-200"
-      : "bg-red-100 text-red-800 border-red-200";
+      ? "bg-green-100 text-green-800 border-green-200 dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-400/40"
+      : "bg-red-100 text-red-800 border-red-200 dark:bg-rose-500/20 dark:text-rose-200 dark:border-rose-400/40";
 
   element.className = `${baseClass} ${variantClass}`;
   element.textContent = message;

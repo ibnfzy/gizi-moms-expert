@@ -25,7 +25,7 @@ export const initAdminDashboard = () => {
     if (!Array.isArray(items) || items.length === 0) {
       const emptyCard = document.createElement("div");
       emptyCard.className =
-        "col-span-full rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center text-sm text-gray-500";
+        "col-span-full rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center text-sm text-gray-500 dark:border-black/70 dark:bg-slate-950/70 dark:text-slate-400";
       emptyCard.textContent =
         "Belum ada data statistik yang dapat ditampilkan.";
       statsGrid.appendChild(emptyCard);
@@ -35,7 +35,7 @@ export const initAdminDashboard = () => {
     items.forEach((item) => {
       const card = document.createElement("div");
       card.className =
-        "relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100";
+        "relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 dark:bg-slate-950/70 dark:ring-black/60";
 
       const accent = document.createElement("div");
       accent.className = "absolute inset-x-0 top-0 h-1";
@@ -45,18 +45,18 @@ export const initAdminDashboard = () => {
       const content = document.createElement("div");
       content.className = "p-6";
       content.innerHTML = `
-                <p class="text-sm font-semibold text-gray-500">${escapeHtml(
+                <p class="text-sm font-semibold text-gray-500 dark:text-slate-400">${escapeHtml(
                   item.title ?? "Statistik"
                 )}</p>
                 <div class="mt-3 flex items-end justify-between">
-                    <h2 class="text-3xl font-bold text-gray-900">${escapeHtml(
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-slate-100">${escapeHtml(
                       item.value ?? "-"
                     )}</h2>
-                    <span class="text-xs text-gray-400">${escapeHtml(
+                    <span class="text-xs text-gray-400 dark:text-slate-500">${escapeHtml(
                       item.subtitle ?? ""
                     )}</span>
                 </div>
-                <p class="mt-4 text-sm leading-relaxed text-gray-600">${escapeHtml(
+                <p class="mt-4 text-sm leading-relaxed text-gray-600 dark:text-slate-400">${escapeHtml(
                   item.description ?? ""
                 )}</p>
             `;
@@ -70,7 +70,7 @@ export const initAdminDashboard = () => {
     if (!Array.isArray(rules) || rules.length === 0) {
       rulesBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">
+                    <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
                         Belum ada rule yang dapat ditampilkan.
                     </td>
                 </tr>
@@ -84,16 +84,16 @@ export const initAdminDashboard = () => {
         const badgeClass =
           rule.status_badge ||
           (rule.is_active
-            ? "bg-green-100 text-green-800"
-            : "bg-gray-100 text-gray-600");
+            ? "bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200"
+            : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200");
         const badgeLabel =
           rule.status_label || (rule.is_active ? "Aktif" : "Tidak Aktif");
         return `
-                <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
                       rule.id ?? "-"
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       rule.name ?? "-"
                     )}</td>
                     <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
@@ -101,7 +101,7 @@ export const initAdminDashboard = () => {
           badgeLabel
         )}</span>
                     </td>
-                    <td class="border border-black/40 px-6 py-4 text-right text-sm text-gray-500 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm text-gray-500 dark:text-slate-400 dark:border-gray-300">${escapeHtml(
                       rule.updated_human ?? rule.updated_at ?? "-"
                     )}</td>
                 </tr>

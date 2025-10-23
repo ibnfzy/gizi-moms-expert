@@ -94,26 +94,26 @@ export const initAdminRules = () => {
       .map((rule) => {
         ruleStore.set(String(rule.id), rule);
         const badgeClass = rule.is_active
-          ? "bg-green-100 text-green-800"
-          : "bg-gray-100 text-gray-600";
+          ? "bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200"
+          : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
         const badgeLabel = rule.is_active ? "Aktif" : "Tidak Aktif";
 
         return `
-                <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black/40 px-4 py-3 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+                    <td class="border border-black/40 px-4 py-3 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
                       rule.name
                     )}</td>
-                    <td class="border border-black/40 px-4 py-3 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-4 py-3 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       rule.version
                     )}</td>
                     <td class="border border-black/40 px-4 py-3 dark:border-gray-300">
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${badgeLabel}</span>
                     </td>
-                    <td class="border border-black/40 px-4 py-3 text-right text-sm dark:border-gray-300">
-                        <button type="button" class="mr-2 inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100" data-action="edit" data-id="${escapeHtml(
+                    <td class="border border-black/40 px-4 py-3 text-right text-sm dark:text-slate-200 dark:border-gray-300">
+                        <button type="button" class="mr-2 inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="edit" data-id="${escapeHtml(
                           rule.id
                         )}">Edit</button>
-                        <button type="button" class="inline-flex items-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50" data-action="delete" data-id="${escapeHtml(
+                        <button type="button" class="inline-flex items-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
                           rule.id
                         )}">Hapus</button>
                     </td>
