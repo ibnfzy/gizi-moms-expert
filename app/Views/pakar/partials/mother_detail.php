@@ -7,6 +7,11 @@
     $facts            = is_array($latestInference['facts'] ?? null)
         ? $latestInference['facts']
         : [];
+    $motherId         = $mother['id'] ?? null;
+    $detailUrl        = $motherId === null
+        ? site_url('pakar/dashboard/mothers/0')
+        : site_url('pakar/dashboard/mothers/' . $motherId);
+    $inferenceEndpoint = site_url('api/inference/run');
 
     $formatValue = static function ($value, string $suffix = ''): string {
         if ($value === null || $value === '' || $value === []) {
@@ -93,7 +98,12 @@
         return $items;
     };
 ?>
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 px-4" data-modal="mother-detail">
+<div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 px-4"
+    data-modal="mother-detail"
+    data-detail-url="<?= esc($detailUrl) ?>"
+    data-mother-id="<?= esc((string) ($motherId ?? '')) ?>"
+>
     <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl">
         <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4">
             <div>
@@ -108,6 +118,12 @@
                 <span class="sr-only">Tutup</span>
                 &times;
             </button>
+        </div>
+        <div
+            class="hidden px-6 pt-4"
+            data-inference-feedback-wrapper
+        >
+            <div class="rounded-xl border px-4 py-3 text-sm" data-inference-feedback></div>
         </div>
         <div class="grid gap-6 px-6 py-6 md:grid-cols-2">
             <div class="space-y-4">
@@ -216,7 +232,14 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-end border-t border-gray-100 px-6 py-4">
+        <div class="flex flex-col gap-3 border-t border-gray-100 px-6 py-4 md:flex-row md:items-center md:justify-between">
+            <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-md border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+                data-run-inference
+                data-inference-endpoint="<?= esc($inferenceEndpoint) ?>"
+                data-mother-id="<?= esc((string) ($motherId ?? '')) ?>"
+            >Jalankan Inferensi</button>
             <button
                 type="button"
                 class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
