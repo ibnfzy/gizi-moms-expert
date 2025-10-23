@@ -34,11 +34,21 @@ class RuleController extends BaseController
     {
         $payload = get_request_data($this->request);
 
+        $usingJsonRule = array_key_exists('json_rule', $payload);
+
         $validationRules = [
-            'name'      => 'required|string',
-            'version'   => 'required|string',
-            'json_rule' => 'required|string',
+            'name'    => 'required|string',
+            'version' => 'required|string',
         ];
+
+        if ($usingJsonRule) {
+            $validationRules['json_rule'] = 'required|string';
+        } else {
+            $validationRules['condition'] = 'required|string';
+            $validationRules['recommendation'] = 'required|string';
+            $validationRules['category'] = 'permit_empty|string';
+            $validationRules['status'] = 'permit_empty|string';
+        }
 
         if (! $this->validateData($payload, $validationRules)) {
             return $this->response
@@ -49,19 +59,32 @@ class RuleController extends BaseController
                 ]);
         }
 
-        if (! $this->isValidJson($payload['json_rule'])) {
+        $resolution = $this->resolveJsonRule($payload, null, ! $usingJsonRule);
+
+        if (($resolution['error'] ?? null) !== null) {
             return $this->response
                 ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
                 ->setJSON([
                     'status'  => false,
-                    'message' => 'Format JSON rule tidak valid.',
+                    'message' => $resolution['error'],
+                ]);
+        }
+
+        $jsonRule = $resolution['json'] ?? null;
+
+        if ($jsonRule === null) {
+            return $this->response
+                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
+                ->setJSON([
+                    'status'  => false,
+                    'message' => 'Detail rule tidak valid.',
                 ]);
         }
 
         $ruleId = $this->rules->insert([
             'name'           => $payload['name'],
             'version'        => $payload['version'],
-            'json_rule'      => $payload['json_rule'],
+            'json_rule'      => $jsonRule,
             'effective_from' => $payload['effective_from'] ?? null,
             'is_active'      => array_key_exists('is_active', $payload)
                 ? (bool) $payload['is_active']
@@ -111,7 +134,14 @@ class RuleController extends BaseController
             'is_active',
         ]));
 
-        if ($fields === []) {
+        $detailPayload = array_intersect_key($payload, array_flip([
+            'condition',
+            'recommendation',
+            'category',
+            'status',
+        ]));
+
+        if ($fields === [] && $detailPayload === []) {
             return $this->response
                 ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
                 ->setJSON([
@@ -120,7 +150,21 @@ class RuleController extends BaseController
                 ]);
         }
 
-        if (array_key_exists('json_rule', $fields) && ! $this->isValidJson((string) $fields['json_rule'])) {
+        $existingDetails = $this->decodeRuleDetails($existing['json_rule'] ?? '') ?: [];
+        $resolution = $this->resolveJsonRule($payload, $existingDetails, false);
+
+        if (($resolution['error'] ?? null) !== null) {
+            return $this->response
+                ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
+                ->setJSON([
+                    'status'  => false,
+                    'message' => $resolution['error'],
+                ]);
+        }
+
+        if (($resolution['json'] ?? null) !== null) {
+            $fields['json_rule'] = $resolution['json'];
+        } elseif (array_key_exists('json_rule', $fields) && ! $this->isValidJson((string) $fields['json_rule'])) {
             return $this->response
                 ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
                 ->setJSON([
@@ -192,6 +236,8 @@ class RuleController extends BaseController
             return [];
         }
 
+        $details = $this->decodeRuleDetails($rule['json_rule'] ?? '') ?? [];
+
         return [
             'id'             => $rule['id'] ?? null,
             'name'           => $rule['name'] ?? '',
@@ -201,6 +247,94 @@ class RuleController extends BaseController
             'is_active'      => isset($rule['is_active']) ? (bool) $rule['is_active'] : false,
             'created_at'     => $rule['created_at'] ?? null,
             'updated_at'     => $rule['updated_at'] ?? null,
+            'details'        => $details,
+        ];
+    }
+
+    private function decodeRuleDetails(?string $json): array
+    {
+        $defaults = [
+            'condition'      => '',
+            'recommendation' => '',
+            'category'       => '',
+            'status'         => '',
+        ];
+
+        if (! $json) {
+            return $defaults;
+        }
+
+        $decoded = json_decode($json, true);
+
+        if (! is_array($decoded)) {
+            return $defaults;
+        }
+
+        return array_merge($defaults, array_intersect_key($decoded, $defaults));
+    }
+
+    /**
+     * @return array{json: string|null, error?: string|null}
+     */
+    private function resolveJsonRule(array $payload, ?array $currentDetails = null, bool $requireDetails = false): array
+    {
+        if (array_key_exists('json_rule', $payload)) {
+            $json = (string) $payload['json_rule'];
+
+            if (! $this->isValidJson($json)) {
+                return [
+                    'json'  => null,
+                    'error' => 'Format JSON rule tidak valid.',
+                ];
+            }
+
+            return ['json' => $json];
+        }
+
+        $detailKeys = ['condition', 'recommendation', 'category', 'status'];
+        $details = $currentDetails ?? [];
+        $hasDetailInput = false;
+
+        foreach ($detailKeys as $key) {
+            if (! array_key_exists($key, $payload)) {
+                continue;
+            }
+
+            $hasDetailInput = true;
+            $value = $payload[$key];
+
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            if ($value === '' && in_array($key, ['category', 'status'], true)) {
+                unset($details[$key]);
+                continue;
+            }
+
+            $details[$key] = $value;
+        }
+
+        if (! $hasDetailInput) {
+            if ($requireDetails) {
+                return [
+                    'json'  => null,
+                    'error' => 'Detail rule tidak ditemukan.',
+                ];
+            }
+
+            return ['json' => null];
+        }
+
+        if (empty($details['condition']) || empty($details['recommendation'])) {
+            return [
+                'json'  => null,
+                'error' => 'Kondisi dan rekomendasi rule wajib diisi.',
+            ];
+        }
+
+        return [
+            'json' => json_encode($details, JSON_UNESCAPED_UNICODE),
         ];
     }
 }

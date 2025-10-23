@@ -246,10 +246,13 @@ const initAdminRules = () => {
     const ruleIdInput = document.getElementById('ruleId');
     const ruleNameInput = document.getElementById('ruleName');
     const ruleVersionInput = document.getElementById('ruleVersion');
-    const ruleJsonInput = document.getElementById('ruleJson');
+    const ruleConditionInput = document.getElementById('ruleCondition');
+    const ruleRecommendationInput = document.getElementById('ruleRecommendation');
+    const ruleCategoryInput = document.getElementById('ruleCategory');
+    const ruleStatusInput = document.getElementById('ruleStatus');
     const cancelModalButton = document.getElementById('cancelModalButton');
     const closeModalButton = document.getElementById('closeModalButton');
-    const jsonValidationMessage = document.getElementById('jsonValidationMessage');
+    const ruleDetailsMessage = document.getElementById('ruleDetailsMessage');
 
     const ruleStore = new Map();
     let mode = 'create';
@@ -270,7 +273,34 @@ const initAdminRules = () => {
     const resetForm = () => {
         ruleForm.reset();
         ruleIdInput.value = '';
-        jsonValidationMessage.textContent = '';
+        if (ruleConditionInput) ruleConditionInput.value = '';
+        if (ruleRecommendationInput) ruleRecommendationInput.value = '';
+        if (ruleCategoryInput) ruleCategoryInput.value = '';
+        if (ruleStatusInput) ruleStatusInput.value = '';
+        if (ruleDetailsMessage) ruleDetailsMessage.textContent = '';
+    };
+
+    const extractRuleDetails = (rule) => {
+        if (!rule) {
+            return {};
+        }
+
+        if (rule.details && typeof rule.details === 'object') {
+            return rule.details;
+        }
+
+        if (rule.json_rule) {
+            try {
+                const parsed = JSON.parse(rule.json_rule);
+                if (parsed && typeof parsed === 'object') {
+                    return parsed;
+                }
+            } catch (error) {
+                console.error('Gagal mengurai detail rule:', error);
+            }
+        }
+
+        return {};
     };
 
     const renderRules = (rules) => {
@@ -325,7 +355,22 @@ const initAdminRules = () => {
                 ruleIdInput.value = rule.id ?? '';
                 ruleNameInput.value = rule.name ?? '';
                 ruleVersionInput.value = rule.version ?? '';
-                ruleJsonInput.value = rule.json_rule ?? '';
+                const details = extractRuleDetails(rule);
+                if (ruleConditionInput) {
+                    ruleConditionInput.value = details.condition ?? '';
+                }
+                if (ruleRecommendationInput) {
+                    ruleRecommendationInput.value = details.recommendation ?? '';
+                }
+                if (ruleCategoryInput) {
+                    ruleCategoryInput.value = details.category ?? '';
+                }
+                if (ruleStatusInput) {
+                    ruleStatusInput.value = details.status ?? '';
+                }
+                if (ruleDetailsMessage) {
+                    ruleDetailsMessage.textContent = '';
+                }
                 toggleModal(true);
             });
         });
@@ -410,47 +455,42 @@ const initAdminRules = () => {
         }
     });
 
-    if (ruleJsonInput) {
-        ruleJsonInput.addEventListener('input', () => {
-            if (!ruleJsonInput.value) {
-                jsonValidationMessage.textContent = '';
-                return;
-            }
-            try {
-                JSON.parse(ruleJsonInput.value);
-                jsonValidationMessage.textContent = '';
-            } catch (error) {
-                jsonValidationMessage.textContent = 'Format JSON tidak valid.';
-            }
-        });
-    }
-
     if (ruleForm) {
         ruleForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const name = ruleNameInput.value.trim();
             const version = ruleVersionInput.value.trim();
-            const jsonRule = ruleJsonInput.value.trim();
+            const condition = ruleConditionInput?.value.trim() ?? '';
+            const recommendation = ruleRecommendationInput?.value.trim() ?? '';
+            const category = ruleCategoryInput?.value.trim() ?? '';
+            const status = ruleStatusInput?.value.trim() ?? '';
 
-            if (!name || !version || !jsonRule) {
-                showNotification(notificationId, 'error', 'Mohon lengkapi seluruh data rule.');
-                return;
+            if (ruleDetailsMessage) {
+                ruleDetailsMessage.textContent = '';
             }
 
-            try {
-                JSON.parse(jsonRule);
-                jsonValidationMessage.textContent = '';
-            } catch (error) {
-                jsonValidationMessage.textContent = 'Format JSON tidak valid.';
-                showNotification(notificationId, 'error', 'Format JSON rule tidak valid.');
+            if (!name || !version || !condition || !recommendation) {
+                showNotification(notificationId, 'error', 'Mohon lengkapi seluruh data rule.');
+                if (ruleDetailsMessage) {
+                    ruleDetailsMessage.textContent = 'Isikan kondisi dan rekomendasi untuk rule.';
+                }
                 return;
             }
 
             const payload = {
                 name,
                 version,
-                json_rule: jsonRule,
+                condition,
+                recommendation,
+            };
+
+            if (category) {
+                payload.category = category;
+            }
+
+            if (status) {
+                payload.status = status;
             };
 
             const requestOptions = {
