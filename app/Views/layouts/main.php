@@ -70,7 +70,7 @@
         <?= $this->include('components/sidebar') ?>
       </aside>
 
-      <main class="flex-1 overflow-y-auto bg-slate-50 p-6 dark:bg-slate-950/40">
+      <main class="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 via-white to-slate-200 p-6 dark:bg-slate-950/40">
         <div class="mx-auto max-w-6xl">
           <?= $this->renderSection('content') ?>
         </div>

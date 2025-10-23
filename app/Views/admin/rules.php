@@ -7,7 +7,7 @@
     data-rules-endpoint="<?= site_url('api/rules') ?>"
     data-notification-id="admin-rules-notification"
 >
-    <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+    <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm shadow-slate-100 ring-1 ring-gray-100">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold text-gray-900">Manajemen Rules</h1>
@@ -15,7 +15,7 @@
             </div>
             <button
                 id="addRuleButton"
-                class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
                 Tambah Rule
             </button>
@@ -29,7 +29,7 @@
         ></div>
 
         <div class="mt-6 overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-left text-sm">
+            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm">
                 <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
                     <tr>
                         <th scope="col" class="px-4 py-3">Nama Rule</th>
@@ -145,7 +145,7 @@
                 </button>
                 <button
                     type="submit"
-                    class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                     Simpan Rule
                 </button>

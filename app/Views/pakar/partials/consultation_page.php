@@ -209,7 +209,7 @@
                                 ><?= esc($messageText) ?></textarea>
                                 <button
                                     type="submit"
-                                    class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:bg-giziblue dark:hover:bg-blue-500 dark:focus:ring-offset-slate-900"
+                                    class="inline-flex items-center rounded-xl border border-giziblue bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/70 dark:bg-giziblue dark:hover:bg-blue-500 dark:focus:ring-offset-slate-900"
                                 >Kirim</button>
                             </form>
                         </div>

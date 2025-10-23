@@ -28,9 +28,9 @@
             </div>
         </div>
 
-        <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-left text-sm">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm">
                     <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <tr>
                             <th scope="col" class="px-6 py-3">Nama</th>
@@ -173,7 +173,7 @@
                 <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50" data-close-email>
                     Batal
                 </button>
-                <button type="submit" class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Simpan Perubahan
                 </button>
             </div>
@@ -208,7 +208,7 @@
                 <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50" data-close-password>
                     Batal
                 </button>
-                <button type="submit" class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Simpan Password
                 </button>
             </div>

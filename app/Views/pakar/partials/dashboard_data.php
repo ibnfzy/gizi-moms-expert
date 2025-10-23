@@ -30,7 +30,7 @@
 ?>
 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     <?php foreach ($cards as $card): ?>
-        <div class="relative overflow-hidden rounded-2xl bg-white/80 shadow-sm ring-1 ring-slate-200/70 dark:bg-slate-900/70 dark:ring-slate-800/80">
+        <div class="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-slate-800/80 dark:bg-slate-900/70 dark:ring-slate-800/80">
             <div class="absolute inset-x-0 top-0 h-1 <?= esc($card['color']) ?> dark:opacity-80"></div>
             <div class="p-6">
                 <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"><?= esc($card['label']) ?></p>
@@ -46,7 +46,7 @@
     <?php endforeach; ?>
 </div>
 
-<div class="overflow-hidden rounded-2xl bg-white/80 shadow-sm ring-1 ring-slate-200/70 dark:bg-slate-900/70 dark:ring-slate-800/80">
+<div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-slate-800/80 dark:bg-slate-900/70 dark:ring-slate-800/80">
     <div class="border-b border-slate-100 px-6 py-4 dark:border-slate-800">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+        <table class="min-w-full divide-y divide-slate-200 border border-slate-200/80 dark:divide-slate-800 dark:border-slate-800/80">
             <thead class="bg-slate-50 text-left text-sm font-semibold text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
                 <tr>
                     <th scope="col" class="px-6 py-3">Nama</th>

@@ -39,7 +39,7 @@
             </div>
             <a
                 href="<?= site_url('logout') ?>"
-                class="inline-flex items-center rounded-md bg-giziblue px-3 py-2 text-sm font-semibold text-white shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                class="inline-flex items-center rounded-md border border-giziblue bg-giziblue px-3 py-2 text-sm font-semibold text-white shadow hover:border-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/60 dark:focus:ring-offset-slate-900"
             >Keluar</a>
         </div>
     </div>

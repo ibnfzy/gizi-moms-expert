@@ -90,7 +90,7 @@
                     </label>
                     <a href="#" class="text-blue-600 hover:text-blue-700 transition-all duration-200">Lupa kata sandi?</a>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                <button type="submit" class="w-full rounded-lg border border-blue-600 bg-blue-600 py-3 font-semibold text-white shadow-md transition-all duration-200 hover:border-blue-700 hover:bg-blue-700 hover:shadow-lg">
                     Masuk Sekarang
                 </button>
             </form>
