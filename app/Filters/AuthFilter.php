@@ -7,7 +7,6 @@ use App\Models\UserModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
 
 class AuthFilter implements FilterInterface
 {
@@ -19,7 +18,7 @@ class AuthFilter implements FilterInterface
         $token = auth_token($authHeader);
 
         if ($token === null) {
-            return $this->unauthorizedResponse('Authorization token missing.');
+            return errorResponse('Authorization token missing.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         try {
@@ -27,18 +26,19 @@ class AuthFilter implements FilterInterface
             $payload = $jwtService->validateToken($token);
         } catch (\Throwable $exception) {
             log_message('error', 'JWT validation error: ' . $exception->getMessage());
-            return $this->unauthorizedResponse('Failed to validate token.');
+
+            return errorResponse('Token expired or invalid', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         if ($payload === null || empty($payload['id'])) {
-            return $this->unauthorizedResponse('Invalid or expired token.');
+            return errorResponse('Token expired or invalid', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         $userModel = new UserModel();
         $user = $userModel->find($payload['id']);
 
         if (! $user) {
-            return $this->unauthorizedResponse('User not found.');
+            return errorResponse('User not found.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         unset($user['password_hash']);
@@ -53,15 +53,4 @@ class AuthFilter implements FilterInterface
         // No action required after request.
     }
 
-    private function unauthorizedResponse(string $message): ResponseInterface
-    {
-        $response = Services::response();
-
-        return $response
-            ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED)
-            ->setJSON([
-                'status'  => false,
-                'message' => $message,
-            ]);
-    }
 }
