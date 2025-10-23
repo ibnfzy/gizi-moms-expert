@@ -49,6 +49,49 @@
 
         return esc($value);
     };
+
+    $normalizeRecommendation = static function ($recommendation): array {
+        if (is_array($recommendation)) {
+            $items = $recommendation;
+        } elseif (is_string($recommendation)) {
+            $decoded = json_decode($recommendation, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $items = $decoded;
+            } else {
+                $items = [$recommendation];
+            }
+        } elseif ($recommendation === null || $recommendation === '') {
+            $items = [];
+        } else {
+            $items = [(string) $recommendation];
+        }
+
+        $items = array_map(static fn ($item): string => trim((string) $item), $items);
+        $items = array_values(array_filter($items, static fn ($item): bool => $item !== ''));
+
+        if ($items === [] && is_string($recommendation)) {
+            $raw = trim($recommendation);
+
+            if ($raw === '[]') {
+                return [];
+            }
+
+            $segments = preg_split('/(?<=\.)\s+|\r?\n+/', $raw) ?: [];
+            $segments = array_map(static fn ($item): string => trim((string) $item), $segments);
+            $segments = array_values(array_filter($segments, static fn ($item): bool => $item !== ''));
+
+            if ($segments !== []) {
+                return $segments;
+            }
+
+            if ($raw !== '') {
+                return [$raw];
+            }
+        }
+
+        return $items;
+    };
 ?>
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 px-4" data-modal="mother-detail">
     <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl">
@@ -137,9 +180,20 @@
                             <li class="rounded-lg bg-white/80 px-3 py-2 text-sm text-gray-500">Belum ada rekomendasi khusus.</li>
                         <?php else: ?>
                             <?php foreach ($recommendations as $index => $item): ?>
+                                <?php $steps = $normalizeRecommendation($item); ?>
                                 <li class="rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-gray-100">
                                     <span class="text-xs font-semibold uppercase tracking-wide text-blue-500">Langkah <?= esc($index + 1) ?></span>
-                                    <p class="mt-1 text-sm leading-relaxed text-gray-700"><?= esc($item) ?></p>
+                                    <?php if ($steps === []): ?>
+                                        <p class="mt-1 text-sm leading-relaxed text-gray-500">Belum ada rincian langkah khusus.</p>
+                                    <?php elseif (count($steps) === 1): ?>
+                                        <p class="mt-1 text-sm leading-relaxed text-gray-700"><?= esc($steps[0]) ?></p>
+                                    <?php else: ?>
+                                        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-gray-700">
+                                            <?php foreach ($steps as $step): ?>
+                                                <li><?= esc($step) ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
