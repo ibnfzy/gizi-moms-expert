@@ -2,6 +2,12 @@
 
 <?= $this->section('content') ?>
 <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 transition duration-300 ease-in-out">
+  <div class="border-b border-white/10 bg-slate-900/70 backdrop-blur-sm">
+    <div
+      class="mx-auto max-w-7xl px-4 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.35em] text-white sm:px-6 sm:text-xs lg:px-8 lg:text-sm">
+      PUSKESMAS LALANG DESA BEA NGENCUNG MANGGARAI TIMUR
+    </div>
+  </div>
   <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
     <a href="#hero" class="text-2xl font-extrabold tracking-tight text-white transition hover:opacity-80">GiziChain</a>
     <nav class="hidden items-center space-x-8 text-sm font-medium uppercase tracking-wide md:flex">
