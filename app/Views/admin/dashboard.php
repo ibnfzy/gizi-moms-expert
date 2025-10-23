@@ -18,7 +18,7 @@
                     class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Kelola
                     Data Ibu</a>
                 <a href="<?= site_url('admin/rules') ?>"
-                    class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Kelola
+                    class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Kelola
                     Rules</a>
             </div>
         </div>
@@ -43,9 +43,9 @@
                 Ulang</button>
         </div>
 
-        <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-left text-sm">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm">
                     <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
                         <tr>
                             <th scope="col" class="px-6 py-3">ID Rule</th>
