@@ -45,7 +45,7 @@ class PakarConsultationController extends BaseController
                 $mothersCache[$motherId] = $this->mothers
                     ->withUser()
                     ->where('mothers.id', $motherId)
-                    ->first() ?: null;
+                    ->get()->getRowArray() ?: null;
             }
 
             $motherRecord = $mothersCache[$motherId];
@@ -60,7 +60,7 @@ class PakarConsultationController extends BaseController
                 ->findAll();
 
             $formattedMessages = array_map(
-                fn (array $message): array => $this->formatMessage($message, $userRole),
+                fn(array $message): array => $this->formatMessage($message, $userRole),
                 $messages
             );
 

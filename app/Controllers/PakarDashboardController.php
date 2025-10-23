@@ -21,9 +21,9 @@ class PakarDashboardController extends BaseController
         $records = $this->mothers
             ->withUser()
             ->orderBy('users.name', 'ASC')
-            ->findAll();
+            ->get()->getResultArray();
 
-        $mothers = array_map(fn (array $mother): array => $this->formatter->present($mother, true, true), $records);
+        $mothers = array_map(fn(array $mother): array => $this->formatter->present($mother, true, true), $records);
 
         $statusSummary = [
             'normal'   => 0,
