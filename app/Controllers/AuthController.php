@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Libraries\JWTService;
 use App\Models\UserModel;
+use DateInterval;
 
 class AuthController extends BaseController
 {
@@ -47,7 +48,7 @@ class AuthController extends BaseController
 
             try {
                 $jwtService = new JWTService();
-                $token = $jwtService->generateToken($user);
+                $token = $jwtService->generateToken($user, new DateInterval('P1D'));
             } catch (\Throwable $exception) {
                 log_message('error', 'Failed to generate auth token: ' . $exception->getMessage());
 
