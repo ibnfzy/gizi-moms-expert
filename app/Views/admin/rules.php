@@ -29,18 +29,18 @@
         ></div>
 
         <div class="mt-6 overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 border border-black text-left text-sm dark:divide-black/60 dark:border-gray-300">
+            <table class="min-w-full border-collapse border border-black text-left text-sm dark:border-gray-300">
                 <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                     <tr>
-                        <th scope="col" class="px-4 py-3">Nama Rule</th>
-                        <th scope="col" class="px-4 py-3">Versi</th>
-                        <th scope="col" class="px-4 py-3">Status</th>
-                        <th scope="col" class="px-4 py-3 text-right">Aksi</th>
+                        <th scope="col" class="border border-black px-4 py-3 dark:border-gray-300">Nama Rule</th>
+                        <th scope="col" class="border border-black px-4 py-3 dark:border-gray-300">Versi</th>
+                        <th scope="col" class="border border-black px-4 py-3 dark:border-gray-300">Status</th>
+                        <th scope="col" class="border border-black px-4 py-3 text-right dark:border-gray-300">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="rulesTableBody" class="divide-y divide-gray-100 text-gray-700 dark:divide-black/60 dark:text-slate-200">
+                <tbody id="rulesTableBody" class="text-gray-700 dark:text-slate-200">
                     <tr data-loader-row>
-                        <td colspan="4" class="px-4 py-6 text-center text-sm text-gray-500 dark:text-slate-400">
+                        <td colspan="4" class="border border-black px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">
                             <div class="flex items-center justify-center gap-3">
                                 <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
                                 Memuat data rules...

@@ -40,7 +40,7 @@ $normalizedHeaders = array_map(static function ($header) {
     <?php endif; ?>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 border border-black dark:divide-black/60 dark:border-gray-300 dark:bg-slate-950/40">
+        <table class="min-w-full border-collapse border border-black dark:border-gray-300 dark:bg-slate-950/40">
             <?php if (! empty($normalizedHeaders)) : ?>
                 <thead class="bg-gray-50 dark:bg-slate-950/60">
                     <tr>
@@ -48,7 +48,7 @@ $normalizedHeaders = array_map(static function ($header) {
                             $label = $header['label'];
                             $align = $header['align'];
                             $extraClass = $header['class'];
-                            $thClass = trim('px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-slate-300 ' . ($alignClasses[$align] ?? $alignClasses['left']) . ' ' . $extraClass);
+                            $thClass = trim('border border-black px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:border-gray-300 dark:text-slate-300 ' . ($alignClasses[$align] ?? $alignClasses['left']) . ' ' . $extraClass);
                             ?>
                             <th scope="col" class="<?= esc($thClass) ?>">
                                 <?= esc($label) ?>
@@ -57,10 +57,10 @@ $normalizedHeaders = array_map(static function ($header) {
                     </tr>
                 </thead>
             <?php endif; ?>
-            <tbody class="divide-y divide-gray-200 bg-white dark:divide-black/60 dark:bg-slate-950/30 dark:text-slate-200">
+            <tbody class="bg-white dark:bg-slate-950/30 dark:text-slate-200">
                 <?php if (empty($rows)) : ?>
                     <tr>
-                        <td colspan="<?= count($normalizedHeaders) ?>" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-slate-400">
+                        <td colspan="<?= count($normalizedHeaders) ?>" class="border border-black px-6 py-4 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">
                             <?= esc($emptyMessage) ?>
                         </td>
                     </tr>
@@ -82,7 +82,7 @@ $normalizedHeaders = array_map(static function ($header) {
                                     $cellClass = '';
                                     $cellAlign = $normalizedHeaders[$index]['align'] ?? 'left';
                                 }
-                                $tdClass = trim('px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-slate-200 ' . ($alignClasses[$cellAlign] ?? $alignClasses['left']) . ' ' . $cellClass);
+                                $tdClass = trim('border border-black px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:border-gray-300 dark:text-slate-200 ' . ($alignClasses[$cellAlign] ?? $alignClasses['left']) . ' ' . $cellClass);
                                 ?>
                                 <td class="<?= esc($tdClass) ?>">
                                     <?php if ($raw) : ?>

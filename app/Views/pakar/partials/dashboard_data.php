@@ -61,21 +61,21 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-200 border border-black dark:divide-black/60 dark:border-gray-300">
+            <table class="min-w-full border-collapse border border-black dark:border-gray-300">
             <thead class="bg-slate-50 text-left text-sm font-semibold text-slate-600 dark:bg-slate-950/70 dark:text-slate-200">
                 <tr>
-                    <th scope="col" class="px-6 py-3">Nama</th>
-                    <th scope="col" class="px-6 py-3">Umur</th>
-                    <th scope="col" class="px-6 py-3">Usia Bayi</th>
-                    <th scope="col" class="px-6 py-3">Status</th>
-                    <th scope="col" class="px-6 py-3">Terakhir Diperbarui</th>
-                    <th scope="col" class="px-6 py-3 text-right">Aksi</th>
+                    <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Nama</th>
+                    <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Umur</th>
+                    <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Usia Bayi</th>
+                    <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Status</th>
+                    <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Terakhir Diperbarui</th>
+                    <th scope="col" class="border border-black px-6 py-3 text-right dark:border-gray-300">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 text-sm text-slate-700 dark:divide-black/60 dark:text-slate-200">
+            <tbody class="text-sm text-slate-700 dark:text-slate-200">
                 <?php if ($mothers === []): ?>
                     <tr>
-                        <td colspan="6" class="px-6 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                        <td colspan="6" class="border border-black px-6 py-6 text-center text-sm text-slate-500 dark:border-gray-300 dark:text-slate-400">
                             Belum ada data ibu menyusui yang dapat ditampilkan.
                         </td>
                     </tr>
@@ -94,18 +94,18 @@
                             $statusLabel = $mother['status']['label'] ?? 'Normal';
                         ?>
                         <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-900/60">
-                            <td class="px-6 py-4 font-medium text-slate-900 dark:text-slate-100"><?= esc($mother['name'] ?? '-') ?></td>
-                            <td class="px-6 py-4"><?= $formatValue($mother['profile']['umur'] ?? null, ' tahun') ?></td>
-                            <td class="px-6 py-4"><?= $formatValue($mother['profile']['usia_bayi_bln'] ?? null, ' bln') ?></td>
-                            <td class="px-6 py-4">
+                            <td class="border border-black px-6 py-4 font-medium text-slate-900 dark:border-gray-300 dark:text-slate-100"><?= esc($mother['name'] ?? '-') ?></td>
+                            <td class="border border-black px-6 py-4 dark:border-gray-300"><?= $formatValue($mother['profile']['umur'] ?? null, ' tahun') ?></td>
+                            <td class="border border-black px-6 py-4 dark:border-gray-300"><?= $formatValue($mother['profile']['usia_bayi_bln'] ?? null, ' bln') ?></td>
+                            <td class="border border-black px-6 py-4 dark:border-gray-300">
                                 <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold <?= esc($statusBadge) ?>">
                                     <?= esc($statusLabel) ?>
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                            <td class="border border-black px-6 py-4 text-sm text-slate-500 dark:border-gray-300 dark:text-slate-400">
                                 <?= esc($mother['latest_inference']['created_at_human'] ?? '-') ?>
                             </td>
-                            <td class="px-6 py-4 text-right">
+                            <td class="border border-black px-6 py-4 text-right dark:border-gray-300">
                                 <button
                                     type="button"
                                     class="inline-flex items-center rounded-md border border-giziblue px-3 py-2 text-xs font-semibold text-giziblue transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-black/70 dark:text-blue-300 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950"

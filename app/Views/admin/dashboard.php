@@ -45,18 +45,18 @@
 
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/40 dark:ring-black/60">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 border border-black text-left text-sm dark:divide-black/60 dark:border-gray-300">
+                <table class="min-w-full border-collapse border border-black text-left text-sm dark:border-gray-300">
                     <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                         <tr>
-                            <th scope="col" class="px-6 py-3">ID Rule</th>
-                            <th scope="col" class="px-6 py-3">Nama</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3 text-right">Terakhir Diperbarui</th>
+                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">ID Rule</th>
+                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Nama</th>
+                            <th scope="col" class="border border-black px-6 py-3 dark:border-gray-300">Status</th>
+                            <th scope="col" class="border border-black px-6 py-3 text-right dark:border-gray-300">Terakhir Diperbarui</th>
                         </tr>
                     </thead>
-                    <tbody data-rules-body class="divide-y divide-gray-100 text-gray-700 dark:divide-black/60 dark:text-slate-200">
+                    <tbody data-rules-body class="text-gray-700 dark:text-slate-200">
                         <tr data-rules-loader-row>
-                            <td colspan="5" class="px-6 py-8">
+                            <td colspan="5" class="border border-black px-6 py-8 dark:border-gray-300">
                                 <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
                                     <div class="h-6 w-6 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin"
                                         aria-hidden="true"></div>
