@@ -1,24 +1,24 @@
 <?php
-    $request = service('request');
-    $currentPath = trim($request->uri->getPath(), '/');
+$request = service('request');
+$currentPath = trim($request->getUri()->getPath(), '/');
 
-    $navigation = [
-        [
-            'label' => 'Dashboard',
-            'href'  => site_url('pakar/dashboard'),
-            'match' => 'pakar/dashboard',
-        ],
-        [
-            'label' => 'Konsultasi',
-            'href'  => site_url('pakar/consultations'),
-            'match' => 'pakar/consultations',
-        ],
-        [
-            'label' => 'Panduan Status',
-            'href'  => '#panduan-status',
-            'match' => '',
-        ],
-    ];
+$navigation = [
+    [
+        'label' => 'Dashboard',
+        'href'  => site_url('pakar/dashboard'),
+        'match' => 'pakar/dashboard',
+    ],
+    [
+        'label' => 'Konsultasi',
+        'href'  => site_url('pakar/consultations'),
+        'match' => 'pakar/consultations',
+    ],
+    [
+        'label' => 'Panduan Status',
+        'href'  => '#panduan-status',
+        'match' => '',
+    ],
+];
 ?>
 
 <nav class="flex h-full flex-col gap-6 px-4 py-6">
@@ -32,10 +32,8 @@
                     : 'text-gray-600 hover:bg-gray-50';
             ?>
                 <li>
-                    <a
-                        href="<?= esc($item['href']) ?>"
-                        class="flex items-center justify-between gap-3 rounded-lg border border-transparent px-3 py-2 transition <?= $classes ?>"
-                    >
+                    <a href="<?= esc($item['href']) ?>"
+                        class="flex items-center justify-between gap-3 rounded-lg border border-transparent px-3 py-2 transition <?= $classes ?>">
                         <span><?= esc($item['label']) ?></span>
                         <?php if ($isActive): ?>
                             <span class="h-2 w-2 rounded-full bg-blue-500"></span>
@@ -49,7 +47,8 @@
     <div class="rounded-xl bg-blue-50 p-4 text-xs text-blue-600">
         <p class="font-semibold">Tips</p>
         <p class="mt-1 leading-relaxed">
-            Gunakan panel konsultasi untuk memantau percakapan aktif dengan ibu menyusui dan tindak lanjuti rekomendasi dari hasil inferensi.
+            Gunakan panel konsultasi untuk memantau percakapan aktif dengan ibu menyusui dan tindak lanjuti rekomendasi dari
+            hasil inferensi.
         </p>
     </div>
 </nav>
