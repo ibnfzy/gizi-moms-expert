@@ -24,10 +24,7 @@ class RuleController extends BaseController
 
         $data = array_map([$this, 'formatRule'], $rules);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $data,
-        ]);
+        return successResponse($data, 'Daftar rule berhasil dimuat.');
     }
 
     public function create()
@@ -51,34 +48,26 @@ class RuleController extends BaseController
         }
 
         if (! $this->validateData($payload, $validationRules)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status' => false,
-                    'errors' => $this->validator->getErrors(),
-                ]);
+            return errorResponse(
+                'Data rule tidak valid.',
+                ResponseInterface::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()
+            );
         }
 
         $resolution = $this->resolveJsonRule($payload, null, ! $usingJsonRule);
 
         if (($resolution['error'] ?? null) !== null) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => $resolution['error'],
-                ]);
+            return errorResponse(
+                $resolution['error'],
+                ResponseInterface::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         $jsonRule = $resolution['json'] ?? null;
 
         if ($jsonRule === null) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Detail rule tidak valid.',
-                ]);
+            return errorResponse('Detail rule tidak valid.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         $ruleId = $this->rules->insert([
@@ -92,23 +81,16 @@ class RuleController extends BaseController
         ], true);
 
         if (! $ruleId) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Gagal menyimpan rule baru.',
-                ]);
+            return errorResponse('Gagal menyimpan rule baru.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $rule = $this->rules->find($ruleId);
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_CREATED)
-            ->setJSON([
-                'status'  => true,
-                'message' => 'Rule berhasil ditambahkan.',
-                'data'    => $this->formatRule($rule ?? []),
-            ]);
+        return successResponse(
+            $this->formatRule($rule ?? []),
+            'Rule berhasil ditambahkan.',
+            ResponseInterface::HTTP_CREATED
+        );
     }
 
     public function update(int $id)
@@ -116,12 +98,7 @@ class RuleController extends BaseController
         $existing = $this->rules->find($id);
 
         if (! $existing) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Rule tidak ditemukan.',
-                ]);
+            return errorResponse('Rule tidak ditemukan.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         $payload = get_request_data($this->request);
@@ -142,35 +119,23 @@ class RuleController extends BaseController
         ]));
 
         if ($fields === [] && $detailPayload === []) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak ada data yang diubah.',
-                ]);
+            return errorResponse('Tidak ada data yang diubah.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         $existingDetails = $this->decodeRuleDetails($existing['json_rule'] ?? '') ?: [];
         $resolution = $this->resolveJsonRule($payload, $existingDetails, false);
 
         if (($resolution['error'] ?? null) !== null) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => $resolution['error'],
-                ]);
+            return errorResponse(
+                $resolution['error'],
+                ResponseInterface::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         if (($resolution['json'] ?? null) !== null) {
             $fields['json_rule'] = $resolution['json'];
         } elseif (array_key_exists('json_rule', $fields) && ! $this->isValidJson((string) $fields['json_rule'])) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Format JSON rule tidak valid.',
-                ]);
+            return errorResponse('Format JSON rule tidak valid.', ResponseInterface::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         if (array_key_exists('is_active', $fields)) {
@@ -178,21 +143,15 @@ class RuleController extends BaseController
         }
 
         if (! $this->rules->update($id, $fields)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Gagal memperbarui rule.',
-                ]);
+            return errorResponse('Gagal memperbarui rule.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $updated = $this->rules->find($id);
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Rule berhasil diperbarui.',
-            'data'    => $this->formatRule($updated ?? []),
-        ]);
+        return successResponse(
+            $this->formatRule($updated ?? []),
+            'Rule berhasil diperbarui.'
+        );
     }
 
     public function delete(int $id)
@@ -200,27 +159,14 @@ class RuleController extends BaseController
         $existing = $this->rules->find($id);
 
         if (! $existing) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Rule tidak ditemukan.',
-                ]);
+            return errorResponse('Rule tidak ditemukan.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         if (! $this->rules->delete($id)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Gagal menghapus rule.',
-                ]);
+            return errorResponse('Gagal menghapus rule.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Rule berhasil dihapus.',
-        ]);
+        return successResponse(null, 'Rule berhasil dihapus.');
     }
 
     private function isValidJson(string $json): bool

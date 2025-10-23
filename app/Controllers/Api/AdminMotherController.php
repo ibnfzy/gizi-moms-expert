@@ -33,10 +33,7 @@ class AdminMotherController extends BaseController
 
         $payload = array_map(fn(array $mother): array => $this->formatter->present($mother, false, false), $records);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Daftar ibu berhasil dimuat.');
     }
 
     public function show(int $id)
@@ -52,10 +49,7 @@ class AdminMotherController extends BaseController
 
         $payload = $this->formatter->present($mother, true, true);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Data ibu berhasil dimuat.');
     }
 
     public function updateEmail(int $id)
@@ -79,21 +73,18 @@ class AdminMotherController extends BaseController
         ];
 
         if (! $this->validateData($payload, $rules)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status' => false,
-                    'errors' => $this->validator->getErrors(),
-                ]);
+            return errorResponse(
+                'Data email tidak valid.',
+                ResponseInterface::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()
+            );
         }
 
         if (empty($mother['user_id'])) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Data pengguna untuk ibu ini tidak tersedia.',
-                ]);
+            return errorResponse(
+                'Data pengguna untuk ibu ini tidak tersedia.',
+                ResponseInterface::HTTP_BAD_REQUEST
+            );
         }
 
         $updated = $this->users->update($mother['user_id'], [
@@ -101,18 +92,13 @@ class AdminMotherController extends BaseController
         ]);
 
         if (! $updated) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat memperbarui email pengguna.',
-                ]);
+            return errorResponse(
+                'Tidak dapat memperbarui email pengguna.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Email berhasil diperbarui.',
-        ]);
+        return successResponse(null, 'Email berhasil diperbarui.');
     }
 
     public function updatePassword(int $id)
@@ -131,21 +117,18 @@ class AdminMotherController extends BaseController
         ];
 
         if (! $this->validateData($payload, $rules)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status' => false,
-                    'errors' => $this->validator->getErrors(),
-                ]);
+            return errorResponse(
+                'Password tidak valid.',
+                ResponseInterface::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()
+            );
         }
 
         if (empty($mother['user_id'])) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Data pengguna untuk ibu ini tidak tersedia.',
-                ]);
+            return errorResponse(
+                'Data pengguna untuk ibu ini tidak tersedia.',
+                ResponseInterface::HTTP_BAD_REQUEST
+            );
         }
 
         $updated = $this->users->update($mother['user_id'], [
@@ -153,18 +136,13 @@ class AdminMotherController extends BaseController
         ]);
 
         if (! $updated) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat memperbarui password pengguna.',
-                ]);
+            return errorResponse(
+                'Tidak dapat memperbarui password pengguna.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Password berhasil diperbarui.',
-        ]);
+        return successResponse(null, 'Password berhasil diperbarui.');
     }
 
     public function delete(int $id)
@@ -196,27 +174,14 @@ class AdminMotherController extends BaseController
         }
 
         if (! $result) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat menghapus data ibu.',
-                ]);
+            return errorResponse('Tidak dapat menghapus data ibu.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Data ibu berhasil dihapus.',
-        ]);
+        return successResponse(null, 'Data ibu berhasil dihapus.');
     }
 
     private function notFound(): ResponseInterface
     {
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-            ->setJSON([
-                'status'  => false,
-                'message' => 'Data ibu tidak ditemukan.',
-            ]);
+        return errorResponse('Data ibu tidak ditemukan.', ResponseInterface::HTTP_NOT_FOUND);
     }
 }

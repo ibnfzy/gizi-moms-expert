@@ -32,23 +32,16 @@ class InferenceController extends BaseController
         $motherId = $requestData['mother_id'] ?? null;
 
         if (! is_numeric($motherId)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'mother_id is required and must be a valid number.',
-                ]);
+            return errorResponse(
+                'mother_id is required and must be a valid number.',
+                ResponseInterface::HTTP_BAD_REQUEST
+            );
         }
 
         $mother = $this->mothers->find((int) $motherId);
 
         if (! $mother) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Mother data not found.',
-                ]);
+            return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         $facts = $this->buildFactsFromMother($mother);
@@ -69,20 +62,17 @@ class InferenceController extends BaseController
         ]);
 
         if ($saved === false) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Failed to save inference result.',
-                ]);
+            return errorResponse('Failed to save inference result.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->response->setJSON([
-            'status'          => true,
-            'facts'           => $inferenceResult['facts'],
-            'fired_rules'     => $inferenceResult['fired_rules'],
-            'recommendations' => $inferenceResult['recommendations'],
-        ]);
+        return successResponse(
+            [
+                'facts'           => $inferenceResult['facts'],
+                'fired_rules'     => $inferenceResult['fired_rules'],
+                'recommendations' => $inferenceResult['recommendations'],
+            ],
+            'Inference executed successfully.'
+        );
     }
 
     /**

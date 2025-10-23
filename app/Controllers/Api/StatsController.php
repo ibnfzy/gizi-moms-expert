@@ -19,9 +19,6 @@ class StatsController extends BaseController
     {
         $stats = $this->statsService->getOverviewStats();
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $stats,
-        ]);
+        return successResponse($stats, 'Statistics retrieved successfully.');
     }
 }
