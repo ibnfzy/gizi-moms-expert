@@ -31,13 +31,13 @@
     </div>
   </div>
   <div id="mobileMenu" class="mx-auto hidden max-w-7xl space-y-2 px-4 pb-6 sm:px-6 lg:px-8 md:hidden">
-    <a href="#features"
+    <a href="#features" data-mobile-link="primary"
       class="block rounded-lg px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white">Fitur</a>
-    <a href="#roles"
+    <a href="#roles" data-mobile-link="primary"
       class="block rounded-lg px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white">Peran</a>
-    <a href="#contact"
+    <a href="#contact" data-mobile-link="primary"
       class="block rounded-lg px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white">Kontak</a>
-    <a href="/login"
+    <a href="/login" data-mobile-link="login"
       class="block rounded-lg bg-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/30">Login</a>
   </div>
 </header>
@@ -202,6 +202,8 @@
   const loginDropdown = document.getElementById('loginDropdown');
   const mobileButton = document.getElementById('mobileMenuButton');
   const mobileMenu = document.getElementById('mobileMenu');
+  const mobileLinks = mobileMenu?.querySelectorAll('[data-mobile-link="primary"]');
+  const mobileLoginLink = mobileMenu?.querySelector('[data-mobile-link="login"]');
   const downloadHeader = document.getElementById('downloadHeader');
 
   if (!header) {
@@ -238,6 +240,25 @@
       mobileButton?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
       mobileButton?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
       downloadHeader?.classList.remove('shadow-green-500/30');
+    }
+
+    mobileLinks?.forEach(link => {
+      link.classList.toggle('text-slate-800', scrolled);
+      link.classList.toggle('hover:bg-slate-100', scrolled);
+      link.classList.toggle('hover:text-slate-900', scrolled);
+      link.classList.toggle('text-white/80', !scrolled);
+      link.classList.toggle('hover:bg-white/10', !scrolled);
+      link.classList.toggle('hover:text-white', !scrolled);
+    });
+
+    if (mobileLoginLink) {
+      if (scrolled) {
+        mobileLoginLink.classList.remove('bg-white/20', 'text-white', 'hover:bg-white/30');
+        mobileLoginLink.classList.add('border', 'border-slate-200', 'bg-white', 'text-slate-900', 'hover:bg-slate-100');
+      } else {
+        mobileLoginLink.classList.add('bg-white/20', 'text-white', 'hover:bg-white/30');
+        mobileLoginLink.classList.remove('border', 'border-slate-200', 'bg-white', 'text-slate-900', 'hover:bg-slate-100');
+      }
     }
   };
 
