@@ -30,7 +30,7 @@
 ?>
 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     <?php foreach ($cards as $card): ?>
-        <div class="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-slate-800/80 dark:bg-slate-900/70 dark:ring-slate-800/80">
+        <div class="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:ring-black/60">
             <div class="absolute inset-x-0 top-0 h-1 <?= esc($card['color']) ?> dark:opacity-80"></div>
             <div class="p-6">
                 <p class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"><?= esc($card['label']) ?></p>
@@ -46,23 +46,23 @@
     <?php endforeach; ?>
 </div>
 
-<div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-slate-800/80 dark:bg-slate-900/70 dark:ring-slate-800/80">
-    <div class="border-b border-slate-100 px-6 py-4 dark:border-slate-800">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Daftar Ibu Menyusui</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Status dihitung dari hasil inferensi terbaru.</p>
+    <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:ring-black/60">
+        <div class="border-b border-slate-100 px-6 py-4 dark:border-black/70">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Daftar Ibu Menyusui</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Status dihitung dari hasil inferensi terbaru.</p>
+                </div>
+                <button
+                    type="button"
+                    class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-black/70 dark:text-blue-300 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950"
+                    data-dashboard-refresh="<?= site_url('pakar/dashboard/data') ?>"
+                >Muat Ulang</button>
             </div>
-            <button
-                type="button"
-                class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-blue-500/40 dark:text-blue-300 dark:hover:bg-slate-800/60 dark:focus:ring-offset-slate-900"
-                data-dashboard-refresh="<?= site_url('pakar/dashboard/data') ?>"
-            >Muat Ulang</button>
         </div>
-    </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200 border border-slate-200/80 dark:divide-slate-800 dark:border-slate-800/80">
-            <thead class="bg-slate-50 text-left text-sm font-semibold text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 border border-slate-200/80 dark:divide-black/60 dark:border-black/70">
+            <thead class="bg-slate-50 text-left text-sm font-semibold text-slate-600 dark:bg-slate-950/70 dark:text-slate-200">
                 <tr>
                     <th scope="col" class="px-6 py-3">Nama</th>
                     <th scope="col" class="px-6 py-3">Umur</th>
@@ -72,7 +72,7 @@
                     <th scope="col" class="px-6 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 text-sm text-slate-700 dark:divide-slate-800 dark:text-slate-300">
+            <tbody class="divide-y divide-slate-100 text-sm text-slate-700 dark:divide-black/60 dark:text-slate-200">
                 <?php if ($mothers === []): ?>
                     <tr>
                         <td colspan="6" class="px-6 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
@@ -93,7 +93,7 @@
                             $statusBadge = trim($baseBadge . ' ' . $badgeDark);
                             $statusLabel = $mother['status']['label'] ?? 'Normal';
                         ?>
-                        <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-800/70">
+                        <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-900/60">
                             <td class="px-6 py-4 font-medium text-slate-900 dark:text-slate-100"><?= esc($mother['name'] ?? '-') ?></td>
                             <td class="px-6 py-4"><?= $formatValue($mother['profile']['umur'] ?? null, ' tahun') ?></td>
                             <td class="px-6 py-4"><?= $formatValue($mother['profile']['usia_bayi_bln'] ?? null, ' bln') ?></td>
@@ -108,7 +108,7 @@
                             <td class="px-6 py-4 text-right">
                                 <button
                                     type="button"
-                                    class="inline-flex items-center rounded-md border border-giziblue px-3 py-2 text-xs font-semibold text-giziblue transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-blue-500/60 dark:text-blue-300 dark:hover:bg-slate-800/60 dark:focus:ring-offset-slate-900"
+                                    class="inline-flex items-center rounded-md border border-giziblue px-3 py-2 text-xs font-semibold text-giziblue transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-black/70 dark:text-blue-300 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950"
                                     data-mother-detail="<?= site_url('pakar/dashboard/mothers') ?>/<?= esc($mother['id'] ?? 0) ?>"
                                 >Lihat Detail</button>
                             </td>
@@ -116,6 +116,6 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 </div>

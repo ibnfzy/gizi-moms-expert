@@ -27,28 +27,28 @@ $normalizedHeaders = array_map(static function ($header) {
     ];
 }, $headers);
 ?>
-<div class="bg-white border border-gray-200 rounded-xl shadow-sm shadow-slate-100">
+<div class="rounded-xl border border-gray-200 bg-white shadow-sm shadow-slate-100 dark:border-black/70 dark:bg-slate-950/60 dark:shadow-black/40">
     <?php if ($title || $description) : ?>
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="border-b border-gray-200 px-6 py-4 dark:border-black/70">
             <?php if ($title) : ?>
-                <h2 class="text-lg font-semibold text-gray-900"><?= esc($title) ?></h2>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100"><?= esc($title) ?></h2>
             <?php endif; ?>
             <?php if ($description) : ?>
-                <p class="text-sm text-gray-500 mt-1"><?= esc($description) ?></p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400"><?= esc($description) ?></p>
             <?php endif; ?>
         </div>
     <?php endif; ?>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:divide-black/60 dark:border-black/70 dark:bg-slate-950/40">
             <?php if (! empty($normalizedHeaders)) : ?>
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 dark:bg-slate-950/60">
                     <tr>
                         <?php foreach ($normalizedHeaders as $header) :
                             $label = $header['label'];
                             $align = $header['align'];
                             $extraClass = $header['class'];
-                            $thClass = trim('px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ' . ($alignClasses[$align] ?? $alignClasses['left']) . ' ' . $extraClass);
+                            $thClass = trim('px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-slate-300 ' . ($alignClasses[$align] ?? $alignClasses['left']) . ' ' . $extraClass);
                             ?>
                             <th scope="col" class="<?= esc($thClass) ?>">
                                 <?= esc($label) ?>
@@ -57,16 +57,16 @@ $normalizedHeaders = array_map(static function ($header) {
                     </tr>
                 </thead>
             <?php endif; ?>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-200 bg-white dark:divide-black/60 dark:bg-slate-950/30 dark:text-slate-200">
                 <?php if (empty($rows)) : ?>
                     <tr>
-                        <td colspan="<?= count($normalizedHeaders) ?>" class="px-6 py-4 text-sm text-gray-500 text-center">
+                        <td colspan="<?= count($normalizedHeaders) ?>" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-slate-400">
                             <?= esc($emptyMessage) ?>
                         </td>
                     </tr>
                 <?php else : ?>
                     <?php foreach ($rows as $row) :
-                        $rowClass = trim($row['class'] ?? 'hover:bg-gray-50');
+                        $rowClass = trim($row['class'] ?? 'hover:bg-gray-50 dark:hover:bg-slate-900/60');
                         $cells = $row['cells'] ?? [];
                         ?>
                         <tr class="<?= esc($rowClass) ?>">
@@ -82,7 +82,7 @@ $normalizedHeaders = array_map(static function ($header) {
                                     $cellClass = '';
                                     $cellAlign = $normalizedHeaders[$index]['align'] ?? 'left';
                                 }
-                                $tdClass = trim('px-6 py-4 whitespace-nowrap text-sm ' . ($alignClasses[$cellAlign] ?? $alignClasses['left']) . ' ' . $cellClass);
+                                $tdClass = trim('px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-slate-200 ' . ($alignClasses[$cellAlign] ?? $alignClasses['left']) . ' ' . $cellClass);
                                 ?>
                                 <td class="<?= esc($tdClass) ?>">
                                     <?php if ($raw) : ?>

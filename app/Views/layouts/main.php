@@ -60,17 +60,17 @@
 </head>
 
 <body
-  class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-150 dark:bg-slate-900 dark:text-slate-100">
+  class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-150 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-black dark:text-slate-100">
   <div class="flex flex-col min-h-screen">
     <?= $this->include('components/navbar') ?>
 
     <div class="flex flex-1 overflow-hidden">
       <aside
-        class="hidden w-64 overflow-y-auto border-r border-slate-200 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 md:block">
+        class="hidden w-64 overflow-y-auto border-r border-slate-200 bg-white/80 backdrop-blur-sm dark:border-black/70 dark:bg-slate-950/70 md:block">
         <?= $this->include('components/sidebar') ?>
       </aside>
 
-      <main class="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 via-white to-slate-200 p-6 dark:bg-slate-950/40">
+      <main class="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 via-white to-slate-200 p-6 dark:bg-gradient-to-br dark:from-slate-950/90 dark:via-slate-900/80 dark:to-black/70">
         <div class="mx-auto max-w-6xl">
           <?= $this->renderSection('content') ?>
         </div>
