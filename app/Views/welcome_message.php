@@ -10,21 +10,8 @@
       <a href="#contact" class="nav-link text-white/80 transition hover:text-white">Kontak</a>
     </nav>
     <div class="flex items-center space-x-4">
-      <div class="relative">
-        <button id="loginToggle"
-          class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">
-          Login
-          <?= view('components/icon', [
-                        'name' => 'chevron-down',
-                        'class' => 'h-4 w-4',
-                    ]) ?>
-        </button>
-        <div id="loginDropdown"
-          class="absolute right-0 mt-3 hidden w-40 overflow-hidden rounded-xl bg-white/95 text-sm font-semibold text-slate-700 shadow-xl ring-1 ring-slate-200/70 backdrop-blur">
-          <a href="/login" class="block px-4 py-3 transition hover:bg-slate-100">Admin</a>
-          <a href="/login" class="block px-4 py-3 transition hover:bg-slate-100">Pakar</a>
-        </div>
-      </div>
+      <a href="/login"
+        class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">Login</a>
       <a id="downloadHeader" href="#download"
         class="rounded-full bg-gizigreen px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/20 transition hover:scale-105 hover:shadow-green-500/40">Download
         APK</a>
@@ -44,13 +31,8 @@
       class="block rounded-lg px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white">Peran</a>
     <a href="#contact"
       class="block rounded-lg px-4 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white">Kontak</a>
-    <div class="rounded-xl bg-white/10 p-4">
-      <p class="text-xs font-semibold uppercase tracking-wide text-white/60">Login Sebagai</p>
-      <div class="mt-3 space-y-2 text-sm font-semibold text-white">
-        <a href="/login" class="block rounded-lg bg-white/20 px-4 py-2 transition hover:bg-white/30">Admin</a>
-        <a href="/login" class="block rounded-lg bg-white/20 px-4 py-2 transition hover:bg-white/30">Pakar</a>
-      </div>
-    </div>
+    <a href="/login"
+      class="block rounded-lg bg-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/30">Login</a>
   </div>
 </header>
 

@@ -16,6 +16,7 @@ class AuthController extends BaseController
 
         if ($this->request->getMethod() === 'post') {
             $rules = [
+                'role'     => 'required|in_list[admin,pakar]',
                 'email'    => 'required|valid_email',
                 'password' => 'required',
             ];
@@ -26,6 +27,7 @@ class AuthController extends BaseController
                 return redirect()->back()->withInput()->with('error', $errorMessage ?: 'Validasi gagal.');
             }
 
+            $role = strtolower($this->request->getPost('role'));
             $email = $this->request->getPost('email');
             $password = $this->request->getPost('password');
 
@@ -34,6 +36,10 @@ class AuthController extends BaseController
 
             if (! $user || ! password_verify($password, $user['password_hash'] ?? '')) {
                 return redirect()->back()->withInput()->with('error', 'Email atau kata sandi tidak valid.');
+            }
+
+            if (strtolower($user['role'] ?? '') !== $role) {
+                return redirect()->back()->withInput()->with('error', 'Peran yang dipilih tidak sesuai dengan akun.');
             }
 
             $session->set([

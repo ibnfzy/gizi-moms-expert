@@ -41,6 +41,26 @@
             <form action="<?= site_url('login') ?>" method="post" class="space-y-6">
                 <?= csrf_field() ?>
                 <div class="space-y-2">
+                    <label for="role" class="text-sm font-medium text-gray-700">Login sebagai</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 0 1 .894.553l5 10A1 1 0 0 1 15 15H5a1 1 0 0 1-.894-1.447l5-10A1 1 0 0 1 10 3zm0 3.618L6.618 13h6.764L10 6.618z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        <select id="role" name="role" required class="w-full appearance-none rounded-lg border border-gray-300 bg-white py-3 pl-11 pr-10 text-left text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled <?= old('role') ? '' : 'selected' ?>>Pilih peran</option>
+                            <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
+                            <option value="pakar" <?= old('role') === 'pakar' ? 'selected' : '' ?>>Pakar</option>
+                        </select>
+                        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.939l3.71-3.71a.75.75 0 0 1 1.06 1.061l-4.24 4.24a.75.75 0 0 1-1.06 0l-4.24-4.24a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="space-y-2">
                     <label for="email" class="text-sm font-medium text-gray-700">Email</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -74,14 +94,6 @@
                     Masuk Sekarang
                 </button>
             </form>
-
-            <div class="mt-8 text-center text-sm text-gray-600">
-                <p class="mb-3">Login sebagai:</p>
-                <div class="flex items-center justify-center gap-3">
-                    <a href="<?= site_url('admin') ?>" class="px-4 py-2 rounded-full bg-blue-50 text-blue-600 hover:underline transition-all duration-200">Admin</a>
-                    <a href="<?= site_url('pakar') ?>" class="px-4 py-2 rounded-full bg-blue-50 text-blue-600 hover:underline transition-all duration-200">Pakar</a>
-                </div>
-            </div>
 
             <p class="text-center text-gray-500 text-sm mt-6">© 2025 GiziChain. Semua hak dilindungi.</p>
         </div>
