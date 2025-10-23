@@ -16,7 +16,7 @@
       </div>
       <div class="flex flex-wrap gap-3">
         <a href="<?= site_url('admin/mothers') ?>"
-          class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Kelola
+          class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-blue dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Kelola
           Data Ibu</a>
         <a href="<?= site_url('admin/rules') ?>"
           class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950">Kelola
@@ -41,7 +41,7 @@
           pengetahuan.</p>
       </div>
       <button type="button" data-refresh-rules
-        class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Muat
+        class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-blue dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Muat
         Ulang</button>
     </div>
 
