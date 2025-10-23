@@ -32,9 +32,9 @@
                 <p class="text-sm text-gray-600 mt-2">Sistem Pakar Kebutuhan Gizi Ibu Menyusui</p>
             </div>
 
-            <?php if (session()->has('error')): ?>
+            <?php if ($errorMessage = session()->getFlashdata('error')): ?>
                 <div class="bg-red-100 text-red-700 rounded-md p-3 text-sm mb-6">
-                    <?= esc(session('error')) ?>
+                    <?= esc($errorMessage) ?>
                 </div>
             <?php endif; ?>
 
