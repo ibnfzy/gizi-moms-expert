@@ -208,7 +208,7 @@ const registerPakarComponents = (alpineInstance) => {
             }
             return value;
         },
-    }));
+    });
 
     alpineInstance.data('pakarConsultation', () => ({
         consultations: [],
