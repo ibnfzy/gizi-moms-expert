@@ -79,8 +79,7 @@ const fetchJson = async (url, options = {}) => {
     return payload ?? {};
 };
 
-document.addEventListener('alpine:init', () => {
-    Alpine.data('pakarDashboard', (config = {}) => ({
+const createPakarDashboard = (config = {}) => ({
         cards: [
             {
                 key: 'normal',
@@ -204,9 +203,9 @@ document.addEventListener('alpine:init', () => {
             }
             return value;
         },
-    }));
+    });
 
-    Alpine.data('pakarConsultation', () => ({
+const createPakarConsultation = () => ({
         consultations: [],
         selectedId: null,
         messagesEndpoint: '/api/messages',
@@ -402,5 +401,29 @@ document.addEventListener('alpine:init', () => {
                 this.feedback = { type: 'error', message: error.message || 'Pesan gagal dikirim.' };
             }
         },
-    }));
-});
+    });
+
+const registerPakarComponents = (alpineInstance) => {
+    if (!alpineInstance) {
+        return;
+    }
+
+    alpineInstance.data('pakarDashboard', createPakarDashboard);
+    alpineInstance.data('pakarConsultation', createPakarConsultation);
+};
+
+if (!window.pakarDashboard) {
+    window.pakarDashboard = (config = {}) => createPakarDashboard(config);
+}
+
+if (!window.pakarConsultation) {
+    window.pakarConsultation = (config = {}) => createPakarConsultation(config);
+}
+
+if (window.Alpine) {
+    registerPakarComponents(window.Alpine);
+} else {
+    document.addEventListener('alpine:init', () => {
+        registerPakarComponents(window.Alpine);
+    });
+}
