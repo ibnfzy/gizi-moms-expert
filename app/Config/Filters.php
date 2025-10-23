@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Filters\AdminFilter;
 use App\Filters\AuthFilter;
+use App\Filters\CorsFilter;
 use App\Filters\PakarFilter;
 use App\Filters\RoleFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
@@ -42,6 +43,7 @@ class Filters extends BaseFilters
         'pakarfilter'   => PakarFilter::class,
         'auth'          => AuthFilter::class,
         'role'          => RoleFilter::class,
+        'corsfilter'    => CorsFilter::class,
     ];
 
     /**
@@ -85,6 +87,7 @@ class Filters extends BaseFilters
             // 'invalidchars',
         ],
         'after' => [
+            'corsfilter',
             // 'honeypot',
             // 'secureheaders',
         ],
