@@ -42,15 +42,17 @@ class AuthController extends BaseController
                 return redirect()->back()->withInput()->with('error', 'Peran yang dipilih tidak sesuai dengan akun.');
             }
 
+            $normalizedRole = strtolower($user['role'] ?? '');
+
             $session->set([
                 'user_id'    => $user['id'],
                 'user_name'  => $user['name'],
                 'user_email' => $user['email'],
-                'user_role'  => $user['role'],
+                'user_role'  => $normalizedRole,
                 'isLoggedIn' => true,
             ]);
 
-            return redirect()->to($this->redirectPathForRole($user['role'] ?? null));
+            return redirect()->to($this->redirectPathForRole($normalizedRole));
         }
 
         return view('auth/login');
@@ -66,7 +68,7 @@ class AuthController extends BaseController
 
     private function redirectPathForRole(?string $role): string
     {
-        return match ($role) {
+        return match (strtolower($role ?? '')) {
             'admin' => '/admin/dashboard',
             'pakar' => '/pakar/dashboard',
             default => '/',
