@@ -9,6 +9,7 @@ class Seed extends Seeder
     public function run()
     {
         $this->call('User');
+        $this->call('Mother');
         $this->call('Rules');
     }
 }
