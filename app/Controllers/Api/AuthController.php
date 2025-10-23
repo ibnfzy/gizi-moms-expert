@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\JWTService;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use DateInterval;
 
 class AuthController extends BaseController
 {
@@ -48,7 +49,7 @@ class AuthController extends BaseController
 
         try {
             $jwt = new JWTService();
-            $token = $jwt->generateToken($user);
+            $token = $jwt->generateToken($user, new DateInterval('P1D'));
         } catch (\Throwable $exception) {
             log_message('error', 'Failed to generate token: ' . $exception->getMessage());
 
