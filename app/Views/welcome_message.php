@@ -16,7 +16,7 @@
       <a href="#contact" class="nav-link text-white/80 transition hover:text-white">Kontak</a>
     </nav>
     <div class="flex items-center space-x-4">
-      <a href="/login"
+      <a href="/login" id="loginToggle"
         class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">Login</a>
       <a id="downloadHeader" href="#download"
         class="rounded-full bg-gizigreen px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/20 transition hover:scale-105 hover:shadow-green-500/40">Download
@@ -24,9 +24,9 @@
       <button id="mobileMenuButton"
         class="ml-2 inline-flex items-center justify-center rounded-full border border-white/20 p-2 text-white transition hover:bg-white/10 md:hidden">
         <?= view('components/icon', [
-                    'name' => 'menu',
-                    'class' => 'h-6 w-6',
-                ]) ?>
+          'name' => 'menu',
+          'class' => 'h-6 w-6',
+        ]) ?>
       </button>
     </div>
   </div>
@@ -62,9 +62,9 @@
           class="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-giziblue transition hover:-translate-y-1 hover:shadow-xl hover:shadow-white/30">
           Mulai Sekarang
           <?= view('components/icon', [
-                        'name' => 'arrow-right',
-                        'class' => 'ml-3 h-4 w-4 transition-transform group-hover:translate-x-1',
-                    ]) ?>
+            'name' => 'arrow-right',
+            'class' => 'ml-3 h-4 w-4 transition-transform group-hover:translate-x-1',
+          ]) ?>
         </a>
         <a href="#download"
           class="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
