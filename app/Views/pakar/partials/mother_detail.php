@@ -60,9 +60,7 @@
             <button
                 type="button"
                 class="rounded-full p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
-                hx-get="<?= site_url('pakar/dashboard/mothers/close') ?>"
-                hx-target="#mother-detail-container"
-                hx-swap="innerHTML"
+                data-close-mother-detail
             >
                 <span class="sr-only">Tutup</span>
                 &times;
@@ -162,9 +160,7 @@
             <button
                 type="button"
                 class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                hx-get="<?= site_url('pakar/dashboard/mothers/close') ?>"
-                hx-target="#mother-detail-container"
-                hx-swap="innerHTML"
+                data-close-mother-detail
             >Tutup</button>
         </div>
     </div>

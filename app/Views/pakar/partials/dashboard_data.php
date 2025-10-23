@@ -56,9 +56,7 @@
             <button
                 type="button"
                 class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                hx-get="<?= site_url('pakar/dashboard/data') ?>"
-                hx-target="#dashboard-data"
-                hx-indicator="#dashboard-loading"
+                data-dashboard-refresh="<?= site_url('pakar/dashboard/data') ?>"
             >Muat Ulang</button>
         </div>
     </div>
@@ -103,10 +101,7 @@
                                 <button
                                     type="button"
                                     class="inline-flex items-center rounded-md border border-blue-600 px-3 py-2 text-xs font-semibold text-blue-600 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    hx-get="<?= site_url('pakar/dashboard/mothers') ?>/<?= esc($mother['id'] ?? 0) ?>"
-                                    hx-target="#mother-detail-container"
-                                    hx-swap="innerHTML"
-                                    hx-indicator="#mother-detail-loading"
+                                    data-mother-detail="<?= site_url('pakar/dashboard/mothers') ?>/<?= esc($mother['id'] ?? 0) ?>"
                                 >Lihat Detail</button>
                             </td>
                         </tr>
