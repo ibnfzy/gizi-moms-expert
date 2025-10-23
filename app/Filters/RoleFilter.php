@@ -5,7 +5,6 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
 
 class RoleFilter implements FilterInterface
 {
@@ -16,13 +15,13 @@ class RoleFilter implements FilterInterface
         $user = auth_user();
 
         if ($user === null) {
-            return $this->forbiddenResponse('User context missing.');
+            return errorResponse('User context missing.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         $allowedRoles = array_map('strtolower', $arguments ?? []);
 
         if ($allowedRoles !== [] && ! in_array(strtolower((string) $user['role']), $allowedRoles, true)) {
-            return $this->forbiddenResponse('You do not have permission to access this resource.');
+            return errorResponse('Unauthorized access', ResponseInterface::HTTP_FORBIDDEN);
         }
 
         return null;
@@ -33,15 +32,4 @@ class RoleFilter implements FilterInterface
         // Nothing to do after request.
     }
 
-    private function forbiddenResponse(string $message): ResponseInterface
-    {
-        $response = Services::response();
-
-        return $response
-            ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-            ->setJSON([
-                'status'  => false,
-                'message' => $message,
-            ]);
-    }
 }
