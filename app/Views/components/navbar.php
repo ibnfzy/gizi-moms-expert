@@ -12,6 +12,9 @@ $userRole = $session->get('user_role') ?? 'pakar';
         GM</div>
       <div>
         <h1 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Sistem Pakar Gizi Ibu Menyusui</h1>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.3em] text-giziblue/80 dark:text-giziblue/70">
+          PUSKESMAS LALANG DESA BEA NGENCUNG MANGGARAI TIMUR
+        </p>
         <p class="text-sm text-slate-500 dark:text-slate-400">Monitoring kondisi gizi dan rekomendasi nutrisi harian.
         </p>
       </div>
