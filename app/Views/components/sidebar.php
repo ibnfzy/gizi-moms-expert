@@ -17,6 +17,11 @@ if ($userRole === 'admin') {
             'match' => 'admin/mothers',
         ],
         [
+            'label' => 'Manajemen Pengguna',
+            'href'  => site_url('admin/users'),
+            'match' => 'admin/users',
+        ],
+        [
             'label' => 'Manajemen Rules',
             'href'  => site_url('admin/rules'),
             'match' => 'admin/rules',

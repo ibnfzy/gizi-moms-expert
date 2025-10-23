@@ -18,6 +18,7 @@ $routes->post('/pakar/consultations/(:num)/messages', 'PakarConsultationControll
 $routes->get('/admin/dashboard', 'AdminDashboardController::index', ['filter' => 'adminfilter']);
 $routes->get('/admin/rules', 'AdminRulesController::index', ['filter' => 'adminfilter']);
 $routes->get('/admin/mothers', 'AdminMotherController::index', ['filter' => 'adminfilter']);
+$routes->get('/admin/users', 'AdminUserController::index', ['filter' => 'adminfilter']);
 
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
     $routes->post('auth/login', 'AuthController::login');
@@ -48,6 +49,14 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
                 $routes->put('(:num)/email', 'AdminMotherController::updateEmail/$1');
                 $routes->put('(:num)/password', 'AdminMotherController::updatePassword/$1');
                 $routes->delete('(:num)', 'AdminMotherController::delete/$1');
+            });
+            $routes->group('users', static function ($routes) {
+                $routes->get('/', 'AdminUserController::index');
+                $routes->post('/', 'AdminUserController::create');
+                $routes->get('(:num)', 'AdminUserController::show/$1');
+                $routes->put('(:num)', 'AdminUserController::update/$1');
+                $routes->put('(:num)/password', 'AdminUserController::updatePassword/$1');
+                $routes->delete('(:num)', 'AdminUserController::delete/$1');
             });
         });
     });
