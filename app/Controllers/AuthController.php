@@ -14,7 +14,7 @@ class AuthController extends BaseController
             return redirect()->to($this->redirectPathForRole($session->get('user_role')));
         }
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getMethod() === 'POST') {
             $rules = [
                 'role'     => 'required|in_list[admin,pakar]',
                 'email'    => 'required|valid_email',
