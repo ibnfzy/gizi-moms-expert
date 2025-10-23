@@ -23,6 +23,10 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <a
+                    href="<?= site_url('admin/mothers') ?>"
+                    class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >Kelola Data Ibu</a>
+                <a
                     href="<?= site_url('admin/rules') ?>"
                     class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >Kelola Rules</a>
