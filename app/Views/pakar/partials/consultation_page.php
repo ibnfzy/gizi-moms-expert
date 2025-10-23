@@ -41,16 +41,55 @@
         return esc($truncated);
     };
 ?>
-<div class="flex min-h-[70vh] flex-col gap-6 lg:flex-row">
-    <div id="consultation-indicator" data-consultation-indicator class="hidden w-full rounded-lg bg-blue-50 px-4 py-2 text-sm text-blue-700">
-        Memuat data konsultasi...
-    </div>
-    <aside class="w-full rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 lg:w-80">
-        <div class="border-b border-gray-100 px-5 py-4">
-            <h2 class="text-lg font-semibold text-gray-900">Sesi Konsultasi</h2>
-            <p class="text-sm text-gray-500">Pilih sesi untuk melihat percakapan.</p>
+<div class="relative">
+    <div
+        id="consultation-indicator"
+        data-consultation-indicator
+        class="absolute inset-0 z-10 hidden flex flex-col gap-6 rounded-3xl border border-blue-100 bg-white/90 p-6 text-sm text-blue-700 shadow-lg backdrop-blur-sm"
+    >
+        <div class="flex items-center gap-3 text-blue-600">
+            <span class="inline-flex h-6 w-6 items-center justify-center">
+                <span class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></span>
+            </span>
+            <p class="text-sm font-semibold">Memuat sesi konsultasi...</p>
         </div>
-        <div class="max-h-[28rem] overflow-y-auto">
+        <div class="flex flex-1 flex-col gap-6 overflow-hidden lg:flex-row">
+            <div class="hidden w-full flex-shrink-0 flex-col gap-4 lg:flex lg:w-80">
+                <div class="h-5 w-1/2 rounded bg-blue-100/80 animate-pulse"></div>
+                <div class="space-y-3">
+                    <?php for ($i = 0; $i < 4; $i++): ?>
+                        <div class="space-y-2 rounded-2xl bg-blue-50/80 p-4 shadow-sm">
+                            <div class="h-4 w-2/3 rounded bg-blue-100 animate-pulse"></div>
+                            <div class="h-3 w-1/3 rounded bg-blue-100/80 animate-pulse"></div>
+                            <div class="h-[0.35rem] w-full rounded bg-blue-100/60 animate-pulse"></div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            <div class="flex w-full flex-1 flex-col gap-4">
+                <div class="h-6 w-40 rounded bg-blue-100 animate-pulse"></div>
+                <div class="space-y-3 rounded-2xl bg-blue-50/80 p-5 shadow-sm">
+                    <?php for ($i = 0; $i < 5; $i++): ?>
+                        <div class="flex justify-start">
+                            <div class="h-16 w-2/3 rounded-2xl bg-blue-100/80 animate-pulse"></div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+                <div class="rounded-2xl bg-blue-50/80 p-4 shadow-sm">
+                    <div class="h-4 w-1/4 rounded bg-blue-100/80 animate-pulse"></div>
+                    <div class="mt-3 h-14 rounded-xl bg-blue-100/70 animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex min-h-[70vh] flex-col gap-6 lg:flex-row">
+        <aside class="w-full rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 lg:w-80">
+            <div class="border-b border-gray-100 px-5 py-4">
+                <h2 class="text-lg font-semibold text-gray-900">Sesi Konsultasi</h2>
+                <p class="text-sm text-gray-500">Pilih sesi untuk melihat percakapan.</p>
+            </div>
+            <div class="max-h-[28rem] overflow-y-auto">
             <?php if ($consultations === []): ?>
                 <div class="px-5 py-6 text-sm text-gray-500">
                     Belum ada sesi konsultasi yang terdaftar.
@@ -89,14 +128,14 @@
                 </ul>
             <?php endif; ?>
         </div>
-    </aside>
+        </aside>
 
-    <section class="flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
-        <?php if ($selectedId === null || empty($selectedConsultation)): ?>
-            <div class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-gray-500">
-                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-500">
-                    <span class="text-2xl font-semibold">💬</span>
-                </div>
+        <section class="flex-1 rounded-2xl bg-white shadow-sm ring-1 ring-gray-100">
+            <?php if ($selectedId === null || empty($selectedConsultation)): ?>
+                <div class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-gray-500">
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-500">
+                        <span class="text-2xl font-semibold">💬</span>
+                    </div>
                 <p class="text-base font-semibold text-gray-700">Pilih sesi konsultasi</p>
                 <p class="text-sm">Mulai percakapan dengan memilih salah satu ibu dari daftar di sebelah kiri.</p>
             </div>
@@ -177,6 +216,7 @@
                     </div>
                 </div>
             </div>
-        <?php endif; ?>
-    </section>
+            <?php endif; ?>
+        </section>
+    </div>
 </div>
