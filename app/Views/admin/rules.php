@@ -54,13 +54,13 @@
     id="ruleModal"
     class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 dark:bg-black/70"
     aria-hidden="true">
-    <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
-        <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4 dark:border-black/70">
+    <div class="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+        <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4 dark:border-slate-200/30">
             <div>
                 <h2 id="modalTitle" class="text-lg font-semibold text-gray-900 dark:text-slate-100">Tambah Rule</h2>
                 <p class="text-sm text-gray-500 dark:text-slate-400">Lengkapi formulir berikut untuk menyimpan rule.</p>
             </div>
-            <button id="closeModalButton" class="text-gray-400 transition hover:text-gray-600 focus:outline-none dark:text-slate-500 dark:hover:text-slate-300">
+            <button id="closeModalButton" class="text-gray-400 transition hover:text-gray-600 focus:outline-none dark:text-slate-300 dark:hover:text-slate-100">
                 <span class="sr-only">Tutup</span>
                 &times;
             </button>
@@ -74,7 +74,7 @@
                     <input
                         type="text"
                         id="ruleName"
-                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Contoh: Kebutuhan Kalori"
                         required />
                 </div>
@@ -83,7 +83,7 @@
                     <input
                         type="text"
                         id="ruleVersion"
-                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Contoh: v1.0"
                         required />
                 </div>
@@ -93,7 +93,7 @@
                     <label for="ruleCondition" class="mb-1 block text-sm font-medium text-gray-700 dark:text-slate-200">Kondisi</label>
                     <textarea
                         id="ruleCondition"
-                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Deskripsikan kondisi yang perlu dipenuhi"
                         required></textarea>
                 </div>
@@ -101,7 +101,7 @@
                     <label for="ruleRecommendation" class="mb-1 block text-sm font-medium text-gray-700 dark:text-slate-200">Rekomendasi</label>
                     <textarea
                         id="ruleRecommendation"
-                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Tuliskan rekomendasi yang diberikan"
                         required></textarea>
                 </div>
@@ -112,7 +112,7 @@
                     <input
                         type="text"
                         id="ruleCategory"
-                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Contoh: Nutrisi" />
                 </div>
                 <div>
@@ -120,21 +120,21 @@
                     <input
                         type="text"
                         id="ruleStatus"
-                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Contoh: Aktif" />
                 </div>
             </div>
             <p id="ruleDetailsMessage" class="text-xs text-red-500"></p>
-            <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-5 dark:border-black/70">
+            <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-5 dark:border-slate-200/30">
                 <button
                     type="button"
                     id="cancelModalButton"
-                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">
+                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">
                     Batal
                 </button>
                 <button
                     type="submit"
-                    class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950">
+                    class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-200/30 dark:focus:ring-offset-slate-950">
                     Simpan Rule
                 </button>
             </div>

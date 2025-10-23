@@ -58,14 +58,14 @@
 <!-- Create Modal -->
 <div id="adminUserCreateModal"
   class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
+  <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserCreateForm" class="space-y-6">
-      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <div>
           <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Tambah Pengguna</h2>
           <p class="text-sm text-gray-500 dark:text-slate-400">Buat akun admin atau pakar baru.</p>
         </div>
-        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300"
+        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-300 dark:hover:text-slate-100"
           data-close-create>
           <span class="sr-only">Tutup</span>
           &times;
@@ -75,19 +75,19 @@
         <div class="space-y-2">
           <label for="userCreateName" class="text-sm font-medium text-gray-700 dark:text-slate-200">Nama</label>
           <input type="text" id="userCreateName" name="name"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             placeholder="Nama lengkap pengguna" required>
         </div>
         <div class="space-y-2">
           <label for="userCreateEmail" class="text-sm font-medium text-gray-700 dark:text-slate-200">Email</label>
           <input type="email" id="userCreateEmail" name="email"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             placeholder="contoh@email.com" required>
         </div>
         <div class="space-y-2">
           <label for="userCreateRole" class="text-sm font-medium text-gray-700 dark:text-slate-200">Peran</label>
           <select id="userCreateRole" name="role"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             required>
             <option value="admin">Admin</option>
             <option value="pakar">Pakar</option>
@@ -96,13 +96,13 @@
         <div class="space-y-2">
           <label for="userCreatePassword" class="text-sm font-medium text-gray-700 dark:text-slate-200">Password</label>
           <input type="password" id="userCreatePassword" name="password"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             placeholder="Minimal 8 karakter" required>
         </div>
       </div>
-      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <button type="button"
-          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50"
           data-close-create>Batal</button>
         <button type="submit"
           class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-400">Simpan</button>
@@ -114,15 +114,15 @@
 <!-- Edit Modal -->
 <div id="adminUserEditModal"
   class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
+  <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserEditForm" class="space-y-6">
       <input type="hidden" id="userEditId" name="id">
-      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <div>
           <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Perbarui Pengguna</h2>
           <p class="text-sm text-gray-500 dark:text-slate-400">Ubah informasi nama, email, atau peran pengguna.</p>
         </div>
-        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300"
+        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-300 dark:hover:text-slate-100"
           data-close-edit>
           <span class="sr-only">Tutup</span>
           &times;
@@ -132,28 +132,28 @@
         <div class="space-y-2">
           <label for="userEditName" class="text-sm font-medium text-gray-700 dark:text-slate-200">Nama</label>
           <input type="text" id="userEditName" name="name"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             required>
         </div>
         <div class="space-y-2">
           <label for="userEditEmail" class="text-sm font-medium text-gray-700 dark:text-slate-200">Email</label>
           <input type="email" id="userEditEmail" name="email"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             required>
         </div>
         <div class="space-y-2">
           <label for="userEditRole" class="text-sm font-medium text-gray-700 dark:text-slate-200">Peran</label>
           <select id="userEditRole" name="role"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             required>
             <option value="admin">Admin</option>
             <option value="pakar">Pakar</option>
           </select>
         </div>
       </div>
-      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <button type="button"
-          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50"
           data-close-edit>Batal</button>
         <button type="submit"
           class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-400">Simpan
@@ -166,15 +166,15 @@
 <!-- Password Modal -->
 <div id="adminUserPasswordModal"
   class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
+  <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserPasswordForm" class="space-y-6">
       <input type="hidden" id="userPasswordId" name="id">
-      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <div>
           <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Atur Ulang Password</h2>
           <p class="text-sm text-gray-500 dark:text-slate-400">Tetapkan password baru untuk pengguna ini.</p>
         </div>
-        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300"
+        <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-300 dark:hover:text-slate-100"
           data-close-password>
           <span class="sr-only">Tutup</span>
           &times;
@@ -185,13 +185,13 @@
           <label for="userPasswordInput" class="text-sm font-medium text-gray-700 dark:text-slate-200">Password
             Baru</label>
           <input type="password" id="userPasswordInput" name="password"
-            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-black/70 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-200/50 dark:bg-slate-900 dark:text-slate-100"
             placeholder="Minimal 8 karakter" required>
         </div>
       </div>
-      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <button type="button"
-          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50"
           data-close-password>Batal</button>
         <button type="submit"
           class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-400">Perbarui

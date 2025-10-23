@@ -204,7 +204,7 @@
                                 <textarea
                                     name="text"
                                     rows="2"
-                                    class="flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200"
+                                    class="flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue dark:border-slate-200/40 dark:bg-slate-900/60 dark:text-slate-200"
                                     placeholder="Tulis pesan untuk ibu..."
                                 ><?= esc($messageText) ?></textarea>
                                 <button
