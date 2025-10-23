@@ -83,15 +83,34 @@ class JWTService
             return null;
         }
 
-        $newUnencryptedClass     = '\\Lcobucci\\JWT\\Token\\UnencryptedToken';
-        $legacyUnencryptedClass  = '\\Lcobucci\\JWT\\UnencryptedToken';
-        $isUnencryptedToken      = false;
+        $interfacesToCheck = [
+            '\\Lcobucci\\JWT\\Token\\UnencryptedToken',
+            '\\Lcobucci\\JWT\\UnencryptedToken',
+        ];
 
-        if (interface_exists($newUnencryptedClass) && $parsedToken instanceof $newUnencryptedClass) {
-            $isUnencryptedToken = true;
+        $classesToCheck = [
+            '\\Lcobucci\\JWT\\Token\\Plain',
+        ];
+
+        $isUnencryptedToken = false;
+
+        foreach ($interfacesToCheck as $interface) {
+            if (interface_exists($interface) && $parsedToken instanceof $interface) {
+                $isUnencryptedToken = true;
+                break;
+            }
         }
 
-        if (! $isUnencryptedToken && class_exists($legacyUnencryptedClass) && $parsedToken instanceof $legacyUnencryptedClass) {
+        if (! $isUnencryptedToken) {
+            foreach ($classesToCheck as $class) {
+                if (class_exists($class) && $parsedToken instanceof $class) {
+                    $isUnencryptedToken = true;
+                    break;
+                }
+            }
+        }
+
+        if (! $isUnencryptedToken && method_exists($parsedToken, 'claims')) {
             $isUnencryptedToken = true;
         }
 
