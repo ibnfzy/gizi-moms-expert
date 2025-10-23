@@ -57,13 +57,13 @@
 
 <!-- Detail Modal -->
 <div id="motherDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
-        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-black/70">
+    <div class="w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
             <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Detail Data Ibu</h2>
                 <p class="text-sm text-gray-500 dark:text-slate-400">Informasi lengkap mengenai profil dan riwayat ibu.</p>
             </div>
-            <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-500 dark:hover:text-slate-300" data-close-detail>
+            <button type="button" class="text-gray-400 hover:text-gray-600 dark:text-slate-300 dark:hover:text-slate-100" data-close-detail>
                 <span class="sr-only">Tutup</span>
                 &times;
             </button>
@@ -132,13 +132,13 @@
                 </div>
             </div>
 
-            <div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 text-sm dark:border-black/70 dark:bg-slate-900/50 dark:text-slate-200">
+            <div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 text-sm dark:border-slate-200/30 dark:bg-slate-900/50 dark:text-slate-200">
                 <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Inferensi Terakhir</h4>
                 <p class="mt-2 text-gray-600 dark:text-slate-300" data-detail-inference>-</p>
             </div>
         </div>
-        <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
-            <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-detail>
+        <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
+            <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-detail>
                 Tutup
             </button>
         </div>
@@ -147,9 +147,9 @@
 
 <!-- Email Modal -->
 <div id="motherEmailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
         <form id="motherEmailForm" class="space-y-6">
-            <div class="border-b border-gray-200 px-6 py-4 dark:border-black/70">
+            <div class="border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Perbarui Email</h2>
                 <p class="text-sm text-gray-500 dark:text-slate-400">Atur ulang email yang digunakan ibu untuk mengakses sistem.</p>
             </div>
@@ -160,17 +160,17 @@
                         type="email"
                         id="motherEmailInput"
                         name="email"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="nama@email.com"
                         required>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-slate-400">Pastikan email aktif dan dapat dihubungi.</p>
             </div>
-            <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
-                <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-email>
+            <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
+                <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-email>
                     Batal
                 </button>
-                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950">
+                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-200/30 dark:focus:ring-offset-slate-950">
                     Simpan Perubahan
                 </button>
             </div>
@@ -180,9 +180,9 @@
 
 <!-- Password Modal -->
 <div id="motherPasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-slate-950 dark:text-slate-100">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
         <form id="motherPasswordForm" class="space-y-6">
-            <div class="border-b border-gray-200 px-6 py-4 dark:border-black/70">
+            <div class="border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Atur Ulang Password</h2>
                 <p class="text-sm text-gray-500 dark:text-slate-400">Buat password baru minimal 8 karakter.</p>
             </div>
@@ -194,17 +194,17 @@
                         id="motherPasswordInput"
                         name="password"
                         minlength="8"
-                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-black/70 dark:bg-slate-950/40 dark:text-slate-100"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-200/50 dark:bg-slate-950/40 dark:text-slate-100"
                         placeholder="Minimal 8 karakter"
                         required>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-slate-400">Bagikan password baru kepada ibu setelah disimpan.</p>
             </div>
-            <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-black/70">
-                <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-password>
+            <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-slate-200/30">
+                <button type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-slate-200/30 dark:text-slate-300 dark:hover:bg-slate-900/50" data-close-password>
                     Batal
                 </button>
-                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950">
+                <button type="submit" class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-200/30 dark:focus:ring-offset-slate-950">
                     Simpan Password
                 </button>
             </div>
