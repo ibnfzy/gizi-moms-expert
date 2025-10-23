@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\JWTService;
 use App\Models\UserModel;
 
 class AuthController extends BaseController
@@ -44,12 +45,22 @@ class AuthController extends BaseController
 
             $normalizedRole = strtolower($user['role'] ?? '');
 
+            try {
+                $jwtService = new JWTService();
+                $token = $jwtService->generateToken($user);
+            } catch (\Throwable $exception) {
+                log_message('error', 'Failed to generate auth token: ' . $exception->getMessage());
+
+                return redirect()->back()->withInput()->with('error', 'Gagal membuat token autentikasi. Silakan coba lagi.');
+            }
+
             $session->set([
                 'user_id'    => $user['id'],
                 'user_name'  => $user['name'],
                 'user_email' => $user['email'],
                 'user_role'  => $normalizedRole,
                 'isLoggedIn' => true,
+                'auth_token' => $token,
             ]);
 
             return redirect()->to($this->redirectPathForRole($normalizedRole));

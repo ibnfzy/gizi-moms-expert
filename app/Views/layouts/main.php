@@ -35,6 +35,10 @@
             </main>
         </div>
     </div>
+    <script>
+        window.appConfig = window.appConfig || {};
+        window.appConfig.authToken = <?= json_encode(session('auth_token') ?? null) ?>;
+    </script>
     <?= $this->renderSection('scripts') ?>
 </body>
 </html>

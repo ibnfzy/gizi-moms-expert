@@ -27,13 +27,33 @@ const showNotification = (target, type, message, timeout = 4000) => {
     }
 };
 
+const getAuthToken = () => {
+    const token = window.appConfig?.authToken ?? null;
+    if (token) {
+        return token;
+    }
+
+    try {
+        return window.localStorage ? window.localStorage.getItem('jwtToken') : null;
+    } catch (error) {
+        return null;
+    }
+};
+
 const fetchJson = async (url, options = {}) => {
+    const headers = {
+        Accept: 'application/json',
+        ...(options.headers || {}),
+    };
+
+    const token = getAuthToken();
+    if (token && !headers.Authorization) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
     const config = {
-        headers: {
-            Accept: 'application/json',
-            ...(options.headers || {}),
-        },
         ...options,
+        headers,
     };
 
     const response = await fetch(url, config);
@@ -344,10 +364,6 @@ document.addEventListener('alpine:init', () => {
             this.appendMessage(tempMessage);
 
             const headers = { 'Content-Type': 'application/json' };
-            const token = window.localStorage ? window.localStorage.getItem('jwtToken') : null;
-            if (token) {
-                headers.Authorization = `Bearer ${token}`;
-            }
 
             try {
                 const payload = await fetchJson(this.messagesEndpoint, {
