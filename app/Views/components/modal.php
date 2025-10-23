@@ -25,18 +25,18 @@ $closeLabel = $closeLabel ?? 'Tutup';
         <div
             x-show="open"
             x-transition.scale
-            class="relative z-50 w-full max-w-xl bg-white rounded-xl shadow-2xl overflow-hidden"
+            class="relative z-50 w-full max-w-xl overflow-hidden rounded-xl border border-slate-200/70 bg-white shadow-2xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100"
             role="dialog"
             aria-modal="true"
             aria-labelledby="<?= esc($modalId) ?>-title"
         >
-            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 id="<?= esc($modalId) ?>-title" class="text-lg font-semibold text-gray-900">
+            <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
+                <h3 id="<?= esc($modalId) ?>-title" class="text-lg font-semibold text-gray-900 dark:text-slate-100">
                     <?= esc($title) ?>
                 </h3>
                 <button
                     type="button"
-                    class="text-gray-400 hover:text-gray-600"
+                    class="text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-slate-200"
                     @click="open = false"
                     aria-label="Tutup"
                 >
@@ -44,23 +44,23 @@ $closeLabel = $closeLabel ?? 'Tutup';
                 </button>
             </div>
 
-            <div class="px-6 py-5 space-y-3">
+            <div class="space-y-3 px-6 py-5">
                 <?php if ($contentView) : ?>
                     <?= view($contentView, $contentData) ?>
                 <?php elseif (is_array($content)) : ?>
                     <?php foreach ($content as $paragraph) : ?>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-sm text-gray-600 dark:text-slate-300">
                             <?= esc($paragraph) ?>
                         </p>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-gray-600 dark:text-slate-300">
                         <?= esc($content) ?>
                     </p>
                 <?php endif; ?>
             </div>
 
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
+            <div class="flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-slate-200/30 dark:bg-slate-900/40">
                 <?= view('components/button', [
                     'label' => $closeLabel,
                     'variant' => 'secondary',
