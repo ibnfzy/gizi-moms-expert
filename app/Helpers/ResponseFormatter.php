@@ -8,13 +8,15 @@ if (! function_exists('successResponse')) {
     /**
      * Return a standardized JSON success response.
      */
-    function successResponse($data, string $message = 'Success'): ResponseInterface
+    function successResponse($data = null, string $message = 'Success', int $code = ResponseInterface::HTTP_OK): ResponseInterface
     {
-        return service('response')->setJSON([
-            'status'  => 'success',
-            'message' => $message,
-            'data'    => $data,
-        ]);
+        return service('response')
+            ->setStatusCode($code)
+            ->setJSON([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $data,
+            ]);
     }
 }
 
@@ -22,12 +24,12 @@ if (! function_exists('errorResponse')) {
     /**
      * Return a standardized JSON error response.
      */
-    function errorResponse(string $message = 'Error', int $code = 400, $data = null): ResponseInterface
+    function errorResponse(string $message = 'Error', int $code = ResponseInterface::HTTP_BAD_REQUEST, $data = null): ResponseInterface
     {
         return service('response')
             ->setStatusCode($code)
             ->setJSON([
-                'status'  => 'error',
+                'status'  => false,
                 'message' => $message,
                 'data'    => $data,
             ]);

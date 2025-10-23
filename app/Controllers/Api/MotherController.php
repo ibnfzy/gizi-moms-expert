@@ -29,10 +29,7 @@ class MotherController extends BaseController
 
         $payload = array_map(fn (array $mother): array => $this->formatter->present($mother, false, false), $records);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Daftar ibu berhasil dimuat.');
     }
 
     public function show(int $id)
@@ -43,19 +40,11 @@ class MotherController extends BaseController
             ->first();
 
         if (! is_array($mother)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Mother data not found.',
-                ]);
+            return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         $payload = $this->formatter->present($mother, true, true);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Data ibu berhasil dimuat.');
     }
 }

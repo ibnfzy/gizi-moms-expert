@@ -29,21 +29,14 @@ class MessageController extends BaseController
         $consultation = $this->consultations->find($consultationId);
 
         if (! is_array($consultation)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Consultation not found.',
-                ]);
+            return errorResponse('Consultation not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         if (! $this->isParticipant($consultation)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'You are not allowed to access this consultation.',
-                ]);
+            return errorResponse(
+                'You are not allowed to access this consultation.',
+                ResponseInterface::HTTP_FORBIDDEN
+            );
         }
 
         $messages = $this->messages
@@ -54,10 +47,7 @@ class MessageController extends BaseController
 
         $payload = array_map(fn (array $message): array => $this->formatMessage($message), $messages);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Pesan konsultasi berhasil dimuat.');
     }
 
     public function create()
@@ -68,40 +58,23 @@ class MessageController extends BaseController
         $text           = trim((string) ($data['text'] ?? ''));
 
         if ($consultationId === null || $consultationId <= 0) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'consultation_id is required.',
-                ]);
+            return errorResponse('consultation_id is required.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         if ($text === '') {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Message text cannot be empty.',
-                ]);
+            return errorResponse('Message text cannot be empty.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         $consultation = $this->consultations->find($consultationId);
         if (! is_array($consultation)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Consultation not found.',
-                ]);
+            return errorResponse('Consultation not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         if (! $this->isParticipant($consultation)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'You are not allowed to send a message to this consultation.',
-                ]);
+            return errorResponse(
+                'You are not allowed to send a message to this consultation.',
+                ResponseInterface::HTTP_FORBIDDEN
+            );
         }
 
         $user  = auth_user();
@@ -109,12 +82,7 @@ class MessageController extends BaseController
         $validRoles = ['pakar', 'ibu'];
 
         if (! in_array($role, $validRoles, true)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Only pakar or ibu can send messages.',
-                ]);
+            return errorResponse('Only pakar or ibu can send messages.', ResponseInterface::HTTP_FORBIDDEN);
         }
 
         $messageId = $this->messages->insert([
@@ -125,22 +93,16 @@ class MessageController extends BaseController
         ], true);
 
         if (! is_int($messageId) || $messageId <= 0) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Failed to send message.',
-                ]);
+            return errorResponse('Failed to send message.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $message = $this->messages->find($messageId);
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_CREATED)
-            ->setJSON([
-                'status' => true,
-                'data'   => $this->formatMessage($message ?: []),
-            ]);
+        return successResponse(
+            $this->formatMessage($message ?: []),
+            'Pesan berhasil dikirim.',
+            ResponseInterface::HTTP_CREATED
+        );
     }
 
     /**

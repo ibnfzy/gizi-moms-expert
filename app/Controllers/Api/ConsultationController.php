@@ -37,53 +37,34 @@ class ConsultationController extends BaseController
         $notes    = $data['notes'] ?? null;
 
         if ($motherId === null || $motherId <= 0) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'mother_id is required.',
-                ]);
+            return errorResponse('mother_id is required.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         $mother = $this->mothers->find($motherId);
         if (! is_array($mother)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Mother data not found.',
-                ]);
+            return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
         $user = auth_user();
         if ($user === null) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'User context missing.',
-                ]);
+            return errorResponse('User context missing.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         if ($user['role'] === 'pakar') {
             $pakarId = $pakarId ?: (int) $user['id'];
         } else {
             if ((int) $mother['user_id'] !== (int) $user['id']) {
-                return $this->response
-                    ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-                    ->setJSON([
-                        'status'  => false,
-                        'message' => 'You cannot create a consultation for this mother.',
-                    ]);
+                return errorResponse(
+                    'You cannot create a consultation for this mother.',
+                    ResponseInterface::HTTP_FORBIDDEN
+                );
             }
 
             if ($pakarId === null || $pakarId <= 0) {
-                return $this->response
-                    ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                    ->setJSON([
-                        'status'  => false,
-                        'message' => 'pakar_id is required when created by a mother.',
-                    ]);
+                return errorResponse(
+                    'pakar_id is required when created by a mother.',
+                    ResponseInterface::HTTP_BAD_REQUEST
+                );
             }
         }
 
@@ -92,12 +73,7 @@ class ConsultationController extends BaseController
             ->find($pakarId);
 
         if (! is_array($pakar)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Pakar not found.',
-                ]);
+            return errorResponse('Pakar not found.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
         $status = strtolower((string) $status);
@@ -116,12 +92,7 @@ class ConsultationController extends BaseController
         $consultationId = $this->consultations->insert($insertData, true);
 
         if (! is_int($consultationId) || $consultationId <= 0) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Failed to create consultation.',
-                ]);
+            return errorResponse('Failed to create consultation.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $consultation = $this->consultations->find($consultationId);
@@ -140,11 +111,10 @@ class ConsultationController extends BaseController
             'mother'      => is_array($motherDetail) ? $this->formatter->present($motherDetail, true, false) : null,
         ];
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_CREATED)
-            ->setJSON([
-                'status' => true,
-                'data'   => $payload,
-            ]);
+        return successResponse(
+            $payload,
+            'Konsultasi berhasil dibuat.',
+            ResponseInterface::HTTP_CREATED
+        );
     }
 }

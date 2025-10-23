@@ -28,23 +28,17 @@ class AuthController extends BaseController
         ];
 
         if (! $this->validateData($data, $rules)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status' => false,
-                    'errors' => $this->validator->getErrors(),
-                ]);
+            return errorResponse(
+                'Validation failed.',
+                ResponseInterface::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()
+            );
         }
 
         $user = $this->users->where('email', $data['email'])->first();
 
         if (! $user || ! password_verify($data['password'], $user['password_hash'])) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Invalid email or password.',
-                ]);
+            return errorResponse('Invalid email or password.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
         try {
@@ -53,20 +47,17 @@ class AuthController extends BaseController
         } catch (\Throwable $exception) {
             log_message('error', 'Failed to generate token: ' . $exception->getMessage());
 
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Unable to generate authentication token.',
-                ]);
+            return errorResponse('Unable to generate authentication token.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
         $userData = $this->formatUser($user);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'token'  => $token,
-            'user'   => $userData,
-        ]);
+        return successResponse(
+            [
+                'token' => $token,
+                'user'  => $userData,
+            ],
+            'Login successful.'
+        );
     }
 
     public function register()
@@ -81,12 +72,11 @@ class AuthController extends BaseController
         ];
 
         if (! $this->validateData($data, $rules)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status' => false,
-                    'errors' => $this->validator->getErrors(),
-                ]);
+            return errorResponse(
+                'Validation failed.',
+                ResponseInterface::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()
+            );
         }
 
         $userId = $this->users->insert([
@@ -97,31 +87,20 @@ class AuthController extends BaseController
         ]);
 
         if (! $userId) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Unable to create user.',
-                ]);
+            return errorResponse('Unable to create user.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $newUser = $this->users->find($userId);
 
         if (! $newUser) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Unable to retrieve user information.',
-                ]);
+            return errorResponse('Unable to retrieve user information.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_CREATED)
-            ->setJSON([
-                'status' => true,
-                'user'   => $this->formatUser($newUser),
-            ]);
+        return successResponse(
+            $this->formatUser($newUser),
+            'User registered successfully.',
+            ResponseInterface::HTTP_CREATED
+        );
     }
 
     public function me()
@@ -129,18 +108,10 @@ class AuthController extends BaseController
         $user = auth_user();
 
         if (! $user) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Unauthorized.',
-                ]);
+            return errorResponse('Unauthorized.', ResponseInterface::HTTP_UNAUTHORIZED);
         }
 
-        return $this->response->setJSON([
-            'status' => true,
-            'user'   => $user,
-        ]);
+        return successResponse($user, 'Authenticated user retrieved.');
     }
 
     private function formatUser(array $user): array

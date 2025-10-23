@@ -27,10 +27,7 @@ class AdminUserController extends BaseController
 
         $payload = array_map(fn(array $user): array => $this->present($user), $records);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $payload,
-        ]);
+        return successResponse($payload, 'Daftar pengguna berhasil dimuat.');
     }
 
     public function show(int $id)
@@ -41,10 +38,7 @@ class AdminUserController extends BaseController
             return $this->notFound();
         }
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $this->present($user),
-        ]);
+        return successResponse($this->present($user), 'Data pengguna berhasil dimuat.');
     }
 
     public function create()
@@ -78,31 +72,23 @@ class AdminUserController extends BaseController
         ]);
 
         if (! $userId) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat membuat pengguna baru.',
-                ]);
+            return errorResponse('Tidak dapat membuat pengguna baru.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $user = $this->users->find((int) $userId);
 
         if (! is_array($user)) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Pengguna berhasil dibuat namun tidak dapat dimuat.',
-                ]);
+            return errorResponse(
+                'Pengguna berhasil dibuat namun tidak dapat dimuat.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_CREATED)
-            ->setJSON([
-                'status' => true,
-                'data'   => $this->present($user),
-            ]);
+        return successResponse(
+            $this->present($user),
+            'Pengguna berhasil dibuat.',
+            ResponseInterface::HTTP_CREATED
+        );
     }
 
     public function update(int $id)
@@ -141,20 +127,15 @@ class AdminUserController extends BaseController
         ]);
 
         if (! $updated) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat memperbarui data pengguna.',
-                ]);
+            return errorResponse('Tidak dapat memperbarui data pengguna.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $fresh = $this->users->find($user['id']);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $this->present($fresh ?? $user),
-        ]);
+        return successResponse(
+            $this->present($fresh ?? $user),
+            'Pengguna berhasil diperbarui.'
+        );
     }
 
     public function updatePassword(int $id)
@@ -184,18 +165,13 @@ class AdminUserController extends BaseController
         ]);
 
         if (! $updated) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat memperbarui password pengguna.',
-                ]);
+            return errorResponse(
+                'Tidak dapat memperbarui password pengguna.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Password pengguna berhasil diperbarui.',
-        ]);
+        return successResponse(null, 'Password pengguna berhasil diperbarui.');
     }
 
     public function delete(int $id)
@@ -208,27 +184,17 @@ class AdminUserController extends BaseController
 
         $currentUser = auth_user();
         if (is_array($currentUser) && (int) ($currentUser['id'] ?? 0) === (int) $user['id']) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Anda tidak dapat menghapus akun yang sedang digunakan.',
-                ]);
+            return errorResponse(
+                'Anda tidak dapat menghapus akun yang sedang digunakan.',
+                ResponseInterface::HTTP_BAD_REQUEST
+            );
         }
 
         if (! $this->users->delete($user['id'])) {
-            return $this->response
-                ->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)
-                ->setJSON([
-                    'status'  => false,
-                    'message' => 'Tidak dapat menghapus pengguna.',
-                ]);
+            return errorResponse('Tidak dapat menghapus pengguna.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'Pengguna berhasil dihapus.',
-        ]);
+        return successResponse(null, 'Pengguna berhasil dihapus.');
     }
 
     private function findManagedUser(int $id): ?array
@@ -296,13 +262,11 @@ class AdminUserController extends BaseController
             $message = $fallback;
         }
 
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-            ->setJSON([
-                'status'  => false,
-                'message' => $message,
-                'errors'  => $errors,
-            ]);
+        return errorResponse(
+            $message,
+            ResponseInterface::HTTP_BAD_REQUEST,
+            ['errors' => $errors]
+        );
     }
 
     private function roleBadge(string $role): string
@@ -316,11 +280,6 @@ class AdminUserController extends BaseController
 
     private function notFound(): ResponseInterface
     {
-        return $this->response
-            ->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)
-            ->setJSON([
-                'status'  => false,
-                'message' => 'Pengguna tidak ditemukan.',
-            ]);
+        return errorResponse('Pengguna tidak ditemukan.', ResponseInterface::HTTP_NOT_FOUND);
     }
 }
