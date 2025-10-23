@@ -113,11 +113,11 @@ export const initAdminUsers = () => {
         const createdAt = user?.created_at_human || user?.created_at || "-";
 
         return `
-                <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
                       user?.name ?? "-"
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       user?.email ?? "-"
                     )}</td>
                     <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
@@ -125,18 +125,18 @@ export const initAdminUsers = () => {
           roleLabel
         )}</span>
                     </td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-gray-50 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       createdAt
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:text-slate-200 dark:border-gray-300">
                         <div class="flex flex-wrap justify-end gap-2">
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" data-action="edit" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="edit" data-id="${escapeHtml(
                               user?.id
                             )}">Edit</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" data-action="password" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
                               user?.id
                             )}">Atur Password</button>
-                            <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50" data-action="delete" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
                               user?.id
                             )}">Hapus</button>
                         </div>

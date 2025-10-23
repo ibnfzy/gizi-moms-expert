@@ -84,7 +84,7 @@ export const initAdminMothers = () => {
     }
 
     if (!Array.isArray(items) || items.length === 0) {
-      element.innerHTML = '<li class="text-gray-400">Tidak ada data</li>';
+      element.innerHTML = '<li class="text-gray-400 dark:text-slate-500">Tidak ada data</li>';
       return;
     }
 
@@ -125,21 +125,21 @@ export const initAdminMothers = () => {
         const badgeClass =
           typeof status.badge === "string" && status.badge.trim() !== ""
             ? status.badge
-            : "bg-gray-100 text-gray-600";
+            : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
         const badgeLabel = status.label || "Tidak diketahui";
 
         return `
-                <tr class="transition hover:bg-gray-50">
-                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:border-gray-300">${escapeHtml(
+                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
                       mother?.name ?? "-"
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       mother?.email ?? "-"
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       formatValue(mother?.umur)
                     )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:border-gray-300">${escapeHtml(
+                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
                       formatValue(mother?.usia_bayi_bln)
                     )}</td>
                     <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
@@ -147,18 +147,18 @@ export const initAdminMothers = () => {
           badgeLabel
         )}</span>
                     </td>
-                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:border-gray-300">
+                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:text-slate-200 dark:border-gray-300">
                         <div class="flex flex-wrap justify-end gap-2">
-                            <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50" data-action="detail" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:border-giziblue/70 dark:text-blue-300 dark:hover:bg-slate-900/50" data-action="detail" data-id="${escapeHtml(
                               mother?.id
                             )}">Detail</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" data-action="email" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
                               mother?.id
                             )}">Edit Email</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" data-action="password" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
                               mother?.id
                             )}">Atur Password</button>
-                            <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50" data-action="delete" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
                               mother?.id
                             )}">Hapus</button>
                         </div>
@@ -192,7 +192,7 @@ export const initAdminMothers = () => {
       const badgeClass =
         typeof status.badge === "string" && status.badge.trim() !== ""
           ? status.badge
-          : "bg-gray-100 text-gray-600";
+          : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
       detailElements.status.className = `inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`;
     }
     if (detailElements.bb) {
