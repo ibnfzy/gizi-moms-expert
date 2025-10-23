@@ -84,7 +84,8 @@ export const initAdminMothers = () => {
     }
 
     if (!Array.isArray(items) || items.length === 0) {
-      element.innerHTML = '<li class="text-gray-400 dark:text-slate-500">Tidak ada data</li>';
+      element.innerHTML =
+        '<li class="text-gray-400 dark:text-slate-500">Tidak ada data</li>';
       return;
     }
 
@@ -152,10 +153,10 @@ export const initAdminMothers = () => {
                             <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:border-giziblue/70 dark:text-blue-300 dark:hover:bg-slate-900/50" data-action="detail" data-id="${escapeHtml(
                               mother?.id
                             )}">Detail</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
                               mother?.id
                             )}">Edit Email</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-black/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
+                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
                               mother?.id
                             )}">Atur Password</button>
                             <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
