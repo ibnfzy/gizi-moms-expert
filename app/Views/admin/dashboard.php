@@ -10,15 +10,15 @@
     <section class="space-y-4">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-gray-900">Dashboard Admin</h1>
-                <p class="text-sm text-gray-600">Pantau statistik sistem pakar dan ringkasan rule terbaru.</p>
+                <h1 class="text-2xl font-semibold text-gray-900 dark:text-slate-100">Dashboard Admin</h1>
+                <p class="text-sm text-gray-600 dark:text-slate-400">Pantau statistik sistem pakar dan ringkasan rule terbaru.</p>
             </div>
             <div class="flex flex-wrap gap-3">
                 <a href="<?= site_url('admin/mothers') ?>"
-                    class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Kelola
+                    class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Kelola
                     Data Ibu</a>
                 <a href="<?= site_url('admin/rules') ?>"
-                    class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Kelola
+                    class="inline-flex items-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950">Kelola
                     Rules</a>
             </div>
         </div>
@@ -35,18 +35,18 @@
     <section class="space-y-4">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-lg font-semibold text-gray-900">Rule Terbaru</h2>
-                <p class="text-sm text-gray-500">Daftar rule yang terakhir diperbarui pada basis pengetahuan.</p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Rule Terbaru</h2>
+                <p class="text-sm text-gray-500 dark:text-slate-400">Daftar rule yang terakhir diperbarui pada basis pengetahuan.</p>
             </div>
             <button type="button" data-refresh-rules
-                class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Muat
+                class="inline-flex items-center rounded-lg border border-blue-200 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-black/70 dark:hover:bg-slate-900/50 dark:focus:ring-offset-slate-950">Muat
                 Ulang</button>
         </div>
 
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100">
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/40 dark:ring-black/60">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm">
-                    <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm dark:divide-black/60 dark:border-black/70">
+                    <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                         <tr>
                             <th scope="col" class="px-6 py-3">ID Rule</th>
                             <th scope="col" class="px-6 py-3">Nama</th>
@@ -54,10 +54,10 @@
                             <th scope="col" class="px-6 py-3 text-right">Terakhir Diperbarui</th>
                         </tr>
                     </thead>
-                    <tbody data-rules-body class="divide-y divide-gray-100 text-gray-700">
+                    <tbody data-rules-body class="divide-y divide-gray-100 text-gray-700 dark:divide-black/60 dark:text-slate-200">
                         <tr data-rules-loader-row>
                             <td colspan="5" class="px-6 py-8">
-                                <div class="flex items-center justify-center gap-3 text-sm text-gray-500">
+                                <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
                                     <div class="h-6 w-6 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin"
                                         aria-hidden="true"></div>
                                     Memuat data rule...

@@ -4,7 +4,7 @@
     $userRole = $session->get('user_role') ?? 'pakar';
 ?>
 
-<header class="border-b border-slate-200 bg-slate-100/90 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/70">
+<header class="border-b border-slate-200 bg-slate-100/90 backdrop-blur-sm dark:border-black/70 dark:bg-slate-950/80">
     <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-giziblue text-sm font-semibold text-white">GM</div>
@@ -16,7 +16,7 @@
         <div class="flex items-center justify-end gap-3 text-sm text-slate-500 dark:text-slate-400">
             <button
                 type="button"
-                class="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/70 px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-giziblue/60 hover:text-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:border-giziblue/80 dark:hover:text-giziblue"
+                class="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/70 px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-giziblue/60 hover:text-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-black/70 dark:bg-slate-950/60 dark:text-slate-200 dark:hover:border-giziblue/80 dark:hover:text-giziblue"
                 data-theme-toggle
                 aria-pressed="false"
                 aria-label="Aktifkan mode gelap"
@@ -39,7 +39,7 @@
             </div>
             <a
                 href="<?= site_url('logout') ?>"
-                class="inline-flex items-center rounded-md border border-giziblue bg-giziblue px-3 py-2 text-sm font-semibold text-white shadow hover:border-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/60 dark:focus:ring-offset-slate-900"
+                class="inline-flex items-center rounded-md border border-giziblue bg-giziblue px-3 py-2 text-sm font-semibold text-white shadow hover:border-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-black/70 dark:focus:ring-offset-slate-950"
             >Keluar</a>
         </div>
     </div>
