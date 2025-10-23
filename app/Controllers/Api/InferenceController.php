@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
 use App\Libraries\ForwardChaining;
+use App\Libraries\MotherFormatter;
 use App\Models\InferenceResultModel;
 use App\Models\MotherModel;
 use App\Models\RuleModel;
@@ -15,6 +16,7 @@ class InferenceController extends BaseController
     protected RuleModel $rules;
     protected InferenceResultModel $inferenceResults;
     protected ForwardChaining $engine;
+    protected MotherFormatter $formatter;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class InferenceController extends BaseController
         $this->rules = new RuleModel();
         $this->inferenceResults = new InferenceResultModel();
         $this->engine = new ForwardChaining();
+        $this->formatter = new MotherFormatter();
     }
 
     public function run()
@@ -72,6 +75,60 @@ class InferenceController extends BaseController
                 'recommendations' => $inferenceResult['recommendations'],
             ],
             'Inference executed successfully.'
+        );
+    }
+
+    public function latest()
+    {
+        $user = auth_user();
+
+        if ($user === null) {
+            return errorResponse('Unauthorized.', ResponseInterface::HTTP_UNAUTHORIZED);
+        }
+
+        $motherIdParam = $this->request->getGet('mother_id');
+
+        if (! is_numeric($motherIdParam)) {
+            return errorResponse(
+                'mother_id is required and must be a valid number.',
+                ResponseInterface::HTTP_BAD_REQUEST
+            );
+        }
+
+        $motherId = (int) $motherIdParam;
+
+        $motherRecord = $this->mothers
+            ->withUser()
+            ->where('mothers.id', $motherId)
+            ->first();
+
+        if (! is_array($motherRecord)) {
+            return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        $role = strtolower((string) ($user['role'] ?? ''));
+
+        if ($role === 'ibu' && (int) ($motherRecord['user_id'] ?? 0) !== (int) $user['id']) {
+            return errorResponse(
+                'You are not allowed to access this mother.',
+                ResponseInterface::HTTP_FORBIDDEN
+            );
+        }
+
+        $motherData = $this->formatter->present($motherRecord, true, true);
+        $latestInference = $motherData['latest_inference'] ?? null;
+        unset($motherData['latest_inference']);
+
+        $message = $latestInference === null
+            ? 'Belum ada hasil inferensi untuk ibu ini.'
+            : 'Hasil inferensi terbaru berhasil dimuat.';
+
+        return successResponse(
+            [
+                'mother'    => $motherData,
+                'inference' => $latestInference,
+            ],
+            $message
         );
     }
 
