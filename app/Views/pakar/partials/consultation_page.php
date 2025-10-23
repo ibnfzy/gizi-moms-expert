@@ -42,7 +42,7 @@
     };
 ?>
 <div class="flex min-h-[70vh] flex-col gap-6 lg:flex-row">
-    <div id="consultation-indicator" class="htmx-indicator hidden w-full rounded-lg bg-blue-50 px-4 py-2 text-sm text-blue-700">
+    <div id="consultation-indicator" data-consultation-indicator class="hidden w-full rounded-lg bg-blue-50 px-4 py-2 text-sm text-blue-700">
         Memuat data konsultasi...
     </div>
     <aside class="w-full rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 lg:w-80">
@@ -69,9 +69,7 @@
                             <button
                                 type="button"
                                 class="flex w-full flex-col gap-2 px-5 py-4 text-left transition <?= $buttonClass ?>"
-                                hx-get="<?= site_url('pakar/consultations') ?>/<?= $itemId ?>"
-                                hx-target="#consultation-page"
-                                hx-indicator="#consultation-indicator"
+                                data-consultation-url="<?= site_url('pakar/consultations') ?>/<?= $itemId ?>"
                             >
                                 <div class="flex items-center justify-between">
                                     <div>
@@ -159,9 +157,8 @@
                                 </div>
                             <?php endif; ?>
                             <form
-                                hx-post="<?= site_url('pakar/consultations') ?>/<?= $selectedId ?>/messages"
-                                hx-target="#consultation-page"
-                                hx-indicator="#consultation-indicator"
+                                data-consultation-form
+                                data-submit-url="<?= site_url('pakar/consultations') ?>/<?= $selectedId ?>/messages"
                                 class="flex items-end gap-3"
                             >
                                 <?= csrf_field() ?>

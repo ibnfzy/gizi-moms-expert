@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
-<div class="space-y-8">
+<div class="space-y-8" data-pakar-dashboard>
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-gray-900">Dashboard Pakar</h1>
@@ -41,4 +41,8 @@
         Aktifkan JavaScript atau gunakan tombol muat ulang untuk memperbarui data.
     </div>
 </noscript>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+    <script type="module" src="<?= base_url('js/pakar.js') ?>"></script>
 <?= $this->endSection() ?>
