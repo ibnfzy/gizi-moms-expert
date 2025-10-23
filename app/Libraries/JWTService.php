@@ -9,11 +9,7 @@ use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Token\UnencryptedToken;
-use Lcobucci\JWT\UnencryptedToken as LegacyUnencryptedToken;
-use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\StrictValidAt;
 use Throwable;
 
 class JWTService
@@ -39,13 +35,18 @@ class JWTService
             new SignedWith($this->config->signer(), $this->config->signingKey()),
         ];
 
-        if (class_exists(StrictValidAt::class)) {
-            $constraints[] = new StrictValidAt($clock);
-        } elseif (class_exists(LooseValidAt::class)) {
-            $constraints[] = new LooseValidAt($clock);
+        $strictValidAtClass = '\\Lcobucci\\JWT\\Validation\\Constraint\\StrictValidAt';
+        $looseValidAtClass  = '\\Lcobucci\\JWT\\Validation\\Constraint\\LooseValidAt';
+
+        if (class_exists($strictValidAtClass)) {
+            $constraints[] = new $strictValidAtClass($clock);
+        } elseif (class_exists($looseValidAtClass)) {
+            $constraints[] = new $looseValidAtClass($clock);
         }
 
-        $this->config->setValidationConstraints(...$constraints);
+        if (method_exists($this->config, 'setValidationConstraints')) {
+            $this->config->setValidationConstraints(...$constraints);
+        }
     }
 
     public function generateToken(array $user, ?DateInterval $ttl = null): string
@@ -82,7 +83,19 @@ class JWTService
             return null;
         }
 
-        if (! $parsedToken instanceof UnencryptedToken && ! $parsedToken instanceof LegacyUnencryptedToken) {
+        $newUnencryptedClass     = '\\Lcobucci\\JWT\\Token\\UnencryptedToken';
+        $legacyUnencryptedClass  = '\\Lcobucci\\JWT\\UnencryptedToken';
+        $isUnencryptedToken      = false;
+
+        if (interface_exists($newUnencryptedClass) && $parsedToken instanceof $newUnencryptedClass) {
+            $isUnencryptedToken = true;
+        }
+
+        if (! $isUnencryptedToken && class_exists($legacyUnencryptedClass) && $parsedToken instanceof $legacyUnencryptedClass) {
+            $isUnencryptedToken = true;
+        }
+
+        if (! $isUnencryptedToken) {
             return null;
         }
 
@@ -92,13 +105,64 @@ class JWTService
             return null;
         }
 
-        $claims = $parsedToken->claims();
+        $sentinel = new \stdClass();
+
+        $nameClaim = $this->getClaimValue($parsedToken, 'name', $sentinel);
 
         return [
-            'id'    => $claims->get('uid'),
-            'email' => $claims->get('email'),
-            'role'  => $claims->get('role'),
-            'name'  => $claims->has('name') ? $claims->get('name') : null,
+            'id'    => $this->getClaimValue($parsedToken, 'uid'),
+            'email' => $this->getClaimValue($parsedToken, 'email'),
+            'role'  => $this->getClaimValue($parsedToken, 'role'),
+            'name'  => $nameClaim === $sentinel ? null : $nameClaim,
         ];
+    }
+
+    /**
+     * Extracts a claim value from a token, supporting multiple JWT library versions.
+     */
+    private function getClaimValue(object $token, string $claim, $default = null)
+    {
+        if (method_exists($token, 'claims')) {
+            $claims = $token->claims();
+
+            if (is_object($claims)) {
+                if (method_exists($claims, 'has') && method_exists($claims, 'get')) {
+                    return $claims->has($claim) ? $claims->get($claim) : $default;
+                }
+
+                if (method_exists($claims, 'all')) {
+                    $data = $claims->all();
+                    if (is_array($data)) {
+                        return $data[$claim] ?? $default;
+                    }
+                }
+
+                if (method_exists($claims, 'get')) {
+                    try {
+                        return $claims->get($claim);
+                    } catch (Throwable $e) {
+                        return $default;
+                    }
+                }
+            }
+
+            if (is_array($claims)) {
+                return $claims[$claim] ?? $default;
+            }
+        }
+
+        if (method_exists($token, 'hasClaim') && method_exists($token, 'getClaim')) {
+            return $token->hasClaim($claim) ? $token->getClaim($claim) : $default;
+        }
+
+        if (method_exists($token, 'getClaim')) {
+            try {
+                return $token->getClaim($claim, $default);
+            } catch (Throwable $e) {
+                return $default;
+            }
+        }
+
+        return $default;
     }
 }
