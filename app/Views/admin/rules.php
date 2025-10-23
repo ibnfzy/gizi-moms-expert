@@ -94,18 +94,47 @@
                     />
                 </div>
             </div>
-            <div>
-                <div class="flex items-center justify-between">
-                    <label for="ruleJson" class="mb-1 block text-sm font-medium text-gray-700">JSON Rule</label>
-                    <span id="jsonValidationMessage" class="text-xs text-red-500"></span>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label for="ruleCondition" class="mb-1 block text-sm font-medium text-gray-700">Kondisi</label>
+                    <textarea
+                        id="ruleCondition"
+                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        placeholder="Deskripsikan kondisi yang perlu dipenuhi"
+                        required
+                    ></textarea>
                 </div>
-                <textarea
-                    id="ruleJson"
-                    class="block h-48 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    placeholder='Contoh: {"condition": "..."}'
-                    required
-                ></textarea>
+                <div>
+                    <label for="ruleRecommendation" class="mb-1 block text-sm font-medium text-gray-700">Rekomendasi</label>
+                    <textarea
+                        id="ruleRecommendation"
+                        class="block h-32 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        placeholder="Tuliskan rekomendasi yang diberikan"
+                        required
+                    ></textarea>
+                </div>
             </div>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label for="ruleCategory" class="mb-1 block text-sm font-medium text-gray-700">Kategori</label>
+                    <input
+                        type="text"
+                        id="ruleCategory"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        placeholder="Contoh: Nutrisi"
+                    />
+                </div>
+                <div>
+                    <label for="ruleStatus" class="mb-1 block text-sm font-medium text-gray-700">Status</label>
+                    <input
+                        type="text"
+                        id="ruleStatus"
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        placeholder="Contoh: Aktif"
+                    />
+                </div>
+            </div>
+            <p id="ruleDetailsMessage" class="text-xs text-red-500"></p>
             <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-5">
                 <button
                     type="button"
