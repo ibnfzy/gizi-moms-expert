@@ -29,7 +29,7 @@
         ></div>
 
         <div class="mt-6 overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 text-left text-sm dark:divide-black/60 dark:border-black/70">
+            <table class="min-w-full divide-y divide-gray-200 border border-black text-left text-sm dark:divide-black/60 dark:border-gray-300">
                 <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                     <tr>
                         <th scope="col" class="px-4 py-3">Nama Rule</th>

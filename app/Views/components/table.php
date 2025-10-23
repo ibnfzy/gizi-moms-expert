@@ -40,7 +40,7 @@ $normalizedHeaders = array_map(static function ($header) {
     <?php endif; ?>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 border border-gray-200 dark:divide-black/60 dark:border-black/70 dark:bg-slate-950/40">
+        <table class="min-w-full divide-y divide-gray-200 border border-black dark:divide-black/60 dark:border-gray-300 dark:bg-slate-950/40">
             <?php if (! empty($normalizedHeaders)) : ?>
                 <thead class="bg-gray-50 dark:bg-slate-950/60">
                     <tr>
