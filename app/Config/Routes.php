@@ -23,6 +23,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
             $routes->get('me', 'AuthController::me');
         });
 
+        $routes->get('stats', 'StatsController::index', ['filter' => 'role:admin']);
+
         $routes->group('', ['filter' => 'role:pakar,ibu'], static function ($routes) {
             $routes->get('mothers', 'MotherController::index');
             $routes->get('mothers/(:num)', 'MotherController::show/$1');
