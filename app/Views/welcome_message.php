@@ -204,6 +204,10 @@
   const mobileMenu = document.getElementById('mobileMenu');
   const downloadHeader = document.getElementById('downloadHeader');
 
+  if (!header) {
+    return;
+  }
+
   const setHeaderState = () => {
     const scrolled = window.scrollY > 10;
     header.classList.toggle('bg-white/95', scrolled);
@@ -219,21 +223,21 @@
     });
 
     const logo = header.querySelector('a[href="#hero"]');
-    logo.classList.toggle('text-slate-900', scrolled);
-    logo.classList.toggle('text-white', !scrolled);
+    logo?.classList.toggle('text-slate-900', scrolled);
+    logo?.classList.toggle('text-white', !scrolled);
 
     if (scrolled) {
-      loginToggle.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
-      loginToggle.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      loginToggle?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
+      loginToggle?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
       mobileButton?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
       mobileButton?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-      downloadHeader.classList.add('shadow-green-500/30');
+      downloadHeader?.classList.add('shadow-green-500/30');
     } else {
-      loginToggle.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
-      loginToggle.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      loginToggle?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
+      loginToggle?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
       mobileButton?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
       mobileButton?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-      downloadHeader.classList.remove('shadow-green-500/30');
+      downloadHeader?.classList.remove('shadow-green-500/30');
     }
   };
 
@@ -241,16 +245,16 @@
   window.addEventListener('scroll', setHeaderState);
 
   document.addEventListener('click', (event) => {
-    if (loginToggle.contains(event.target)) {
+    if (loginToggle?.contains(event.target)) {
       event.preventDefault();
-      loginDropdown.classList.toggle('hidden');
-    } else if (!loginDropdown.contains(event.target)) {
-      loginDropdown.classList.add('hidden');
+      loginDropdown?.classList.toggle('hidden');
+    } else if (!loginDropdown?.contains(event.target)) {
+      loginDropdown?.classList.add('hidden');
     }
   });
 
   mobileButton?.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
+    mobileMenu?.classList.toggle('hidden');
   });
 })();
 </script>
