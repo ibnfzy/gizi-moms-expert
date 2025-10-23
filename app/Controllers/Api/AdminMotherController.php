@@ -29,9 +29,9 @@ class AdminMotherController extends BaseController
         $records = $this->mothers
             ->withUser()
             ->orderBy('users.name', 'ASC')
-            ->findAll();
+            ->get()->getResultArray();
 
-        $payload = array_map(fn (array $mother): array => $this->formatter->present($mother, false, false), $records);
+        $payload = array_map(fn(array $mother): array => $this->formatter->present($mother, false, false), $records);
 
         return $this->response->setJSON([
             'status' => true,
@@ -44,7 +44,7 @@ class AdminMotherController extends BaseController
         $mother = $this->mothers
             ->withUser()
             ->where('mothers.id', $id)
-            ->first();
+            ->get()->getRowArray();
 
         if (! is_array($mother)) {
             return $this->notFound();
