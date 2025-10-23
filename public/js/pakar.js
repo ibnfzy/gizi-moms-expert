@@ -79,7 +79,12 @@ const fetchJson = async (url, options = {}) => {
     return payload ?? {};
 };
 
-const createPakarDashboard = (config = {}) => ({
+const registerPakarComponents = (alpineInstance) => {
+    if (!alpineInstance) {
+        return;
+    }
+
+    alpineInstance.data('pakarDashboard', (config = {}) => ({
         cards: [
             {
                 key: 'normal',
@@ -205,7 +210,7 @@ const createPakarDashboard = (config = {}) => ({
         },
     });
 
-const createPakarConsultation = () => ({
+    alpineInstance.data('pakarConsultation', () => ({
         consultations: [],
         selectedId: null,
         messagesEndpoint: '/api/messages',
@@ -401,24 +406,8 @@ const createPakarConsultation = () => ({
                 this.feedback = { type: 'error', message: error.message || 'Pesan gagal dikirim.' };
             }
         },
-    });
-
-const registerPakarComponents = (alpineInstance) => {
-    if (!alpineInstance) {
-        return;
-    }
-
-    alpineInstance.data('pakarDashboard', createPakarDashboard);
-    alpineInstance.data('pakarConsultation', createPakarConsultation);
+    }));
 };
-
-if (!window.pakarDashboard) {
-    window.pakarDashboard = (config = {}) => createPakarDashboard(config);
-}
-
-if (!window.pakarConsultation) {
-    window.pakarConsultation = (config = {}) => createPakarConsultation(config);
-}
 
 if (window.Alpine) {
     registerPakarComponents(window.Alpine);
