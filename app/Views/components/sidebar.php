@@ -55,22 +55,22 @@ $isPathMatched = static function (string $path, string $match): bool {
 };
 ?>
 
-<nav class="flex h-full flex-col gap-6 px-4 py-6">
+<nav class="flex h-full flex-col gap-6 px-4 py-6 text-slate-600 dark:text-slate-300">
     <div>
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500">Navigasi</h2>
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Navigasi</h2>
         <ul class="mt-3 space-y-2 text-sm">
             <?php foreach ($navigation as $item):
                 $isActive = $isPathMatched($currentPath, $item['match']);
                 $classes = $isActive
-                    ? 'bg-blue-50 text-blue-600 border-blue-200'
-                    : 'text-gray-600 hover:bg-gray-50';
+                    ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-500/40 dark:bg-slate-800/80 dark:text-blue-300'
+                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/60';
             ?>
                 <li>
                     <a href="<?= esc($item['href']) ?>"
                         class="flex items-center justify-between gap-3 rounded-lg border border-transparent px-3 py-2 transition <?= $classes ?>">
                         <span><?= esc($item['label']) ?></span>
                         <?php if ($isActive): ?>
-                            <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                            <span class="h-2 w-2 rounded-full bg-blue-500 shadow-sm dark:bg-blue-400"></span>
                         <?php endif; ?>
                     </a>
                 </li>
@@ -78,9 +78,9 @@ $isPathMatched = static function (string $path, string $match): bool {
         </ul>
     </div>
 
-    <div class="rounded-xl bg-blue-50 p-4 text-xs text-blue-600">
+    <div class="rounded-xl bg-blue-50 p-4 text-xs text-blue-600 dark:bg-slate-800/70 dark:text-blue-200">
         <p class="font-semibold">Tips</p>
-        <p class="mt-1 leading-relaxed">
+        <p class="mt-1 leading-relaxed text-slate-600 dark:text-slate-300">
             <?= esc($tipsText) ?>
         </p>
     </div>
