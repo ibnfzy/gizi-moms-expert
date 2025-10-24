@@ -5,13 +5,12 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
 
 class RoleFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        helper('auth');
+        helper(['auth', 'response_formatter']);
 
         $user = auth_user();
 
@@ -35,13 +34,6 @@ class RoleFilter implements FilterInterface
 
     private function forbiddenResponse(string $message): ResponseInterface
     {
-        $response = Services::response();
-
-        return $response
-            ->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)
-            ->setJSON([
-                'status'  => false,
-                'message' => $message,
-            ]);
+        return errorResponse($message, ResponseInterface::HTTP_FORBIDDEN);
     }
 }
