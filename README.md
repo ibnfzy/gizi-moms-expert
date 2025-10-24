@@ -66,3 +66,13 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 - json (enabled by default - don't turn it off)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
 - [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+
+## Cron setup
+
+Gunakan perintah CLI berikut untuk mengirimkan notifikasi pengingat konsultasi kepada ibu yang memiliki jadwal pada keesokan hari:
+
+```
+php spark schedule:reminder
+```
+
+Tambahkan perintah tersebut ke cron server Anda (misalnya dijalankan setiap jam) agar pengingat terkirim tepat waktu.
