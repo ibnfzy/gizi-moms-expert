@@ -15,6 +15,9 @@ $routes->get('/pakar/dashboard/mothers/close', 'PakarDashboardController::clearD
 $routes->get('/pakar/consultations', 'PakarConsultationController::index', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/consultations/(:num)', 'PakarConsultationController::conversation/$1', ['filter' => 'pakarfilter']);
 $routes->post('/pakar/consultations/(:num)/messages', 'PakarConsultationController::sendMessage/$1', ['filter' => 'pakarfilter']);
+$routes->get('/pakar/schedules', 'PakarScheduleController::index', ['filter' => 'pakarfilter']);
+$routes->get('/pakar/schedules/table', 'PakarScheduleController::table', ['filter' => 'pakarfilter']);
+$routes->get('/pakar/schedules/rows/(:num)', 'PakarScheduleController::row/$1', ['filter' => 'pakarfilter']);
 $routes->get('/admin/dashboard', 'AdminDashboardController::index', ['filter' => 'adminfilter']);
 $routes->get('/admin/rules', 'AdminRulesController::index', ['filter' => 'adminfilter']);
 $routes->get('/admin/mothers', 'AdminMotherController::index', ['filter' => 'adminfilter']);

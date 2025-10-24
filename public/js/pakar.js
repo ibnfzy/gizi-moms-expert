@@ -123,6 +123,423 @@ const createErrorPanel = (message) =>
     message
   )}</div>`;
 
+const initSchedulePage = () => {
+  const page = document.querySelector("[data-pakar-schedules]");
+  if (!page) {
+    return;
+  }
+
+  const rowUrlTemplate = page.dataset.rowUrlTemplate || "";
+  const feedbackElement = page.querySelector("[data-schedule-feedback]");
+  const filterForm = page.querySelector("[data-schedule-filter-form]");
+  const resetButton = page.querySelector("[data-schedule-filter-reset]");
+  const statusSelect = filterForm?.querySelector("[name='status']");
+  const modal = document.querySelector("[data-schedule-evaluation-modal]");
+  const modalForm = modal?.querySelector("[data-schedule-evaluation-form]");
+  const modalFeedback = modal?.querySelector("[data-modal-feedback]");
+  const summaryField = modal?.querySelector("[data-modal-summary]");
+  const followUpField = modal?.querySelector("[data-modal-follow-up]");
+  const modalTitle = modal?.querySelector("[data-modal-title]");
+  const modalSchedule = modal?.querySelector("[data-modal-schedule]");
+  const modalOverlay = modal?.querySelector("[data-modal-overlay]");
+  const modalCloseButtons = modal?.querySelectorAll("[data-modal-dismiss]") || [];
+
+  const successFeedbackClasses = [
+    "border-emerald-200",
+    "bg-emerald-50",
+    "text-emerald-700",
+    "dark:border-emerald-400/40",
+    "dark:bg-emerald-400/10",
+    "dark:text-emerald-200",
+  ];
+
+  const errorFeedbackClasses = [
+    "border-red-200",
+    "bg-red-50",
+    "text-red-700",
+    "dark:border-red-400/40",
+    "dark:bg-red-500/10",
+    "dark:text-red-200",
+  ];
+
+  let feedbackTimeout = null;
+  let escapeHandler = null;
+
+  const hideFeedback = () => {
+    if (!feedbackElement) {
+      return;
+    }
+
+    if (feedbackTimeout) {
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = null;
+    }
+
+    feedbackElement.classList.add("hidden");
+    feedbackElement.textContent = "";
+    feedbackElement.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+  };
+
+  const showFeedback = (type, message) => {
+    if (!feedbackElement || !message) {
+      return;
+    }
+
+    if (feedbackTimeout) {
+      window.clearTimeout(feedbackTimeout);
+    }
+
+    feedbackElement.textContent = message;
+    feedbackElement.classList.remove("hidden");
+    feedbackElement.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+
+    if (type === "success") {
+      feedbackElement.classList.add(...successFeedbackClasses);
+    } else {
+      feedbackElement.classList.add(...errorFeedbackClasses);
+    }
+
+    feedbackTimeout = window.setTimeout(() => {
+      hideFeedback();
+    }, 6000);
+  };
+
+  const parseApiMessage = (xhr) => {
+    if (!xhr) {
+      return "";
+    }
+
+    const text = xhr.responseText || "";
+    const contentType = xhr.getResponseHeader
+      ? xhr.getResponseHeader("Content-Type") || ""
+      : "";
+
+    if (contentType.includes("application/json")) {
+      try {
+        const payload = JSON.parse(text);
+        if (
+          payload &&
+          typeof payload.message === "string" &&
+          payload.message.trim() !== ""
+        ) {
+          return payload.message.trim();
+        }
+      } catch (error) {
+        // Ignore JSON parse errors and fallback to HTML parsing.
+      }
+    }
+
+    return extractErrorMessage(
+      text,
+      xhr.statusText || "Permintaan gagal diproses."
+    );
+  };
+
+  const clearModalFeedback = () => {
+    if (!modalFeedback) {
+      return;
+    }
+
+    modalFeedback.classList.add("hidden");
+    modalFeedback.textContent = "";
+    modalFeedback.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+  };
+
+  const showModalFeedback = (type, message) => {
+    if (!modalFeedback || !message) {
+      return;
+    }
+
+    modalFeedback.textContent = message;
+    modalFeedback.classList.remove("hidden");
+    modalFeedback.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+
+    if (type === "success") {
+      modalFeedback.classList.add(...successFeedbackClasses);
+    } else {
+      modalFeedback.classList.add(...errorFeedbackClasses);
+    }
+  };
+
+  const closeModal = () => {
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+
+    if (modalForm) {
+      modalForm.reset();
+      modalForm.removeAttribute("hx-put");
+      delete modalForm.dataset.scheduleId;
+    }
+
+    if (modalSchedule) {
+      modalSchedule.textContent = "";
+    }
+
+    clearModalFeedback();
+
+    if (escapeHandler) {
+      document.removeEventListener("keydown", escapeHandler);
+      escapeHandler = null;
+    }
+  };
+
+  const openModal = (options = {}) => {
+    if (!modal || !modalForm) {
+      return;
+    }
+
+    const {
+      scheduleId = "",
+      evaluationUrl = "",
+      name = "",
+      datetime = "",
+      summary = "",
+      followUp = false,
+    } = options;
+
+    if (!scheduleId || !evaluationUrl) {
+      return;
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("overflow-hidden");
+
+    modalForm.setAttribute("hx-put", evaluationUrl);
+    modalForm.dataset.scheduleId = scheduleId;
+
+    clearModalFeedback();
+
+    if (modalTitle) {
+      modalTitle.textContent = name
+        ? `Evaluasi • ${name}`
+        : "Evaluasi Konsultasi";
+    }
+
+    if (modalSchedule) {
+      const parts = [];
+      if (name) {
+        parts.push(name);
+      }
+      if (datetime) {
+        parts.push(datetime);
+      }
+      modalSchedule.textContent = parts.join(" • ");
+    }
+
+    if (summaryField) {
+      summaryField.value = summary || "";
+      window.requestAnimationFrame(() => {
+        summaryField.focus();
+        const length = summaryField.value.length;
+        summaryField.setSelectionRange(length, length);
+      });
+    }
+
+    if (followUpField) {
+      followUpField.checked = Boolean(followUp);
+    }
+
+    if (escapeHandler) {
+      document.removeEventListener("keydown", escapeHandler);
+    }
+
+    escapeHandler = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeModal();
+      }
+    };
+
+    document.addEventListener("keydown", escapeHandler);
+  };
+
+  const refreshRow = async (scheduleId) => {
+    if (!scheduleId || !rowUrlTemplate) {
+      return false;
+    }
+
+    const target = document.getElementById(`schedule-row-${scheduleId}`);
+    if (!target) {
+      return false;
+    }
+
+    const url = rowUrlTemplate.replace("__id__", encodeURIComponent(scheduleId));
+
+    try {
+      const { html, ok, message } = await fetchHtml(url, {
+        acceptErrorResponse: true,
+      });
+
+      if (!ok) {
+        showFeedback("error", message || "Gagal memperbarui jadwal.");
+        return false;
+      }
+
+      if (html && html.trim() !== "") {
+        target.outerHTML = html;
+      }
+
+      return true;
+    } catch (error) {
+      showFeedback("error", error?.message || "Gagal memperbarui jadwal.");
+      return false;
+    }
+  };
+
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeModal();
+    });
+  }
+
+  modalCloseButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeModal();
+    });
+  });
+
+  if (modalForm) {
+    modalForm.addEventListener("htmx:beforeRequest", () => {
+      clearModalFeedback();
+    });
+  }
+
+  if (resetButton && statusSelect && filterForm) {
+    resetButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      statusSelect.value = "";
+      page.dataset.currentStatus = "";
+      hideFeedback();
+      if (window.htmx) {
+        window.htmx.trigger(filterForm, "submit");
+      }
+    });
+  }
+
+  if (statusSelect) {
+    statusSelect.addEventListener("change", () => {
+      page.dataset.currentStatus = statusSelect.value || "";
+    });
+  }
+
+  if (filterForm) {
+    filterForm.addEventListener("htmx:afterRequest", () => {
+      if (statusSelect) {
+        page.dataset.currentStatus = statusSelect.value || "";
+      }
+    });
+  }
+
+  page.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const button = target.closest("[data-schedule-evaluation-button]");
+    if (!button) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const scheduleId = button.dataset.scheduleId || "";
+    const evaluationUrl = button.dataset.scheduleEvaluationUrl || "";
+
+    if (!scheduleId || !evaluationUrl) {
+      return;
+    }
+
+    openModal({
+      scheduleId,
+      evaluationUrl,
+      name: button.dataset.scheduleName || "",
+      datetime: button.dataset.scheduleDatetime || "",
+      summary: button.dataset.evaluationSummary || "",
+      followUp: button.dataset.evaluationFollowUp === "1",
+    });
+  });
+
+  page.addEventListener("htmx:afterRequest", async (event) => {
+    const { detail } = event;
+    if (!detail) {
+      return;
+    }
+
+    const trigger = detail.elt;
+    if (!trigger || trigger.dataset?.scheduleRefresh !== "true") {
+      return;
+    }
+
+    const scheduleId = trigger.dataset.scheduleId || "";
+    const message = parseApiMessage(detail.xhr);
+    const successful =
+      typeof detail.successful === "boolean"
+        ? detail.successful
+        : detail.xhr?.status >= 200 && detail.xhr?.status < 300;
+
+    if (successful) {
+      if (trigger === modalForm) {
+        clearModalFeedback();
+        closeModal();
+      }
+
+      const refreshed = scheduleId ? await refreshRow(scheduleId) : true;
+
+      if (refreshed) {
+        const successMessage = message || "Data jadwal berhasil diperbarui.";
+        showFeedback("success", successMessage);
+      }
+    } else if (trigger === modalForm) {
+      showModalFeedback("error", message || "Evaluasi gagal disimpan.");
+    } else if (message) {
+      showFeedback("error", message);
+    }
+  });
+
+  page.addEventListener("htmx:responseError", (event) => {
+    const { detail } = event;
+    if (!detail) {
+      return;
+    }
+
+    const trigger = detail.elt;
+    if (!trigger || trigger.dataset?.scheduleRefresh !== "true") {
+      return;
+    }
+
+    const message = parseApiMessage(detail.xhr);
+
+    if (trigger === modalForm) {
+      showModalFeedback("error", message || "Evaluasi gagal disimpan.");
+    } else if (message) {
+      showFeedback("error", message);
+    }
+  });
+};
+
 const initDashboardPage = () => {
   const page = document.querySelector("[data-pakar-dashboard]");
   if (!page) {
@@ -567,6 +984,7 @@ const initConsultationPage = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  initSchedulePage();
   initDashboardPage();
   initConsultationPage();
 });
