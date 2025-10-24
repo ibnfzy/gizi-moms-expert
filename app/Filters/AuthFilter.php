@@ -7,13 +7,12 @@ use App\Models\UserModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
 
 class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        helper('auth');
+        helper(['auth', 'response_formatter']);
 
         $authHeader = $request->getHeaderLine('Authorization');
         $token = auth_token($authHeader);
@@ -55,13 +54,6 @@ class AuthFilter implements FilterInterface
 
     private function unauthorizedResponse(string $message): ResponseInterface
     {
-        $response = Services::response();
-
-        return $response
-            ->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED)
-            ->setJSON([
-                'status'  => false,
-                'message' => $message,
-            ]);
+        return errorResponse($message, ResponseInterface::HTTP_UNAUTHORIZED);
     }
 }
