@@ -19,8 +19,8 @@ class ScheduleReminder extends BaseCommand
     {
         $timezone = app_timezone();
         $now = Time::now($timezone);
-        $windowStart = $now->copy()->addHours(23);
-        $windowEnd = $now->copy()->addHours(25);
+        $windowStart = (clone $now)->addHours(23);
+        $windowEnd = (clone $now)->addHours(25);
 
         $scheduleModel = new ScheduleModel();
 
