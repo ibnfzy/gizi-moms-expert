@@ -61,7 +61,7 @@ class ConsultationController extends BaseController
                 ->where('mother_id', $motherRecord['id'])
                 ->orderBy('updated_at', 'DESC')
                 ->orderBy('created_at', 'DESC')
-                ->findAll();
+                ->get()->getResultArray();
 
             $motherRecords[(int) $motherRecord['id']] = $motherRecord;
         } else {
@@ -69,7 +69,7 @@ class ConsultationController extends BaseController
                 ->where('pakar_id', $user['id'])
                 ->orderBy('updated_at', 'DESC')
                 ->orderBy('created_at', 'DESC')
-                ->findAll();
+                ->get()->getResultArray();
 
             $motherIds = array_values(array_unique(array_map(
                 static fn(array $record): int => (int) ($record['mother_id'] ?? 0),
@@ -113,7 +113,7 @@ class ConsultationController extends BaseController
             $pakarRecords = $this->users
                 ->select('id, name, email, role')
                 ->whereIn('id', $pakarIds)
-                ->findAll();
+                ->get()->getResultArray();
 
             foreach ($pakarRecords as $pakar) {
                 $pakarMap[(int) ($pakar['id'] ?? 0)] = $pakar;

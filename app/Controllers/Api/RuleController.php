@@ -20,7 +20,7 @@ class RuleController extends BaseController
     {
         $rules = $this->rules
             ->orderBy('created_at', 'DESC')
-            ->findAll();
+            ->get()->getResultArray();
 
         $data = array_map([$this, 'formatRule'], $rules);
 

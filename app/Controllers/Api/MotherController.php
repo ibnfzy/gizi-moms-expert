@@ -25,7 +25,7 @@ class MotherController extends BaseController
         $records = $this->mothers
             ->withUser()
             ->orderBy('users.name', 'ASC')
-            ->findAll();
+            ->get()->getResultArray();
 
         $payload = array_map(fn(array $mother): array => $this->formatter->present($mother, false, false), $records);
 

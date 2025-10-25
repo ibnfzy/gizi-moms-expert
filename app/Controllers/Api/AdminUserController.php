@@ -23,7 +23,7 @@ class AdminUserController extends BaseController
         $records = $this->users
             ->whereIn('role', $this->managedRoles())
             ->orderBy('name', 'ASC')
-            ->findAll();
+            ->get()->getResultArray();
 
         $payload = array_map(fn(array $user): array => $this->present($user), $records);
 

@@ -49,7 +49,7 @@ class InferenceController extends BaseController
 
         $facts = $this->buildFactsFromMother($mother);
 
-        $ruleRecords = $this->rules->where('is_active', true)->findAll();
+        $ruleRecords = $this->rules->where('is_active', true)->get()->getResultArray();
         $parsedRules = $this->parseRules($ruleRecords);
 
         $inferenceResult = $this->engine->run($facts, $parsedRules);

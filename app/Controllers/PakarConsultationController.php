@@ -185,7 +185,7 @@ class PakarConsultationController extends BaseController
             ->where('pakar_id', $pakarId)
             ->orderBy('updated_at', 'DESC')
             ->orderBy('created_at', 'DESC')
-            ->findAll();
+            ->get()->getResultArray();
 
         $mothersCache   = [];
         $consultations  = [];
@@ -209,10 +209,10 @@ class PakarConsultationController extends BaseController
                 ->where('consultation_id', $consultation['id'])
                 ->orderBy('created_at', 'ASC')
                 ->orderBy('id', 'ASC')
-                ->findAll();
+                ->get()->getResultArray();
 
             $formattedMessages = array_map(
-                fn (array $message): array => $this->formatMessage($message, $userRole),
+                fn(array $message): array => $this->formatMessage($message, $userRole),
                 $messages
             );
 

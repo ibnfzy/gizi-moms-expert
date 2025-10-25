@@ -43,9 +43,9 @@ class MessageController extends BaseController
             ->where('consultation_id', $consultationId)
             ->orderBy('created_at', 'ASC')
             ->orderBy('id', 'ASC')
-            ->findAll();
+            ->get()->getResultArray();
 
-        $payload = array_map(fn (array $message): array => $this->formatMessage($message), $messages);
+        $payload = array_map(fn(array $message): array => $this->formatMessage($message), $messages);
 
         return successResponse($payload, 'Pesan konsultasi berhasil dimuat.');
     }
