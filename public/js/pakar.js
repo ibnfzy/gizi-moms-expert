@@ -310,6 +310,12 @@ const initSchedulePage = () => {
   );
   const evaluationCloseButtons =
     evaluationModal?.querySelectorAll("[data-modal-dismiss]") || [];
+  const evaluationSubmitButton = evaluationForm?.querySelector(
+    "[data-modal-submit]"
+  );
+  const evaluationIndicator = evaluationForm?.querySelector(
+    "[data-modal-indicator]"
+  );
 
   const createModal = document.querySelector("[data-schedule-create-modal]");
   const createForm = createModal?.querySelector("[data-schedule-create-form]");
@@ -439,6 +445,24 @@ const initSchedulePage = () => {
     );
   };
 
+  const toggleEvaluationIndicator = (show) => {
+    if (evaluationIndicator) {
+      evaluationIndicator.classList.toggle("hidden", !show);
+    }
+
+    if (!evaluationSubmitButton) {
+      return;
+    }
+
+    evaluationSubmitButton.disabled = show;
+
+    if (show) {
+      evaluationSubmitButton.setAttribute("aria-busy", "true");
+    } else {
+      evaluationSubmitButton.removeAttribute("aria-busy");
+    }
+  };
+
   const clearEvaluationFeedback = () => {
     if (!evaluationFeedback) {
       return;
@@ -483,8 +507,8 @@ const initSchedulePage = () => {
 
     if (evaluationForm) {
       evaluationForm.reset();
-      evaluationForm.removeAttribute("hx-put");
       delete evaluationForm.dataset.scheduleId;
+      delete evaluationForm.dataset.evaluationUrl;
     }
 
     if (evaluationSchedule) {
@@ -492,6 +516,7 @@ const initSchedulePage = () => {
     }
 
     clearEvaluationFeedback();
+    toggleEvaluationIndicator(false);
 
     if (evaluationEscapeHandler) {
       document.removeEventListener("keydown", evaluationEscapeHandler);
@@ -522,10 +547,11 @@ const initSchedulePage = () => {
     evaluationModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("overflow-hidden");
 
-    evaluationForm.setAttribute("hx-put", evaluationUrl);
     evaluationForm.dataset.scheduleId = scheduleId;
+    evaluationForm.dataset.evaluationUrl = evaluationUrl;
 
     clearEvaluationFeedback();
+    toggleEvaluationIndicator(false);
 
     if (evaluationTitle) {
       evaluationTitle.textContent = name
@@ -851,8 +877,83 @@ const initSchedulePage = () => {
   });
 
   if (evaluationForm) {
-    evaluationForm.addEventListener("htmx:beforeRequest", () => {
+    evaluationForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
       clearEvaluationFeedback();
+
+      const scheduleId = evaluationForm.dataset.scheduleId || "";
+      const evaluationUrl = evaluationForm.dataset.evaluationUrl || "";
+
+      if (!scheduleId || !evaluationUrl) {
+        showEvaluationFeedback(
+          "error",
+          "Data evaluasi tidak tersedia. Silakan tutup dan buka kembali."
+        );
+        return;
+      }
+
+      const formData = new FormData(evaluationForm);
+      const summaryValue = formData.get("evaluation[summary]");
+      const summary =
+        typeof summaryValue === "string" ? summaryValue.trim() : "";
+
+      if (summary === "") {
+        showEvaluationFeedback("error", "Ringkasan evaluasi wajib diisi.");
+        if (summaryField) {
+          summaryField.focus();
+        }
+        return;
+      }
+
+      const followUp = formData.get("evaluation[follow_up]") === "1";
+
+      const payload = {
+        evaluation: {
+          summary,
+          follow_up: followUp,
+        },
+      };
+
+      toggleEvaluationIndicator(true);
+
+      try {
+        const { ok, data, message } = await fetchJson(evaluationUrl, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+          acceptErrorResponse: true,
+        });
+
+        if (!ok || !data || data.status !== true) {
+          const errorMessage =
+            (data && data.message) || message || "Evaluasi gagal disimpan.";
+          showEvaluationFeedback("error", errorMessage);
+          return;
+        }
+
+        const successMessage =
+          (data && data.message) || "Evaluasi berhasil disimpan.";
+
+        closeEvaluationModal();
+
+        const refreshed = await refreshRow(scheduleId);
+
+        if (refreshed) {
+          showFeedback("success", successMessage);
+        } else {
+          showFeedback(
+            "error",
+            `${successMessage} Namun tabel gagal diperbarui, silakan muat ulang halaman.`
+          );
+        }
+      } catch (error) {
+        showEvaluationFeedback(
+          "error",
+          error?.message || "Evaluasi gagal disimpan."
+        );
+      } finally {
+        toggleEvaluationIndicator(false);
+      }
     });
   }
 
@@ -1078,19 +1179,12 @@ const initSchedulePage = () => {
         : detail.xhr?.status >= 200 && detail.xhr?.status < 300;
 
     if (successful) {
-      if (trigger === evaluationForm) {
-        clearEvaluationFeedback();
-        closeEvaluationModal();
-      }
-
       const refreshed = scheduleId ? await refreshRow(scheduleId) : true;
 
       if (refreshed) {
         const successMessage = message || "Data jadwal berhasil diperbarui.";
         showFeedback("success", successMessage);
       }
-    } else if (trigger === evaluationForm) {
-      showEvaluationFeedback("error", message || "Evaluasi gagal disimpan.");
     } else if (message) {
       showFeedback("error", message);
     }
@@ -1109,9 +1203,7 @@ const initSchedulePage = () => {
 
     const message = parseApiMessage(detail.xhr);
 
-    if (trigger === modalForm) {
-      showModalFeedback("error", message || "Evaluasi gagal disimpan.");
-    } else if (message) {
+    if (message) {
       showFeedback("error", message);
     }
   });
