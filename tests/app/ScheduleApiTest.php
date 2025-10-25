@@ -315,7 +315,7 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertFalse($data['data'][0]['is_read']);
     }
 
-    public function testScheduleReminderCommandCreatesNotifications(): void
+    public function testScheduleReminderEndpointCreatesNotifications(): void
     {
         $expert       = $this->createUser('pakar', 'expert-reminder@example.com');
         $motherBundle = $this->createMotherWithUser('mother-reminder@example.com');
@@ -337,10 +337,18 @@ final class ScheduleApiTest extends FeatureTestCase
             'status'       => 'confirmed',
         ]);
 
-        $result = $this->command('schedule:reminder');
+        $response = $this->get('cron/schedules/reminder');
 
-        $this->assertStringContainsString('Pengingat dikirim untuk jadwal ID ' . $dueSchedule['id'], $result->output());
-        $this->assertStringContainsString('Selesai: 1 pengingat dikirim.', $result->output());
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+
+        $payload = $this->getResponseArray($response);
+        $this->assertTrue($payload['status']);
+        $this->assertSame('Schedule reminder cron executed successfully.', $payload['message']);
+        $this->assertSame(0, $payload['data']['cancelled_count']);
+        $this->assertSame(1, $payload['data']['reminders_sent']);
+        $this->assertCount(1, $payload['data']['reminders']);
+        $this->assertSame($dueSchedule['id'], $payload['data']['reminders'][0]['schedule_id']);
+        $this->assertSame($motherBundle['mother']['id'], $payload['data']['reminders'][0]['mother_id']);
 
         $updatedDue = $this->schedules->find($dueSchedule['id']);
         $this->assertSame(1, (int) $updatedDue['reminder_sent']);
@@ -355,7 +363,7 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertSame('schedule-reminder', $notifications[0]['type']);
     }
 
-    public function testScheduleReminderCommandCancelsExpiredSchedules(): void
+    public function testScheduleReminderEndpointCancelsExpiredSchedules(): void
     {
         $expert       = $this->createUser('pakar', 'expert-reminder-expired@example.com');
         $motherBundle = $this->createMotherWithUser('mother-reminder-expired@example.com');
@@ -384,9 +392,20 @@ final class ScheduleApiTest extends FeatureTestCase
             'status'       => 'completed',
         ]);
 
-        $result = $this->command('schedule:reminder');
+        $response = $this->get('cron/schedules/reminder');
 
-        $this->assertStringContainsString('2 jadwal yang sudah lewat dibatalkan.', $result->output());
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+
+        $payload = $this->getResponseArray($response);
+        $this->assertTrue($payload['status']);
+        $this->assertSame('Schedule reminder cron executed successfully.', $payload['message']);
+        $this->assertSame(2, $payload['data']['cancelled_count']);
+        $this->assertSameCanonicalizing([
+            $confirmedPast['id'],
+            $pendingPast['id'],
+        ], $payload['data']['cancelled_schedule_ids']);
+        $this->assertSame(0, $payload['data']['reminders_sent']);
+        $this->assertSame([], $payload['data']['reminders']);
 
         $updatedConfirmed = $this->schedules->find($confirmedPast['id']);
         $this->assertSame('cancelled', $updatedConfirmed['status']);
