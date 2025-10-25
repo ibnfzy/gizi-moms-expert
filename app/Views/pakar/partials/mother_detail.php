@@ -99,12 +99,12 @@
     };
 ?>
 <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 px-4"
+    class="fixed inset-0 z-50 flex items-start justify-center bg-gray-900/60 px-4 py-6 md:items-center"
     data-modal="mother-detail"
     data-detail-url="<?= esc($detailUrl) ?>"
     data-mother-id="<?= esc((string) ($motherId ?? '')) ?>"
 >
-    <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl">
+    <div class="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
         <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4">
             <div>
                 <h3 class="text-lg font-semibold text-gray-900"><?= esc($mother['name'] ?? '-') ?></h3>

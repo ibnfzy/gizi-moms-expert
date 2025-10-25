@@ -70,8 +70,8 @@
 
 <!-- Create Modal -->
 <div id="adminUserCreateModal"
-  class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+  class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+  <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserCreateForm" class="space-y-6">
       <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
         <div>
@@ -126,8 +126,8 @@
 
 <!-- Edit Modal -->
 <div id="adminUserEditModal"
-  class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+  class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+  <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserEditForm" class="space-y-6">
       <input type="hidden" id="userEditId" name="id">
       <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
@@ -178,8 +178,8 @@
 
 <!-- Password Modal -->
 <div id="adminUserPasswordModal"
-  class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-  <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+  class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+  <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
     <form id="adminUserPasswordForm" class="space-y-6">
       <input type="hidden" id="userPasswordId" name="id">
       <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">

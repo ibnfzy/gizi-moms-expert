@@ -68,8 +68,8 @@
 </div>
 
 <!-- Detail Modal -->
-<div id="motherDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+<div id="motherDetailModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+    <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
         <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
             <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Detail Data Ibu</h2>
@@ -158,8 +158,8 @@
 </div>
 
 <!-- Email Modal -->
-<div id="motherEmailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+<div id="motherEmailModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+    <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
         <form id="motherEmailForm" class="space-y-6">
             <div class="border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Perbarui Email</h2>
@@ -191,8 +191,8 @@
 </div>
 
 <!-- Password Modal -->
-<div id="motherPasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70">
-    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
+<div id="motherPasswordModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-gray-900/50 px-4 py-6 dark:bg-black/70 md:items-center">
+    <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-200/40 dark:bg-slate-950 dark:text-slate-100">
         <form id="motherPasswordForm" class="space-y-6">
             <div class="border-b border-gray-200 px-6 py-4 dark:border-slate-200/30">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Atur Ulang Password</h2>
