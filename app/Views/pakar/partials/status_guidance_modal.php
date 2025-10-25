@@ -1,4 +1,5 @@
 <div
+    id="status-guidance-modal"
     class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 p-4 md:p-6"
     data-status-guidance-modal
     role="dialog"
