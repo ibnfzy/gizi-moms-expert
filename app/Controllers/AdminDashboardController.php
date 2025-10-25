@@ -37,7 +37,7 @@ class AdminDashboardController extends BaseController
 
     private function getLatestRules(): array
     {
-        Time::now('Asia/Makassar', 'id_ID');
+        Time::setLocale('id_ID');
 
         $latestRules = $this->ruleModel
             ->orderBy('effective_from', 'DESC')
