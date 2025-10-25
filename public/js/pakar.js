@@ -1028,6 +1028,17 @@ const initDashboardPage = () => {
   const detailIndicator = document.getElementById("mother-detail-loading");
   const detailContainer = document.getElementById("mother-detail-container");
 
+  const statusModal = document.querySelector("[data-status-guidance-modal]");
+  const statusOverlay = statusModal?.querySelector(
+    "[data-status-guidance-overlay]"
+  );
+  const statusCloseButtons =
+    statusModal?.querySelectorAll("[data-status-guidance-close]") || [];
+  const statusOpenButtons =
+    page.querySelectorAll("[data-status-guidance-open]") || [];
+
+  let statusEscapeHandler = null;
+  let statusLastFocus = null;
   let detailEscapeHandler = null;
   let currentDetailUrl = null;
   let currentMotherId = null;
@@ -1053,6 +1064,86 @@ const initDashboardPage = () => {
       indicator.classList.add("hidden");
     }
   };
+
+  const closeStatusModal = () => {
+    if (!statusModal) {
+      return;
+    }
+
+    statusModal.classList.add("hidden");
+    statusModal.classList.remove("flex");
+    statusModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+
+    if (statusEscapeHandler) {
+      document.removeEventListener("keydown", statusEscapeHandler);
+      statusEscapeHandler = null;
+    }
+
+    if (statusLastFocus && typeof statusLastFocus.focus === "function") {
+      statusLastFocus.focus();
+    }
+
+    statusLastFocus = null;
+  };
+
+  const openStatusModal = () => {
+    if (!statusModal) {
+      return;
+    }
+
+    statusLastFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    statusModal.classList.remove("hidden");
+    statusModal.classList.add("flex");
+    statusModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("overflow-hidden");
+
+    if (statusEscapeHandler) {
+      document.removeEventListener("keydown", statusEscapeHandler);
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeStatusModal();
+      }
+    };
+
+    statusEscapeHandler = handleEscape;
+    document.addEventListener("keydown", handleEscape);
+
+    const focusTarget = statusModal.querySelector(
+      "[data-status-guidance-focus]"
+    );
+    if (focusTarget) {
+      focusTarget.focus();
+    }
+  };
+
+  statusOpenButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      openStatusModal();
+    });
+  });
+
+  statusCloseButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeStatusModal();
+    });
+  });
+
+  if (statusOverlay) {
+    statusOverlay.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeStatusModal();
+    });
+  }
 
   const clearDashboardErrors = () => {
     if (!dataContainer) {
