@@ -130,19 +130,54 @@ const initSchedulePage = () => {
   }
 
   const rowUrlTemplate = page.dataset.rowUrlTemplate || "";
+  const tableUrl = page.dataset.tableUrl || "";
+  const mothersUrl = page.dataset.mothersUrl || "";
+  const createUrl = page.dataset.createUrl || "";
+
   const feedbackElement = page.querySelector("[data-schedule-feedback]");
   const filterForm = page.querySelector("[data-schedule-filter-form]");
   const resetButton = page.querySelector("[data-schedule-filter-reset]");
   const statusSelect = filterForm?.querySelector("[name='status']");
-  const modal = document.querySelector("[data-schedule-evaluation-modal]");
-  const modalForm = modal?.querySelector("[data-schedule-evaluation-form]");
-  const modalFeedback = modal?.querySelector("[data-modal-feedback]");
-  const summaryField = modal?.querySelector("[data-modal-summary]");
-  const followUpField = modal?.querySelector("[data-modal-follow-up]");
-  const modalTitle = modal?.querySelector("[data-modal-title]");
-  const modalSchedule = modal?.querySelector("[data-modal-schedule]");
-  const modalOverlay = modal?.querySelector("[data-modal-overlay]");
-  const modalCloseButtons = modal?.querySelectorAll("[data-modal-dismiss]") || [];
+
+  const tableContainer = document.getElementById("schedule-table");
+  const tableIndicator = document.getElementById("schedule-table-indicator");
+
+  const evaluationModal = document.querySelector(
+    "[data-schedule-evaluation-modal]"
+  );
+  const evaluationForm = evaluationModal?.querySelector(
+    "[data-schedule-evaluation-form]"
+  );
+  const evaluationFeedback = evaluationModal?.querySelector(
+    "[data-modal-feedback]"
+  );
+  const summaryField = evaluationModal?.querySelector("[data-modal-summary]");
+  const followUpField = evaluationModal?.querySelector(
+    "[data-modal-follow-up]"
+  );
+  const evaluationTitle = evaluationModal?.querySelector("[data-modal-title]");
+  const evaluationSchedule = evaluationModal?.querySelector(
+    "[data-modal-schedule]"
+  );
+  const evaluationOverlay = evaluationModal?.querySelector(
+    "[data-modal-overlay]"
+  );
+  const evaluationCloseButtons =
+    evaluationModal?.querySelectorAll("[data-modal-dismiss]") || [];
+
+  const createModal = document.querySelector("[data-schedule-create-modal]");
+  const createForm = createModal?.querySelector("[data-schedule-create-form]");
+  const createFeedback = createModal?.querySelector("[data-modal-feedback]");
+  const createMotherSelect = createModal?.querySelector("[data-create-mother]");
+  const createDatetime = createModal?.querySelector("[data-create-datetime]");
+  const createStatus = createModal?.querySelector("[data-create-status]");
+  const createOverlay = createModal?.querySelector("[data-modal-overlay]");
+  const createCloseButtons =
+    createModal?.querySelectorAll("[data-modal-dismiss]") || [];
+  const createSubmitButton = createModal?.querySelector("[data-modal-submit]");
+  const createIndicator = createModal?.querySelector("[data-modal-indicator]");
+  const createOpenButtons =
+    page.querySelectorAll("[data-schedule-create-open]") || [];
 
   const successFeedbackClasses = [
     "border-emerald-200",
@@ -162,8 +197,25 @@ const initSchedulePage = () => {
     "dark:text-red-200",
   ];
 
+  const allowedStatuses = new Set([
+    "pending",
+    "confirmed",
+    "completed",
+    "cancelled",
+  ]);
+
   let feedbackTimeout = null;
-  let escapeHandler = null;
+  let evaluationEscapeHandler = null;
+  let createEscapeHandler = null;
+  let mothersLoaded = false;
+  let mothersLoading = false;
+
+  const toggleTableIndicator = (show) => {
+    if (!tableIndicator) {
+      return;
+    }
+    tableIndicator.classList.toggle("hidden", !show);
+  };
 
   const hideFeedback = () => {
     if (!feedbackElement) {
@@ -241,68 +293,68 @@ const initSchedulePage = () => {
     );
   };
 
-  const clearModalFeedback = () => {
-    if (!modalFeedback) {
+  const clearEvaluationFeedback = () => {
+    if (!evaluationFeedback) {
       return;
     }
 
-    modalFeedback.classList.add("hidden");
-    modalFeedback.textContent = "";
-    modalFeedback.classList.remove(
+    evaluationFeedback.classList.add("hidden");
+    evaluationFeedback.textContent = "";
+    evaluationFeedback.classList.remove(
       ...successFeedbackClasses,
       ...errorFeedbackClasses
     );
   };
 
-  const showModalFeedback = (type, message) => {
-    if (!modalFeedback || !message) {
+  const showEvaluationFeedback = (type, message) => {
+    if (!evaluationFeedback || !message) {
       return;
     }
 
-    modalFeedback.textContent = message;
-    modalFeedback.classList.remove("hidden");
-    modalFeedback.classList.remove(
+    evaluationFeedback.textContent = message;
+    evaluationFeedback.classList.remove("hidden");
+    evaluationFeedback.classList.remove(
       ...successFeedbackClasses,
       ...errorFeedbackClasses
     );
 
     if (type === "success") {
-      modalFeedback.classList.add(...successFeedbackClasses);
+      evaluationFeedback.classList.add(...successFeedbackClasses);
     } else {
-      modalFeedback.classList.add(...errorFeedbackClasses);
+      evaluationFeedback.classList.add(...errorFeedbackClasses);
     }
   };
 
-  const closeModal = () => {
-    if (!modal) {
+  const closeEvaluationModal = () => {
+    if (!evaluationModal) {
       return;
     }
 
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-    modal.setAttribute("aria-hidden", "true");
+    evaluationModal.classList.add("hidden");
+    evaluationModal.classList.remove("flex");
+    evaluationModal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("overflow-hidden");
 
-    if (modalForm) {
-      modalForm.reset();
-      modalForm.removeAttribute("hx-put");
-      delete modalForm.dataset.scheduleId;
+    if (evaluationForm) {
+      evaluationForm.reset();
+      evaluationForm.removeAttribute("hx-put");
+      delete evaluationForm.dataset.scheduleId;
     }
 
-    if (modalSchedule) {
-      modalSchedule.textContent = "";
+    if (evaluationSchedule) {
+      evaluationSchedule.textContent = "";
     }
 
-    clearModalFeedback();
+    clearEvaluationFeedback();
 
-    if (escapeHandler) {
-      document.removeEventListener("keydown", escapeHandler);
-      escapeHandler = null;
+    if (evaluationEscapeHandler) {
+      document.removeEventListener("keydown", evaluationEscapeHandler);
+      evaluationEscapeHandler = null;
     }
   };
 
-  const openModal = (options = {}) => {
-    if (!modal || !modalForm) {
+  const openEvaluationModal = (options = {}) => {
+    if (!evaluationModal || !evaluationForm) {
       return;
     }
 
@@ -319,23 +371,23 @@ const initSchedulePage = () => {
       return;
     }
 
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-    modal.setAttribute("aria-hidden", "false");
+    evaluationModal.classList.remove("hidden");
+    evaluationModal.classList.add("flex");
+    evaluationModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("overflow-hidden");
 
-    modalForm.setAttribute("hx-put", evaluationUrl);
-    modalForm.dataset.scheduleId = scheduleId;
+    evaluationForm.setAttribute("hx-put", evaluationUrl);
+    evaluationForm.dataset.scheduleId = scheduleId;
 
-    clearModalFeedback();
+    clearEvaluationFeedback();
 
-    if (modalTitle) {
-      modalTitle.textContent = name
+    if (evaluationTitle) {
+      evaluationTitle.textContent = name
         ? `Evaluasi • ${name}`
         : "Evaluasi Konsultasi";
     }
 
-    if (modalSchedule) {
+    if (evaluationSchedule) {
       const parts = [];
       if (name) {
         parts.push(name);
@@ -343,7 +395,7 @@ const initSchedulePage = () => {
       if (datetime) {
         parts.push(datetime);
       }
-      modalSchedule.textContent = parts.join(" • ");
+      evaluationSchedule.textContent = parts.join(" • ");
     }
 
     if (summaryField) {
@@ -359,18 +411,250 @@ const initSchedulePage = () => {
       followUpField.checked = Boolean(followUp);
     }
 
-    if (escapeHandler) {
-      document.removeEventListener("keydown", escapeHandler);
+    if (evaluationEscapeHandler) {
+      document.removeEventListener("keydown", evaluationEscapeHandler);
     }
 
-    escapeHandler = (event) => {
+    evaluationEscapeHandler = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        closeModal();
+        closeEvaluationModal();
       }
     };
 
-    document.addEventListener("keydown", escapeHandler);
+    document.addEventListener("keydown", evaluationEscapeHandler);
+  };
+
+  const toggleCreateIndicator = (show) => {
+    if (!createIndicator) {
+      return;
+    }
+    createIndicator.classList.toggle("hidden", !show);
+  };
+
+  const clearCreateFeedback = () => {
+    if (!createFeedback) {
+      return;
+    }
+
+    createFeedback.classList.add("hidden");
+    createFeedback.textContent = "";
+    createFeedback.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+  };
+
+  const showCreateFeedback = (type, message) => {
+    if (!createFeedback || !message) {
+      return;
+    }
+
+    createFeedback.textContent = message;
+    createFeedback.classList.remove("hidden");
+    createFeedback.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+
+    if (type === "success") {
+      createFeedback.classList.add(...successFeedbackClasses);
+    } else {
+      createFeedback.classList.add(...errorFeedbackClasses);
+    }
+  };
+
+  const resetCreateForm = () => {
+    if (createForm) {
+      createForm.reset();
+    }
+
+    if (createStatus && createStatus.dataset.defaultValue) {
+      createStatus.value = createStatus.dataset.defaultValue;
+    }
+
+    toggleCreateIndicator(false);
+    clearCreateFeedback();
+
+    if (createMotherSelect) {
+      if (mothersLoaded) {
+        createMotherSelect.disabled = false;
+        createMotherSelect.value = "";
+      } else {
+        createMotherSelect.disabled = true;
+        createMotherSelect.innerHTML =
+          '<option value="">Memuat daftar ibu...</option>';
+      }
+    }
+  };
+
+  const fillMotherOptions = (records) => {
+    if (!createMotherSelect) {
+      return;
+    }
+
+    const options = ['<option value="">Pilih ibu</option>'];
+
+    records.forEach((mother) => {
+      const id = Number(mother?.id ?? 0);
+      if (!Number.isInteger(id) || id <= 0) {
+        return;
+      }
+
+      const nameLabel = escapeHtml(mother?.name || "Tanpa Nama");
+      const emailLabel = mother?.email
+        ? ` (${escapeHtml(mother.email)})`
+        : "";
+
+      options.push(`<option value="${id}">${nameLabel}${emailLabel}</option>`);
+    });
+
+    createMotherSelect.innerHTML = options.join("");
+    createMotherSelect.disabled = options.length <= 1;
+  };
+
+  const loadMotherOptions = async () => {
+    if (!createMotherSelect || !mothersUrl) {
+      return false;
+    }
+
+    mothersLoading = true;
+    createMotherSelect.disabled = true;
+    createMotherSelect.innerHTML =
+      '<option value="">Memuat daftar ibu...</option>';
+
+    try {
+      const { ok, data, message } = await fetchJson(mothersUrl, {
+        acceptErrorResponse: true,
+      });
+
+      if (!ok || !data || data.status !== true) {
+        const errorMessage =
+          (data && data.message) ||
+          message ||
+          "Gagal memuat daftar ibu.";
+        showCreateFeedback("error", errorMessage);
+        createMotherSelect.innerHTML =
+          '<option value="">Gagal memuat data ibu</option>';
+        return false;
+      }
+
+      const records = Array.isArray(data.data) ? data.data : [];
+
+      if (records.length === 0) {
+        createMotherSelect.innerHTML =
+          '<option value="">Belum ada ibu yang dapat dijadwalkan</option>';
+        showCreateFeedback(
+          "error",
+          "Belum ada data ibu yang dapat dipilih. Tambahkan ibu terlebih dahulu."
+        );
+        return false;
+      }
+
+      fillMotherOptions(records);
+      mothersLoaded = true;
+      clearCreateFeedback();
+      return true;
+    } catch (error) {
+      showCreateFeedback(
+        "error",
+        error?.message || "Gagal memuat daftar ibu."
+      );
+      createMotherSelect.innerHTML =
+        '<option value="">Gagal memuat data ibu</option>';
+      return false;
+    } finally {
+      mothersLoading = false;
+      if (createMotherSelect && mothersLoaded) {
+        createMotherSelect.disabled = false;
+      }
+    }
+  };
+
+  const closeCreateModal = () => {
+    if (!createModal) {
+      return;
+    }
+
+    createModal.classList.add("hidden");
+    createModal.classList.remove("flex");
+    createModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+
+    if (createEscapeHandler) {
+      document.removeEventListener("keydown", createEscapeHandler);
+      createEscapeHandler = null;
+    }
+
+    resetCreateForm();
+  };
+
+  const openCreateModal = () => {
+    if (!createModal || !createForm) {
+      return;
+    }
+
+    resetCreateForm();
+
+    createModal.classList.remove("hidden");
+    createModal.classList.add("flex");
+    createModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("overflow-hidden");
+
+    if (createEscapeHandler) {
+      document.removeEventListener("keydown", createEscapeHandler);
+    }
+
+    createEscapeHandler = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeCreateModal();
+      }
+    };
+
+    document.addEventListener("keydown", createEscapeHandler);
+
+    if (!mothersLoaded && !mothersLoading) {
+      loadMotherOptions().then((success) => {
+        if (success && createMotherSelect?.isConnected) {
+          createMotherSelect.disabled = false;
+          createMotherSelect.focus();
+        }
+      });
+    } else if (createMotherSelect && !createMotherSelect.disabled) {
+      createMotherSelect.focus();
+    }
+  };
+
+  const reloadTable = async () => {
+    if (!tableContainer || !tableUrl) {
+      return false;
+    }
+
+    toggleTableIndicator(true);
+
+    try {
+      const url = new URL(tableUrl, window.location.origin);
+      const status = page.dataset.currentStatus || "";
+      if (status) {
+        url.searchParams.set("status", status);
+      }
+
+      const { html } = await fetchHtml(url.toString(), {
+        acceptErrorResponse: true,
+      });
+
+      if (typeof html === "string") {
+        tableContainer.innerHTML = html;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    } finally {
+      toggleTableIndicator(false);
+    }
   };
 
   const refreshRow = async (scheduleId) => {
@@ -406,23 +690,170 @@ const initSchedulePage = () => {
     }
   };
 
-  if (modalOverlay) {
-    modalOverlay.addEventListener("click", (event) => {
+  if (evaluationOverlay) {
+    evaluationOverlay.addEventListener("click", (event) => {
       event.preventDefault();
-      closeModal();
+      closeEvaluationModal();
     });
   }
 
-  modalCloseButtons.forEach((button) => {
+  evaluationCloseButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
-      closeModal();
+      closeEvaluationModal();
     });
   });
 
-  if (modalForm) {
-    modalForm.addEventListener("htmx:beforeRequest", () => {
-      clearModalFeedback();
+  if (evaluationForm) {
+    evaluationForm.addEventListener("htmx:beforeRequest", () => {
+      clearEvaluationFeedback();
+    });
+  }
+
+  if (createOverlay) {
+    createOverlay.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeCreateModal();
+    });
+  }
+
+  createCloseButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeCreateModal();
+    });
+  });
+
+  createOpenButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      openCreateModal();
+    });
+  });
+
+  if (createForm) {
+    createForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      clearCreateFeedback();
+
+      if (!createUrl) {
+        showCreateFeedback(
+          "error",
+          "Endpoint pembuatan jadwal tidak tersedia."
+        );
+        return;
+      }
+
+      const formData = new FormData(createForm);
+      const motherIdValue = formData.get("mother_id");
+      const scheduledAtValue = formData.get("scheduled_at");
+      const statusValue =
+        (formData.get("status") || createStatus?.dataset.defaultValue || "")
+          .toString()
+          .trim();
+
+      const motherId = Number(motherIdValue);
+      if (!Number.isInteger(motherId) || motherId <= 0) {
+        showCreateFeedback("error", "Pilih ibu terlebih dahulu.");
+        if (createMotherSelect) {
+          createMotherSelect.focus();
+        }
+        return;
+      }
+
+      const scheduledAtRaw =
+        typeof scheduledAtValue === "string" ? scheduledAtValue.trim() : "";
+      if (!scheduledAtRaw) {
+        showCreateFeedback("error", "Tentukan waktu konsultasi.");
+        if (createDatetime) {
+          createDatetime.focus();
+        }
+        return;
+      }
+
+      if (!allowedStatuses.has(statusValue)) {
+        showCreateFeedback("error", "Status jadwal tidak valid.");
+        if (createStatus) {
+          createStatus.focus();
+        }
+        return;
+      }
+
+      let normalizedDatetime = scheduledAtRaw.replace("T", " ");
+      if (normalizedDatetime.length === 16) {
+        normalizedDatetime = `${normalizedDatetime}:00`;
+      }
+
+      const locationValue =
+        typeof formData.get("location") === "string"
+          ? formData.get("location").trim()
+          : "";
+      const notesValue =
+        typeof formData.get("notes") === "string"
+          ? formData.get("notes").trim()
+          : "";
+
+      const payload = {
+        mother_id: motherId,
+        scheduled_at: normalizedDatetime,
+        status: statusValue,
+      };
+
+      if (locationValue !== "") {
+        payload.location = locationValue;
+      }
+
+      if (notesValue !== "") {
+        payload.notes = notesValue;
+      }
+
+      toggleCreateIndicator(true);
+      setButtonLoading(createSubmitButton, true, "Menyimpan...");
+      if (createMotherSelect) {
+        createMotherSelect.disabled = true;
+      }
+
+      try {
+        const { ok, data, message } = await fetchJson(createUrl, {
+          method: "POST",
+          body: JSON.stringify(payload),
+          acceptErrorResponse: true,
+        });
+
+        if (!ok || !data || data.status !== true) {
+          const errorMessage =
+            (data && data.message) || message || "Gagal membuat jadwal.";
+          showCreateFeedback("error", errorMessage);
+          return;
+        }
+
+        const successMessage =
+          (data && data.message) || "Jadwal berhasil dibuat.";
+
+        closeCreateModal();
+
+        const refreshed = await reloadTable();
+
+        if (refreshed) {
+          showFeedback("success", successMessage);
+        } else {
+          showFeedback(
+            "error",
+            `${successMessage} Namun tabel gagal diperbarui, silakan muat ulang halaman.`
+          );
+        }
+      } catch (error) {
+        showCreateFeedback("error", error?.message || "Gagal membuat jadwal.");
+      } finally {
+        toggleCreateIndicator(false);
+        if (createSubmitButton?.isConnected) {
+          setButtonLoading(createSubmitButton, false);
+        }
+        if (createMotherSelect?.isConnected) {
+          createMotherSelect.disabled = !mothersLoaded;
+        }
+      }
     });
   }
 
@@ -472,7 +903,7 @@ const initSchedulePage = () => {
       return;
     }
 
-    openModal({
+    openEvaluationModal({
       scheduleId,
       evaluationUrl,
       name: button.dataset.scheduleName || "",
@@ -501,9 +932,9 @@ const initSchedulePage = () => {
         : detail.xhr?.status >= 200 && detail.xhr?.status < 300;
 
     if (successful) {
-      if (trigger === modalForm) {
-        clearModalFeedback();
-        closeModal();
+      if (trigger === evaluationForm) {
+        clearEvaluationFeedback();
+        closeEvaluationModal();
       }
 
       const refreshed = scheduleId ? await refreshRow(scheduleId) : true;
@@ -512,8 +943,8 @@ const initSchedulePage = () => {
         const successMessage = message || "Data jadwal berhasil diperbarui.";
         showFeedback("success", successMessage);
       }
-    } else if (trigger === modalForm) {
-      showModalFeedback("error", message || "Evaluasi gagal disimpan.");
+    } else if (trigger === evaluationForm) {
+      showEvaluationFeedback("error", message || "Evaluasi gagal disimpan.");
     } else if (message) {
       showFeedback("error", message);
     }
