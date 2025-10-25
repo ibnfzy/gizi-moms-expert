@@ -82,6 +82,9 @@
   window.appConfig.authToken = <?= json_encode(session('auth_token') ?? null) ?>;
   </script>
   <script src="<?= base_url('js/theme.js') ?>" defer></script>
+  <?php if ((session('user_role') ?? 'pakar') === 'pakar'): ?>
+    <?= view('pakar/partials/status_guidance_modal') ?>
+  <?php endif; ?>
   <?= $this->renderSection('scripts') ?>
 </body>
 

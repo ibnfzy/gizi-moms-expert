@@ -169,6 +169,106 @@ const createErrorPanel = (message) =>
     message
   )}</div>`;
 
+let statusModalInitialized = false;
+
+const initStatusGuidanceModal = () => {
+  if (statusModalInitialized) {
+    return;
+  }
+
+  const statusModal = document.querySelector("[data-status-guidance-modal]");
+  if (!statusModal) {
+    return;
+  }
+
+  statusModalInitialized = true;
+
+  const statusOverlay = statusModal.querySelector(
+    "[data-status-guidance-overlay]"
+  );
+  let statusEscapeHandler = null;
+  let statusLastFocus = null;
+
+  const closeStatusModal = () => {
+    statusModal.classList.add("hidden");
+    statusModal.classList.remove("flex");
+    statusModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+
+    if (statusEscapeHandler) {
+      document.removeEventListener("keydown", statusEscapeHandler);
+      statusEscapeHandler = null;
+    }
+
+    if (statusLastFocus && typeof statusLastFocus.focus === "function") {
+      statusLastFocus.focus();
+    }
+
+    statusLastFocus = null;
+  };
+
+  const openStatusModal = (trigger) => {
+    statusLastFocus =
+      trigger && trigger instanceof HTMLElement
+        ? trigger
+        : document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    statusModal.classList.remove("hidden");
+    statusModal.classList.add("flex");
+    statusModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("overflow-hidden");
+
+    if (statusEscapeHandler) {
+      document.removeEventListener("keydown", statusEscapeHandler);
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeStatusModal();
+      }
+    };
+
+    statusEscapeHandler = handleEscape;
+    document.addEventListener("keydown", handleEscape);
+
+    const focusTarget = statusModal.querySelector(
+      "[data-status-guidance-focus]"
+    );
+    if (focusTarget) {
+      focusTarget.focus();
+    }
+  };
+
+  document.addEventListener("click", (event) => {
+    const closeTrigger = event.target.closest(
+      "[data-status-guidance-close]"
+    );
+    if (closeTrigger) {
+      event.preventDefault();
+      closeStatusModal();
+      return;
+    }
+
+    const openTrigger = event.target.closest("[data-status-guidance-open]");
+    if (!openTrigger) {
+      return;
+    }
+
+    event.preventDefault();
+    openStatusModal(openTrigger);
+  });
+
+  if (statusOverlay) {
+    statusOverlay.addEventListener("click", (event) => {
+      event.preventDefault();
+      closeStatusModal();
+    });
+  }
+};
+
 const initSchedulePage = () => {
   const page = document.querySelector("[data-pakar-schedules]");
   if (!page) {
@@ -1027,7 +1127,6 @@ const initDashboardPage = () => {
   const dashboardIndicator = document.getElementById("dashboard-loading");
   const detailIndicator = document.getElementById("mother-detail-loading");
   const detailContainer = document.getElementById("mother-detail-container");
-
   let detailEscapeHandler = null;
   let currentDetailUrl = null;
   let currentMotherId = null;
@@ -1438,6 +1537,7 @@ const initConsultationPage = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  initStatusGuidanceModal();
   initSchedulePage();
   initDashboardPage();
   initConsultationPage();

@@ -7,7 +7,7 @@
             <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Dashboard Pakar</h1>
             <p class="text-sm text-slate-600 dark:text-slate-400">Pantau kondisi ibu menyusui dan tindak lanjuti kebutuhan gizi mereka.</p>
         </div>
-        <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+        <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
             <div class="hidden items-center gap-2 sm:flex">
                 <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
                 <span>Status terbaru diperbarui otomatis dari hasil inferensi.</span>
