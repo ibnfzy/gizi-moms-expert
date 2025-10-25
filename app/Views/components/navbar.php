@@ -7,16 +7,8 @@ $userRole = $session->get('user_role') ?? 'pakar';
 <header class="border-b border-slate-200 bg-slate-200/90 backdrop-blur-sm dark:border-black/70 dark:bg-slate-950/80">
   <div
     class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-    <div class="flex items-center gap-3">
-      <button type="button"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 transition hover:border-giziblue/70 hover:text-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-giziblue dark:hover:text-giziblue dark:focus:ring-offset-slate-950 md:hidden"
-        data-mobile-nav-toggle aria-controls="mobile-nav-panel" aria-expanded="false" aria-label="Buka navigasi">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="h-5 w-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
-        </svg>
-      </button>
-      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-giziblue text-sm font-semibold text-white">
+    <div class="flex items-center gap-3 sm:gap-4">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-giziblue text-sm font-semibold text-white">
         GM</div>
       <div>
         <h1 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Sistem Pakar Gizi Ibu Menyusui</h1>
