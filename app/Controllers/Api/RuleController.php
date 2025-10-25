@@ -18,6 +18,10 @@ class RuleController extends BaseController
 
     public function index()
     {
+        if ($response = $this->ensureAdmin()) {
+            return $response;
+        }
+
         $rules = $this->rules
             ->orderBy('created_at', 'DESC')
             ->get()->getResultArray();
@@ -29,6 +33,10 @@ class RuleController extends BaseController
 
     public function create()
     {
+        if ($response = $this->ensureAdmin()) {
+            return $response;
+        }
+
         $payload = get_request_data($this->request);
 
         $usingJsonRule = array_key_exists('json_rule', $payload);
@@ -95,6 +103,10 @@ class RuleController extends BaseController
 
     public function update(int $id)
     {
+        if ($response = $this->ensureAdmin()) {
+            return $response;
+        }
+
         $existing = $this->rules->find($id);
 
         if (! $existing) {
@@ -156,6 +168,10 @@ class RuleController extends BaseController
 
     public function delete(int $id)
     {
+        if ($response = $this->ensureAdmin()) {
+            return $response;
+        }
+
         $existing = $this->rules->find($id);
 
         if (! $existing) {
@@ -282,5 +298,22 @@ class RuleController extends BaseController
         return [
             'json' => json_encode($details, JSON_UNESCAPED_UNICODE),
         ];
+    }
+
+    private function ensureAdmin(): ?ResponseInterface
+    {
+        $user = auth_user();
+
+        if ($user === null) {
+            return errorResponse('Unauthorized.', ResponseInterface::HTTP_UNAUTHORIZED);
+        }
+
+        $role = strtolower((string) ($user['role'] ?? ''));
+
+        if ($role !== 'admin') {
+            return errorResponse('You do not have permission to manage rules.', ResponseInterface::HTTP_FORBIDDEN);
+        }
+
+        return null;
     }
 }
