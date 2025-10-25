@@ -25,7 +25,7 @@ class ScheduleReminder extends BaseCommand
         $scheduleModel = new ScheduleModel();
 
         $schedules = $scheduleModel
-            ->where('status', 'scheduled')
+            ->where('status', 'confirmed')
             ->where('reminder_sent', 0)
             ->where('scheduled_at >=', $windowStart->toDateTimeString())
             ->where('scheduled_at <=', $windowEnd->toDateTimeString())

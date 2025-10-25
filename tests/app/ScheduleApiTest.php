@@ -179,9 +179,39 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertTrue($data['status']);
         $this->assertSame('Kehadiran berhasil diperbarui.', $data['message']);
         $this->assertSame('confirmed', $data['data']['attendance']);
+        $this->assertSame('confirmed', $data['data']['status']);
 
         $updated = $this->schedules->find($schedule['id']);
         $this->assertSame('confirmed', $updated['attendance']);
+        $this->assertSame('confirmed', $updated['status']);
+    }
+
+    public function testUpdateAttendanceDeclinedCancelsSchedule(): void
+    {
+        $expert       = $this->createUser('pakar', 'expert-attendance-decline@example.com');
+        $motherBundle = $this->createMotherWithUser('mother-attendance-decline@example.com');
+        $schedule     = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => '2024-06-18 10:00:00',
+        ]);
+
+        $payload = ['attendance' => 'declined'];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders($this->jsonHeadersFor($motherBundle['user']))
+            ->put('api/schedules/' . $schedule['id'] . '/attendance');
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertTrue($data['status']);
+        $this->assertSame('Kehadiran berhasil diperbarui.', $data['message']);
+        $this->assertSame('declined', $data['data']['attendance']);
+        $this->assertSame('cancelled', $data['data']['status']);
+
+        $updated = $this->schedules->find($schedule['id']);
+        $this->assertSame('declined', $updated['attendance']);
+        $this->assertSame('cancelled', $updated['status']);
     }
 
     public function testUpdateEvaluationRequiresExpertRole(): void
@@ -297,14 +327,14 @@ final class ScheduleApiTest extends FeatureTestCase
             'mother_id'    => $motherBundle['mother']['id'],
             'expert_id'    => $expert['id'],
             'scheduled_at' => $now->copy()->addHours(24)->toDateTimeString(),
-            'status'       => 'scheduled',
+            'status'       => 'confirmed',
         ]);
 
         $outsideSchedule = $this->createSchedule([
             'mother_id'    => $motherBundle['mother']['id'],
             'expert_id'    => $expert['id'],
             'scheduled_at' => $now->copy()->addHours(30)->toDateTimeString(),
-            'status'       => 'scheduled',
+            'status'       => 'confirmed',
         ]);
 
         $result = $this->command('schedule:reminder');
