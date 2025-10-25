@@ -100,7 +100,7 @@ class InferenceController extends BaseController
         $motherRecord = $this->mothers
             ->withUser()
             ->where('mothers.id', $motherId)
-            ->first();
+            ->get()->getRowArray();
 
         if (! is_array($motherRecord)) {
             return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);

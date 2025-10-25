@@ -34,7 +34,7 @@ class AuthController extends BaseController
             $password = $this->request->getPost('password');
 
             $userModel = new UserModel();
-            $user = $userModel->where('email', $email)->first();
+            $user = $userModel->where('email', $email)->get()->getRowArray();
 
             if (! $user || ! password_verify($password, $user['password_hash'] ?? '')) {
                 return redirect()->back()->withInput()->with('error', 'Email atau kata sandi tidak valid.');

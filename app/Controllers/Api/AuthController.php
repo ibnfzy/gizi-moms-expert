@@ -35,7 +35,7 @@ class AuthController extends BaseController
             );
         }
 
-        $user = $this->users->where('email', $data['email'])->first();
+        $user = $this->users->where('email', $data['email'])->get()->getRowArray();
 
         if (! $user || ! password_verify($data['password'], $user['password_hash'])) {
             return errorResponse('Invalid email or password.', ResponseInterface::HTTP_UNAUTHORIZED);

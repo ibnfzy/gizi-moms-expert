@@ -51,7 +51,7 @@ class ConsultationController extends BaseController
             $motherRecord = $this->mothers
                 ->withUser()
                 ->where('mothers.user_id', $user['id'])
-                ->first();
+                ->get()->getRowArray();
 
             if (! is_array($motherRecord)) {
                 return errorResponse('Mother profile not found for this user.', ResponseInterface::HTTP_NOT_FOUND);
@@ -72,13 +72,13 @@ class ConsultationController extends BaseController
                 ->findAll();
 
             $motherIds = array_values(array_unique(array_map(
-                static fn (array $record): int => (int) ($record['mother_id'] ?? 0),
+                static fn(array $record): int => (int) ($record['mother_id'] ?? 0),
                 $records
             )));
 
             $motherIds = array_values(array_filter(
                 $motherIds,
-                static fn (int $id): bool => $id > 0
+                static fn(int $id): bool => $id > 0
             ));
 
             if ($motherIds !== []) {
@@ -99,14 +99,14 @@ class ConsultationController extends BaseController
         }
 
         $pakarIds = array_values(array_unique(array_map(
-            static fn (array $record): int => (int) ($record['pakar_id'] ?? 0),
+            static fn(array $record): int => (int) ($record['pakar_id'] ?? 0),
             $records
         )));
 
         $pakarMap = [];
         $pakarIds = array_values(array_filter(
             $pakarIds,
-            static fn (int $id): bool => $id > 0
+            static fn(int $id): bool => $id > 0
         ));
 
         if ($pakarIds !== []) {
@@ -126,7 +126,7 @@ class ConsultationController extends BaseController
         }
 
         $payload = array_map(
-            fn (array $consultation): array => $this->formatConsultationRecord(
+            fn(array $consultation): array => $this->formatConsultationRecord(
                 $consultation,
                 $formattedMothers,
                 $pakarMap
@@ -209,7 +209,7 @@ class ConsultationController extends BaseController
         $motherDetail = $this->mothers
             ->withUser()
             ->where('mothers.id', $motherId)
-            ->first();
+            ->get()->getRowArray();
 
         $payload = [
             'id'          => $consultationId,

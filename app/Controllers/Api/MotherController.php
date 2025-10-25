@@ -27,7 +27,7 @@ class MotherController extends BaseController
             ->orderBy('users.name', 'ASC')
             ->findAll();
 
-        $payload = array_map(fn (array $mother): array => $this->formatter->present($mother, false, false), $records);
+        $payload = array_map(fn(array $mother): array => $this->formatter->present($mother, false, false), $records);
 
         return successResponse($payload, 'Daftar ibu berhasil dimuat.');
     }
@@ -37,7 +37,7 @@ class MotherController extends BaseController
         $mother = $this->mothers
             ->withUser()
             ->where('mothers.id', $id)
-            ->first();
+            ->get()->getRowArray();
 
         if (! is_array($mother)) {
             return errorResponse('Mother data not found.', ResponseInterface::HTTP_NOT_FOUND);

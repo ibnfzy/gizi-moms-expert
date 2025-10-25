@@ -176,7 +176,7 @@ class NotificationController extends BaseController
      */
     private function formatNotifications(array $records): array
     {
-        return array_map(fn (array $record): array => $this->formatNotification($record), $records);
+        return array_map(fn(array $record): array => $this->formatNotification($record), $records);
     }
 
     /**
@@ -201,7 +201,7 @@ class NotificationController extends BaseController
     {
         return $this->mothers
             ->where('user_id', $userId)
-            ->first();
+            ->get()->getRowArray();
     }
 
     private function normalizeBoolean($value): bool

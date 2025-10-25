@@ -186,7 +186,8 @@ class ScheduleController extends BaseController
             $fields['scheduled_at'] = $parsed;
         }
 
-        if (array_key_exists('status', $fields)
+        if (
+            array_key_exists('status', $fields)
             && ! in_array($fields['status'], ['pending', 'confirmed', 'completed', 'cancelled'], true)
         ) {
             return errorResponse('Invalid status value.', ResponseInterface::HTTP_BAD_REQUEST);
@@ -373,7 +374,7 @@ class ScheduleController extends BaseController
      */
     private function formatSchedules(array $records): array
     {
-        return array_map(fn (array $record): array => $this->formatSchedule($record), $records);
+        return array_map(fn(array $record): array => $this->formatSchedule($record), $records);
     }
 
     /**
@@ -441,7 +442,7 @@ class ScheduleController extends BaseController
     {
         return $this->mothers
             ->where('user_id', $userId)
-            ->first();
+            ->get()->getRowArray();
     }
 
     private function notifyMother(int $motherId, string $title, string $message, string $type, ?int $scheduleId = null): void
