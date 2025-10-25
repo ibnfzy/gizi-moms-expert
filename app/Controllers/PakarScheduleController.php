@@ -29,12 +29,21 @@ class PakarScheduleController extends BaseController
 
         $schedules = $this->loadSchedules($status);
 
+        $createStatusOptions = array_filter(
+            self::STATUS_OPTIONS,
+            static fn (string $label, string $value): bool => $value !== '',
+            ARRAY_FILTER_USE_BOTH
+        );
+
         return view('pakar/schedules/index', [
-            'schedules'       => $schedules,
-            'statusOptions'   => self::STATUS_OPTIONS,
-            'filterStatus'    => $status ?? '',
-            'tableUrl'        => site_url('pakar/schedules/table'),
-            'rowUrlTemplate'  => site_url('pakar/schedules/rows/__id__'),
+            'schedules'            => $schedules,
+            'statusOptions'        => self::STATUS_OPTIONS,
+            'createStatusOptions'  => $createStatusOptions,
+            'filterStatus'         => $status ?? '',
+            'tableUrl'             => site_url('pakar/schedules/table'),
+            'rowUrlTemplate'       => site_url('pakar/schedules/rows/__id__'),
+            'motherListEndpoint'   => site_url('api/mothers'),
+            'scheduleCreateEndpoint' => site_url('api/schedules'),
         ]);
     }
 

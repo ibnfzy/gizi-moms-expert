@@ -7,6 +7,9 @@
 /** @var string $filterStatus */
 /** @var string $tableUrl */
 /** @var string $rowUrlTemplate */
+/** @var array<string, string> $createStatusOptions */
+/** @var string $motherListEndpoint */
+/** @var string $scheduleCreateEndpoint */
 ?>
 <div
     class="space-y-6 text-slate-700 dark:text-slate-300"
@@ -14,6 +17,8 @@
     data-table-url="<?= esc($tableUrl) ?>"
     data-row-url-template="<?= esc($rowUrlTemplate) ?>"
     data-current-status="<?= esc($filterStatus) ?>"
+    data-mothers-url="<?= esc($motherListEndpoint) ?>"
+    data-create-url="<?= esc($scheduleCreateEndpoint) ?>"
 >
     <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
@@ -22,10 +27,17 @@
                 Kelola jadwal konsultasi dan catat evaluasi tanpa perlu memuat ulang halaman.
             </p>
         </div>
-        <a
-            href="<?= site_url('pakar/dashboard') ?>"
-            class="inline-flex items-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:text-white dark:focus:ring-offset-slate-900"
-        >Kembali ke Dashboard</a>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-md border border-giziblue bg-giziblue px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:border-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/70 dark:hover:border-blue-500 dark:hover:bg-blue-500 dark:focus:ring-offset-slate-900"
+                data-schedule-create-open
+            >Buat Jadwal</button>
+            <a
+                href="<?= site_url('pakar/dashboard') ?>"
+                class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:text-white dark:focus:ring-offset-slate-900"
+            >Kembali ke Dashboard</a>
+        </div>
     </div>
 
     <div
@@ -57,6 +69,10 @@
 </div>
 
 <?= view('pakar/partials/schedule_evaluation_modal') ?>
+<?= view('pakar/partials/schedule_create_modal', [
+    'statusOptions'     => $createStatusOptions,
+    'createEndpoint'    => $scheduleCreateEndpoint,
+]) ?>
 
 <noscript>
     <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-400/40 dark:bg-amber-400/10 dark:text-amber-100">
