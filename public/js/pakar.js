@@ -38,6 +38,19 @@ const extractErrorMessage = (raw, fallback) => {
   return text && text !== "" ? text : fallback;
 };
 
+const getAuthToken = () => {
+  const token = window.appConfig?.authToken ?? null;
+  if (token) {
+    return token;
+  }
+
+  try {
+    return window.localStorage ? window.localStorage.getItem("jwtToken") : null;
+  } catch (error) {
+    return null;
+  }
+};
+
 const fetchHtml = async (url, options = {}) => {
   if (!url) {
     throw new Error("Endpoint tidak tersedia.");
@@ -53,6 +66,11 @@ const fetchHtml = async (url, options = {}) => {
     },
     ...fetchOptions,
   };
+
+  const token = getAuthToken();
+  if (token && config.headers && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   if (config.body instanceof FormData && config.headers) {
     delete config.headers["Content-Type"];
@@ -88,6 +106,11 @@ const fetchJson = async (url, options = {}) => {
     },
     ...fetchOptions,
   };
+
+  const token = getAuthToken();
+  if (token && config.headers && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   const response = await fetch(url, config);
   const text = await response.text();
