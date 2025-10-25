@@ -64,6 +64,29 @@
   <div class="flex flex-col min-h-screen">
     <?= $this->include('components/navbar') ?>
 
+    <div class="md:hidden" data-mobile-nav-drawer>
+      <div class="fixed inset-0 z-40 hidden bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+        data-mobile-nav-backdrop></div>
+      <div id="mobile-nav-panel"
+        class="fixed inset-y-0 left-0 z-50 flex w-64 max-w-full flex-col gap-4 overflow-y-auto bg-white/95 p-4 shadow-lg transition-transform duration-200 ease-in-out dark:bg-slate-950/95 hidden translate-x-full"
+        data-mobile-nav-panel aria-hidden="true">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">Navigasi</span>
+          <button type="button"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 text-slate-600 transition hover:border-slate-400 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:text-slate-100 dark:focus:ring-offset-slate-950"
+            data-mobile-nav-close aria-label="Tutup navigasi">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6m0 12L6 6" />
+            </svg>
+          </button>
+        </div>
+        <div class="-mx-4 flex-1 overflow-y-auto px-4">
+          <?= $this->include('components/sidebar') ?>
+        </div>
+      </div>
+    </div>
+
     <div class="flex flex-1 overflow-hidden">
       <aside
         class="hidden w-64 overflow-y-auto border-r border-slate-200 bg-white/80 backdrop-blur-sm dark:border-black/70 dark:bg-slate-950/70 md:block">
