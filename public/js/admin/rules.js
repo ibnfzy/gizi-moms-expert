@@ -14,6 +14,7 @@ export const initAdminRules = () => {
   const rulesEndpoint = container.dataset.rulesEndpoint;
   const notificationId = container.dataset.notificationId;
   const tableBody = document.getElementById("rulesTableBody");
+  const cardContainer = container.querySelector("[data-rules-cards]");
   const addRuleButton = document.getElementById("addRuleButton");
   const modal = document.getElementById("ruleModal");
   const modalTitle = document.getElementById("modalTitle");
@@ -78,6 +79,38 @@ export const initAdminRules = () => {
     return {};
   };
 
+  const setCardLoading = (message) => {
+    if (!cardContainer) {
+      return;
+    }
+
+    cardContainer.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 text-sm text-gray-500 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:text-slate-400 dark:shadow-black/30 dark:ring-black/60">
+        <div class="flex items-center justify-center gap-3">
+          <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
+          ${escapeHtml(message)}
+        </div>
+      </div>
+    `;
+  };
+
+  const setCardMessage = (message, variant = "info") => {
+    if (!cardContainer) {
+      return;
+    }
+
+    const textClass =
+      variant === "error"
+        ? "text-red-600 dark:text-rose-300"
+        : "text-gray-500 dark:text-slate-400";
+
+    cardContainer.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+        <p class="text-center text-sm ${textClass}">${escapeHtml(message)}</p>
+      </div>
+    `;
+  };
+
   const renderRules = (rules) => {
     ruleStore.clear();
 
@@ -87,49 +120,101 @@ export const initAdminRules = () => {
                     <td colspan="4" class="border border-black/40 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data rule.</td>
                 </tr>
             `;
+      setCardMessage("Belum ada data rule.");
       return;
     }
 
-    const rows = rules
-      .map((rule) => {
-        ruleStore.set(String(rule.id), rule);
-        const badgeClass = rule.is_active
-          ? "bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200"
-          : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
-        const badgeLabel = rule.is_active ? "Aktif" : "Tidak Aktif";
+    const normalized = rules.map((rule) => {
+      ruleStore.set(String(rule.id), rule);
+      const badgeClass = rule.is_active
+        ? "bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200"
+        : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
+      const badgeLabel = rule.is_active ? "Aktif" : "Tidak Aktif";
 
-        return `
-                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
-                    <td class="border border-black/40 px-4 py-3 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
-                      rule.name
-                    )}</td>
-                    <td class="border border-black/40 px-4 py-3 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
-                      rule.version
-                    )}</td>
-                    <td class="border border-black/40 px-4 py-3 dark:border-gray-300">
-                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${badgeLabel}</span>
-                    </td>
-                    <td class="border border-black/40 px-4 py-3 text-right text-sm dark:text-slate-200 dark:border-gray-300">
-                        <button type="button" class="mr-2 inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="edit" data-id="${escapeHtml(
-                          rule.id
-                        )}">Edit</button>
-                        <button type="button" class="inline-flex items-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
-                          rule.id
-                        )}">Hapus</button>
-                    </td>
-                </tr>
-            `;
-      })
+      return {
+        id: rule.id ?? "",
+        name: rule.name ?? "-",
+        version: rule.version ?? "-",
+        badgeClass,
+        badgeLabel,
+        updatedAt: rule.updated_human ?? rule.updated_at ?? "-",
+      };
+    });
+
+    tableBody.innerHTML = normalized
+      .map((rule) => `
+        <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+          <td class="border border-black/40 px-4 py-3 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
+            rule.name
+          )}</td>
+          <td class="border border-black/40 px-4 py-3 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
+            rule.version
+          )}</td>
+          <td class="border border-black/40 px-4 py-3 dark:border-gray-300">
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${escapeHtml(
+              rule.badgeClass
+            )}">${escapeHtml(rule.badgeLabel)}</span>
+          </td>
+          <td class="border border-black/40 px-4 py-3 text-right text-sm dark:text-slate-200 dark:border-gray-300">
+            <button type="button" class="mr-2 inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="edit" data-id="${escapeHtml(
+              String(rule.id)
+            )}">Edit</button>
+            <button type="button" class="inline-flex items-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
+              String(rule.id)
+            )}">Hapus</button>
+          </td>
+        </tr>
+      `)
       .join("");
 
-    tableBody.innerHTML = rows;
-    attachRowListeners();
+    if (cardContainer) {
+      cardContainer.innerHTML = normalized
+        .map((rule) => `
+          <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+            <div class="text-base font-semibold text-gray-900 dark:text-slate-100">${escapeHtml(
+              rule.name
+            )}</div>
+            <dl class="mt-4 space-y-3">
+              <div>
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Versi</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(rule.version)}</dd>
+              </div>
+              <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Status</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">
+                  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${escapeHtml(
+                    rule.badgeClass
+                  )}">${escapeHtml(rule.badgeLabel)}</span>
+                </dd>
+              </div>
+              <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Diperbarui</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(rule.updatedAt)}</dd>
+              </div>
+            </dl>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button type="button" class="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="edit" data-id="${escapeHtml(
+                String(rule.id)
+              )}">Edit</button>
+              <button type="button" class="inline-flex items-center rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
+                String(rule.id)
+              )}">Hapus</button>
+            </div>
+          </div>
+        `)
+        .join("");
+    }
+
+    attachActionListeners();
   };
 
-  const attachRowListeners = () => {
-    tableBody
-      .querySelectorAll('button[data-action="edit"]')
-      .forEach((button) => {
+  const attachActionListeners = () => {
+    [tableBody, cardContainer].forEach((root) => {
+      if (!root) {
+        return;
+      }
+
+      root.querySelectorAll('button[data-action="edit"]').forEach((button) => {
         button.addEventListener("click", () => {
           const id = button.getAttribute("data-id");
           const rule = ruleStore.get(String(id));
@@ -168,9 +253,7 @@ export const initAdminRules = () => {
         });
       });
 
-    tableBody
-      .querySelectorAll('button[data-action="delete"]')
-      .forEach((button) => {
+      root.querySelectorAll('button[data-action="delete"]').forEach((button) => {
         button.addEventListener("click", async () => {
           const id = button.getAttribute("data-id");
           const rule = ruleStore.get(String(id));
@@ -208,10 +291,12 @@ export const initAdminRules = () => {
           }
         });
       });
+    });
   };
 
   const loadRules = async () => {
     tableBody.innerHTML = createSpinnerRow(4, "Memuat data rules...");
+    setCardLoading("Memuat data rules...");
     try {
       const payload = await fetchJson(rulesEndpoint);
       const data = payload?.data ?? payload;
@@ -224,6 +309,7 @@ export const initAdminRules = () => {
                     )}</td>
                 </tr>
             `;
+      setCardMessage(error.message || "Gagal memuat data rules.", "error");
       showNotification(
         notificationId,
         "error",

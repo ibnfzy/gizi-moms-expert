@@ -27,29 +27,41 @@
         </div>
 
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/40 dark:ring-black/60">
-            <div class="overflow-x-auto">
-                <table class="min-w-full border-collapse border border-black/40 text-left text-sm dark:border-gray-300">
-                    <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
-                        <tr>
-                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Nama</th>
-                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Email</th>
-                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Umur</th>
-                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Usia Bayi (bln)</th>
-                            <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Status</th>
-                            <th scope="col" class="border border-black/40 px-6 py-3 text-right dark:border-gray-300">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody data-table-body class="text-gray-700 dark:text-slate-200">
-                        <tr>
-                            <td colspan="6" class="border border-black/40 px-6 py-8 dark:border-gray-300">
-                                <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
-                                    <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
-                                    Memuat data ibu...
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="border-b border-gray-100 px-6 py-6 dark:border-black/70 md:hidden" data-card-wrapper>
+                <div data-card-container class="space-y-4">
+                    <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 text-sm text-gray-500 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:text-slate-400 dark:shadow-black/30 dark:ring-black/60">
+                        <div class="flex items-center justify-center gap-3">
+                            <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
+                            Memuat data ibu...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden border-t border-gray-100 dark:border-black/70 md:block">
+                <div class="overflow-x-auto">
+                    <table class="min-w-[64rem] border-collapse border border-black/40 text-left text-sm dark:border-gray-300">
+                        <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
+                            <tr>
+                                <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Nama</th>
+                                <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Email</th>
+                                <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Umur</th>
+                                <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Usia Bayi (bln)</th>
+                                <th scope="col" class="border border-black/40 px-6 py-3 dark:border-gray-300">Status</th>
+                                <th scope="col" class="border border-black/40 px-6 py-3 text-right dark:border-gray-300">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody data-table-body class="text-gray-700 dark:text-slate-200">
+                            <tr>
+                                <td colspan="6" class="border border-black/40 px-6 py-8 dark:border-gray-300">
+                                    <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-slate-400">
+                                        <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
+                                        Memuat data ibu...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>

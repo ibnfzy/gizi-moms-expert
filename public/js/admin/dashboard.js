@@ -18,6 +18,7 @@ export const initAdminDashboard = () => {
   const statsLoader = container.querySelector("[data-stats-loader]");
   const rulesBody = container.querySelector("[data-rules-body]");
   const refreshButton = container.querySelector("[data-refresh-rules]");
+  const rulesCards = container.querySelector("[data-rules-cards]");
 
   const renderStats = (items) => {
     statsGrid.innerHTML = "";
@@ -66,6 +67,38 @@ export const initAdminDashboard = () => {
     });
   };
 
+  const setRulesCardLoading = (message) => {
+    if (!rulesCards) {
+      return;
+    }
+
+    rulesCards.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 text-sm text-gray-500 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:text-slate-400 dark:shadow-black/30 dark:ring-black/60">
+        <div class="flex items-center justify-center gap-3">
+          <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
+          ${escapeHtml(message)}
+        </div>
+      </div>
+    `;
+  };
+
+  const setRulesCardMessage = (message, variant = "info") => {
+    if (!rulesCards) {
+      return;
+    }
+
+    const textClass =
+      variant === "error"
+        ? "text-red-600 dark:text-rose-300"
+        : "text-gray-500 dark:text-slate-400";
+
+    rulesCards.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+        <p class="text-center text-sm ${textClass}">${escapeHtml(message)}</p>
+      </div>
+    `;
+  };
+
   const renderRules = (rules) => {
     if (!Array.isArray(rules) || rules.length === 0) {
       rulesBody.innerHTML = `
@@ -75,11 +108,13 @@ export const initAdminDashboard = () => {
                     </td>
                 </tr>
             `;
+      setRulesCardMessage("Belum ada rule yang dapat ditampilkan.");
       return;
     }
 
-    const rows = rules
-      .slice(0, 5)
+    const visibleRules = rules.slice(0, 5);
+
+    rulesBody.innerHTML = visibleRules
       .map((rule) => {
         const badgeClass =
           rule.status_badge ||
@@ -109,7 +144,50 @@ export const initAdminDashboard = () => {
       })
       .join("");
 
-    rulesBody.innerHTML = rows;
+    if (rulesCards) {
+      rulesCards.innerHTML = visibleRules
+        .map((rule) => {
+          const badgeClass =
+            rule.status_badge ||
+            (rule.is_active
+              ? "bg-green-100 text-green-800 dark:bg-emerald-500/20 dark:text-emerald-200"
+              : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200");
+          const badgeLabel =
+            rule.status_label || (rule.is_active ? "Aktif" : "Tidak Aktif");
+          const updatedAt = rule.updated_human ?? rule.updated_at ?? "-";
+
+          return `
+            <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+              <div class="text-base font-semibold text-gray-900 dark:text-slate-100">${escapeHtml(
+                rule.name ?? "Rule"
+              )}</div>
+              <dl class="mt-4 space-y-3">
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">ID Rule</dt>
+                  <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(
+                    rule.id ?? "-"
+                  )}</dd>
+                </div>
+                <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Status</dt>
+                  <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${escapeHtml(
+                      badgeLabel
+                    )}</span>
+                  </dd>
+                </div>
+                <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Terakhir Diperbarui</dt>
+                  <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(
+                    updatedAt
+                  )}</dd>
+                </div>
+              </dl>
+            </div>
+          `;
+        })
+        .join("");
+    }
   };
 
   const loadStats = async () => {
@@ -139,6 +217,7 @@ export const initAdminDashboard = () => {
 
   const loadRules = async () => {
     rulesBody.innerHTML = createSpinnerRow(5, "Memuat data rule...");
+    setRulesCardLoading("Memuat data rule...");
     try {
       const payload = await fetchJson(rulesEndpoint);
       const data = payload?.data ?? payload;
@@ -151,6 +230,7 @@ export const initAdminDashboard = () => {
                     )}</td>
                 </tr>
             `;
+      setRulesCardMessage(error.message || "Gagal memuat data rule.", "error");
       showNotification(
         notificationId,
         "error",

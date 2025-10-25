@@ -14,6 +14,7 @@ export const initAdminMothers = () => {
   const baseEndpoint = container.dataset.baseEndpoint;
   const notificationId = container.dataset.notificationId;
   const tableBody = container.querySelector("[data-table-body]");
+  const cardContainer = container.querySelector("[data-card-container]");
   const detailModal = document.getElementById("motherDetailModal");
   const emailModal = document.getElementById("motherEmailModal");
   const passwordModal = document.getElementById("motherPasswordModal");
@@ -104,6 +105,38 @@ export const initAdminMothers = () => {
     return suffix ? `${text}${suffix}` : text;
   };
 
+  const setCardLoading = (message) => {
+    if (!cardContainer) {
+      return;
+    }
+
+    cardContainer.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 text-sm text-gray-500 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:text-slate-400 dark:shadow-black/30 dark:ring-black/60">
+        <div class="flex items-center justify-center gap-3">
+          <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
+          ${escapeHtml(message)}
+        </div>
+      </div>
+    `;
+  };
+
+  const setCardMessage = (message, variant = "info") => {
+    if (!cardContainer) {
+      return;
+    }
+
+    const textClass =
+      variant === "error"
+        ? "text-red-600 dark:text-rose-300"
+        : "text-gray-500 dark:text-slate-400";
+
+    cardContainer.innerHTML = `
+      <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+        <p class="text-center text-sm ${textClass}">${escapeHtml(message)}</p>
+      </div>
+    `;
+  };
+
   const renderRows = (items) => {
     motherStore.clear();
 
@@ -113,64 +146,122 @@ export const initAdminMothers = () => {
                     <td colspan="6" class="border border-black/40 px-6 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">Belum ada data ibu.</td>
                 </tr>
             `;
+      setCardMessage("Belum ada data ibu.");
       return;
     }
 
-    const rows = items
-      .map((mother) => {
-        if (mother?.id !== undefined) {
-          motherStore.set(String(mother.id), mother);
-        }
+    const normalized = items.map((mother) => {
+      if (mother?.id !== undefined) {
+        motherStore.set(String(mother.id), mother);
+      }
 
-        const status = mother?.status || {};
-        const badgeClass =
-          typeof status.badge === "string" && status.badge.trim() !== ""
-            ? status.badge
-            : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
-        const badgeLabel = status.label || "Tidak diketahui";
+      const status = mother?.status || {};
+      const badgeClass =
+        typeof status.badge === "string" && status.badge.trim() !== ""
+          ? status.badge
+          : "bg-gray-100 text-gray-600 dark:bg-slate-800/70 dark:text-slate-200";
+      const badgeLabel = status.label || "Tidak diketahui";
 
-        return `
-                <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
-                    <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
-                      mother?.name ?? "-"
-                    )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
-                      mother?.email ?? "-"
-                    )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
-                      formatValue(mother?.umur)
-                    )}</td>
-                    <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
-                      formatValue(mother?.usia_bayi_bln)
-                    )}</td>
-                    <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
-                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${escapeHtml(
-          badgeLabel
-        )}</span>
-                    </td>
-                    <td class="border border-black/40 px-6 py-4 text-right text-sm dark:text-slate-200 dark:border-gray-300">
-                        <div class="flex flex-wrap justify-end gap-2">
-                            <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:border-giziblue/70 dark:text-blue-300 dark:hover:bg-slate-900/50" data-action="detail" data-id="${escapeHtml(
-                              mother?.id
-                            )}">Detail</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
-                              mother?.id
-                            )}">Edit Email</button>
-                            <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
-                              mother?.id
-                            )}">Atur Password</button>
-                            <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
-                              mother?.id
-                            )}">Hapus</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-      })
+      return {
+        id: mother?.id ?? "",
+        name: mother?.name ?? "-",
+        email: mother?.email ?? "-",
+        umur: formatValue(mother?.umur),
+        usiaBayi: formatValue(mother?.usia_bayi_bln),
+        badgeClass,
+        badgeLabel,
+      };
+    });
+
+    tableBody.innerHTML = normalized
+      .map((mother) => `
+        <tr class="transition hover:bg-gray-50 dark:hover:bg-slate-900/60">
+          <td class="border border-black/40 px-6 py-4 font-medium text-gray-900 dark:text-slate-100 dark:border-gray-300">${escapeHtml(
+            mother.name
+          )}</td>
+          <td class="border border-black/40 px-6 py-4 text-gray-700 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
+            mother.email
+          )}</td>
+          <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
+            mother.umur
+          )}</td>
+          <td class="border border-black/40 px-6 py-4 text-gray-600 dark:text-slate-200 dark:border-gray-300">${escapeHtml(
+            mother.usiaBayi
+          )}</td>
+          <td class="border border-black/40 px-6 py-4 dark:border-gray-300">
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${escapeHtml(
+              mother.badgeClass
+            )}">${escapeHtml(mother.badgeLabel)}</span>
+          </td>
+          <td class="border border-black/40 px-6 py-4 text-right text-sm dark:text-slate-200 dark:border-gray-300">
+            <div class="flex flex-wrap justify-end gap-2">
+              <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:border-giziblue/70 dark:text-blue-300 dark:hover:bg-slate-900/50" data-action="detail" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Detail</button>
+              <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Edit Email</button>
+              <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Atur Password</button>
+              <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Hapus</button>
+            </div>
+          </td>
+        </tr>
+      `)
       .join("");
 
-    tableBody.innerHTML = rows;
-    attachRowHandlers();
+    if (cardContainer) {
+      cardContainer.innerHTML = normalized
+        .map((mother) => `
+          <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm shadow-slate-100/60 ring-1 ring-slate-200/70 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/30 dark:ring-black/60">
+            <div class="text-base font-semibold text-gray-900 dark:text-slate-100">${escapeHtml(
+              mother.name
+            )}</div>
+            <dl class="mt-4 space-y-3">
+              <div>
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Email</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(mother.email)}</dd>
+              </div>
+              <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Umur</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(mother.umur)}</dd>
+              </div>
+              <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Usia Bayi (bln)</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">${escapeHtml(mother.usiaBayi)}</dd>
+              </div>
+              <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
+                <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">Status</dt>
+                <dd class="mt-1 text-sm text-gray-700 dark:text-slate-200">
+                  <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${escapeHtml(
+                    mother.badgeClass
+                  )}">${escapeHtml(mother.badgeLabel)}</span>
+                </dd>
+              </div>
+            </dl>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button type="button" class="rounded-lg border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:border-giziblue/70 dark:text-blue-300 dark:hover:bg-slate-900/50" data-action="detail" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Detail</button>
+              <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="email" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Edit Email</button>
+              <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 dark:border-slate/70 dark:text-slate-300 dark:hover:bg-slate-900/50" data-action="password" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Atur Password</button>
+              <button type="button" class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-rose-400/40 dark:text-rose-300 dark:hover:bg-rose-500/10" data-action="delete" data-id="${escapeHtml(
+                String(mother.id)
+              )}">Hapus</button>
+            </div>
+          </div>
+        `)
+        .join("");
+    }
+
+    attachActionHandlers();
   };
 
   const populateDetail = (data) => {
@@ -319,32 +410,39 @@ export const initAdminMothers = () => {
     }
   };
 
-  const attachRowHandlers = () => {
-    tableBody.querySelectorAll("button[data-action]").forEach((button) => {
-      button.addEventListener("click", (event) => {
-        const action = button.getAttribute("data-action");
-        const id = button.getAttribute("data-id");
+  const attachActionHandlers = () => {
+    [tableBody, cardContainer].forEach((root) => {
+      if (!root) {
+        return;
+      }
 
-        if (!id) {
-          showNotification(notificationId, "error", "ID ibu tidak valid.");
-          return;
-        }
+      root.querySelectorAll("button[data-action]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.getAttribute("data-action");
+          const id = button.getAttribute("data-id");
 
-        if (action === "detail") {
-          handleDetail(id);
-        } else if (action === "email") {
-          openEmailModal(id);
-        } else if (action === "password") {
-          openPasswordModal(id);
-        } else if (action === "delete") {
-          handleDelete(id);
-        }
+          if (!id) {
+            showNotification(notificationId, "error", "ID ibu tidak valid.");
+            return;
+          }
+
+          if (action === "detail") {
+            handleDetail(id);
+          } else if (action === "email") {
+            openEmailModal(id);
+          } else if (action === "password") {
+            openPasswordModal(id);
+          } else if (action === "delete") {
+            handleDelete(id);
+          }
+        });
       });
     });
   };
 
   const loadMothers = async () => {
     tableBody.innerHTML = createSpinnerRow(6, "Memuat data ibu...");
+    setCardLoading("Memuat data ibu...");
     try {
       const payload = await fetchJson(baseEndpoint);
       const data = payload?.data ?? payload;
@@ -357,6 +455,7 @@ export const initAdminMothers = () => {
                     )}</td>
                 </tr>
             `;
+      setCardMessage(error.message || "Gagal memuat data ibu.", "error");
       showNotification(
         notificationId,
         "error",

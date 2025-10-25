@@ -109,7 +109,7 @@ $evaluationDatetime    = $schedule['scheduled_at']['display'] ?? $scheduledDispl
                 <form
                     class="inline-flex items-center"
                     hx-put="<?= esc(site_url('api/schedules/' . $scheduleId . '/attendance')) ?>"
-                    hx-target="closest tr"
+                    hx-target="closest [data-schedule-row]"
                     hx-swap="none"
                     hx-indicator="#schedule-indicator-<?= esc($scheduleId) ?>-attendance"
                     data-schedule-refresh="true"
