@@ -10,7 +10,7 @@ class RoleFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        helper(['auth', 'response_formatter']);
+        helper(['auth', 'responseformatter']);
 
         $user = auth_user();
 

@@ -12,7 +12,7 @@ class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        helper(['auth', 'response_formatter']);
+        helper(['auth', 'responseformatter']);
 
         $authHeader = $request->getHeaderLine('Authorization');
         $token = auth_token($authHeader);
