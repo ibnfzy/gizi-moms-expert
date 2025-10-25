@@ -2,11 +2,9 @@
 
 namespace App\Commands;
 
-use App\Models\NotificationModel;
-use App\Models\ScheduleModel;
+use App\Services\ScheduleReminderService;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use CodeIgniter\I18n\Time;
 
 class ScheduleReminder extends BaseCommand
 {
@@ -17,48 +15,26 @@ class ScheduleReminder extends BaseCommand
 
     public function run(array $params)
     {
-        $timezone = app_timezone();
-        $now = Time::now($timezone);
-        $windowStart = (clone $now)->addHours(23);
-        $windowEnd = (clone $now)->addHours(25);
+        $service = new ScheduleReminderService();
+        $result  = $service->run();
 
-        $scheduleModel = new ScheduleModel();
+        if ($result['cancelled_count'] > 0) {
+            CLI::write("{$result['cancelled_count']} jadwal yang sudah lewat dibatalkan.", 'yellow');
+        }
 
-        $schedules = $scheduleModel
-            ->where('status', 'scheduled')
-            ->where('reminder_sent', 0)
-            ->where('scheduled_at >=', $windowStart->toDateTimeString())
-            ->where('scheduled_at <=', $windowEnd->toDateTimeString())
-            ->findAll();
-
-        if (empty($schedules)) {
+        if ($result['reminders_sent'] === 0) {
             CLI::write('Tidak ada jadwal yang perlu dikirimkan pengingat.', 'yellow');
 
             return;
         }
 
-        $notificationModel = new NotificationModel();
-        $processed = 0;
+        foreach ($result['reminders'] as $reminder) {
+            $scheduleId = $reminder['schedule_id'];
+            $motherId   = $reminder['mother_id'];
 
-        foreach ($schedules as $schedule) {
-            $scheduledTime = Time::parse($schedule['scheduled_at'], $timezone);
-            $formattedTime = $scheduledTime->format('H:i');
-
-            $notificationModel->insert([
-                'mother_id'    => $schedule['mother_id'],
-                'expert_id'    => $schedule['expert_id'] ?? null,
-                'schedule_id'  => $schedule['id'],
-                'type'         => 'schedule-reminder',
-                'title'        => 'Pengingat Konsultasi',
-                'message'      => "Besok pukul {$formattedTime}, jangan lupa hadir ya!",
-            ]);
-
-            $scheduleModel->update($schedule['id'], ['reminder_sent' => 1]);
-
-            CLI::write("Pengingat dikirim untuk jadwal ID {$schedule['id']} (ibu ID {$schedule['mother_id']}).", 'green');
-            $processed++;
+            CLI::write("Pengingat dikirim untuk jadwal ID {$scheduleId} (ibu ID {$motherId}).", 'green');
         }
 
-        CLI::write("Selesai: {$processed} pengingat dikirim.", 'green');
+        CLI::write("Selesai: {$result['reminders_sent']} pengingat dikirim.", 'green');
     }
 }

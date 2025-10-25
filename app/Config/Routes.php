@@ -23,6 +23,8 @@ $routes->get('/admin/rules', 'AdminRulesController::index', ['filter' => 'adminf
 $routes->get('/admin/mothers', 'AdminMotherController::index', ['filter' => 'adminfilter']);
 $routes->get('/admin/users', 'AdminUserController::index', ['filter' => 'adminfilter']);
 
+$routes->get('cron/schedules/reminder', 'Cron\\ScheduleReminderController::trigger');
+
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
     $routes->post('auth/login', 'AuthController::login');
     $routes->post('inference/run', 'InferenceController::run');

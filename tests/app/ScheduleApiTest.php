@@ -179,9 +179,39 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertTrue($data['status']);
         $this->assertSame('Kehadiran berhasil diperbarui.', $data['message']);
         $this->assertSame('confirmed', $data['data']['attendance']);
+        $this->assertSame('confirmed', $data['data']['status']);
 
         $updated = $this->schedules->find($schedule['id']);
         $this->assertSame('confirmed', $updated['attendance']);
+        $this->assertSame('confirmed', $updated['status']);
+    }
+
+    public function testUpdateAttendanceDeclinedCancelsSchedule(): void
+    {
+        $expert       = $this->createUser('pakar', 'expert-attendance-decline@example.com');
+        $motherBundle = $this->createMotherWithUser('mother-attendance-decline@example.com');
+        $schedule     = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => '2024-06-18 10:00:00',
+        ]);
+
+        $payload = ['attendance' => 'declined'];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders($this->jsonHeadersFor($motherBundle['user']))
+            ->put('api/schedules/' . $schedule['id'] . '/attendance');
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertTrue($data['status']);
+        $this->assertSame('Kehadiran berhasil diperbarui.', $data['message']);
+        $this->assertSame('declined', $data['data']['attendance']);
+        $this->assertSame('cancelled', $data['data']['status']);
+
+        $updated = $this->schedules->find($schedule['id']);
+        $this->assertSame('declined', $updated['attendance']);
+        $this->assertSame('cancelled', $updated['status']);
     }
 
     public function testUpdateEvaluationRequiresExpertRole(): void
@@ -285,7 +315,7 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertFalse($data['data'][0]['is_read']);
     }
 
-    public function testScheduleReminderCommandCreatesNotifications(): void
+    public function testScheduleReminderEndpointCreatesNotifications(): void
     {
         $expert       = $this->createUser('pakar', 'expert-reminder@example.com');
         $motherBundle = $this->createMotherWithUser('mother-reminder@example.com');
@@ -297,20 +327,28 @@ final class ScheduleApiTest extends FeatureTestCase
             'mother_id'    => $motherBundle['mother']['id'],
             'expert_id'    => $expert['id'],
             'scheduled_at' => $now->copy()->addHours(24)->toDateTimeString(),
-            'status'       => 'scheduled',
+            'status'       => 'confirmed',
         ]);
 
         $outsideSchedule = $this->createSchedule([
             'mother_id'    => $motherBundle['mother']['id'],
             'expert_id'    => $expert['id'],
             'scheduled_at' => $now->copy()->addHours(30)->toDateTimeString(),
-            'status'       => 'scheduled',
+            'status'       => 'confirmed',
         ]);
 
-        $result = $this->command('schedule:reminder');
+        $response = $this->get('cron/schedules/reminder');
 
-        $this->assertStringContainsString('Pengingat dikirim untuk jadwal ID ' . $dueSchedule['id'], $result->output());
-        $this->assertStringContainsString('Selesai: 1 pengingat dikirim.', $result->output());
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+
+        $payload = $this->getResponseArray($response);
+        $this->assertTrue($payload['status']);
+        $this->assertSame('Schedule reminder cron executed successfully.', $payload['message']);
+        $this->assertSame(0, $payload['data']['cancelled_count']);
+        $this->assertSame(1, $payload['data']['reminders_sent']);
+        $this->assertCount(1, $payload['data']['reminders']);
+        $this->assertSame($dueSchedule['id'], $payload['data']['reminders'][0]['schedule_id']);
+        $this->assertSame($motherBundle['mother']['id'], $payload['data']['reminders'][0]['mother_id']);
 
         $updatedDue = $this->schedules->find($dueSchedule['id']);
         $this->assertSame(1, (int) $updatedDue['reminder_sent']);
@@ -323,6 +361,60 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertSame($motherBundle['mother']['id'], (int) $notifications[0]['mother_id']);
         $this->assertSame($expert['id'], (int) $notifications[0]['expert_id']);
         $this->assertSame('schedule-reminder', $notifications[0]['type']);
+    }
+
+    public function testScheduleReminderEndpointCancelsExpiredSchedules(): void
+    {
+        $expert       = $this->createUser('pakar', 'expert-reminder-expired@example.com');
+        $motherBundle = $this->createMotherWithUser('mother-reminder-expired@example.com');
+
+        $now = Time::createFromFormat('Y-m-d H:i:s', '2024-05-01 09:00:00', 'Asia/Makassar');
+        Time::setTestNow($now);
+
+        $confirmedPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(1)->toDateTimeString(),
+            'status'       => 'confirmed',
+        ]);
+
+        $pendingPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(2)->toDateTimeString(),
+            'status'       => 'pending',
+        ]);
+
+        $completedPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(3)->toDateTimeString(),
+            'status'       => 'completed',
+        ]);
+
+        $response = $this->get('cron/schedules/reminder');
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+
+        $payload = $this->getResponseArray($response);
+        $this->assertTrue($payload['status']);
+        $this->assertSame('Schedule reminder cron executed successfully.', $payload['message']);
+        $this->assertSame(2, $payload['data']['cancelled_count']);
+        $this->assertSameCanonicalizing([
+            $confirmedPast['id'],
+            $pendingPast['id'],
+        ], $payload['data']['cancelled_schedule_ids']);
+        $this->assertSame(0, $payload['data']['reminders_sent']);
+        $this->assertSame([], $payload['data']['reminders']);
+
+        $updatedConfirmed = $this->schedules->find($confirmedPast['id']);
+        $this->assertSame('cancelled', $updatedConfirmed['status']);
+
+        $updatedPending = $this->schedules->find($pendingPast['id']);
+        $this->assertSame('cancelled', $updatedPending['status']);
+
+        $updatedCompleted = $this->schedules->find($completedPast['id']);
+        $this->assertSame('completed', $updatedCompleted['status']);
     }
 
     /**

@@ -238,7 +238,21 @@ class ScheduleController extends BaseController
             return errorResponse('Invalid attendance value.', ResponseInterface::HTTP_BAD_REQUEST);
         }
 
-        $updated = $this->schedules->update($id, ['attendance' => $attendance]);
+        $fields = ['attendance' => $attendance];
+
+        $currentStatus = (string) ($schedule['status'] ?? 'pending');
+
+        if ($currentStatus !== 'completed') {
+            if ($attendance === 'confirmed') {
+                $fields['status'] = 'confirmed';
+            } elseif ($attendance === 'declined') {
+                $fields['status'] = 'cancelled';
+            } elseif ($attendance === 'pending' && $currentStatus !== 'pending') {
+                $fields['status'] = 'pending';
+            }
+        }
+
+        $updated = $this->schedules->update($id, $fields);
 
         if (! $updated) {
             return errorResponse('Failed to update attendance.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
