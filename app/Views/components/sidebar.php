@@ -42,13 +42,18 @@ if ($userRole === 'admin') {
             'match' => 'pakar/consultations',
         ],
         [
+            'label' => 'Jadwal Konsultasi',
+            'href'  => site_url('pakar/schedules'),
+            'match' => 'pakar/schedules',
+        ],
+        [
             'label' => 'Panduan Status',
             'href'  => '#panduan-status',
             'match' => '',
         ],
     ];
 
-    $tipsText = 'Gunakan panel konsultasi untuk memantau percakapan aktif dengan ibu menyusui dan tindak lanjuti rekomendasi dari hasil inferensi.';
+    $tipsText = 'Gunakan panel konsultasi dan jadwal untuk memantau percakapan aktif serta menindaklanjuti rekomendasi dari hasil inferensi.';
 }
 
 $isPathMatched = static function (string $path, string $match): bool {
