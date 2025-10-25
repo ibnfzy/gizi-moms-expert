@@ -38,6 +38,29 @@ const extractErrorMessage = (raw, fallback) => {
   return text && text !== "" ? text : fallback;
 };
 
+const setButtonLoading = (button, loading, loadingText = "Memproses...") => {
+  if (!button) {
+    return;
+  }
+
+  if (loading) {
+    if (button.dataset.originalText === undefined) {
+      button.dataset.originalText = button.textContent || "";
+    }
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    button.textContent = loadingText;
+    return;
+  }
+
+  button.disabled = false;
+  button.removeAttribute("aria-busy");
+  if (button.dataset.originalText !== undefined) {
+    button.textContent = button.dataset.originalText;
+    delete button.dataset.originalText;
+  }
+};
+
 const getAuthToken = () => {
   const token = window.appConfig?.authToken ?? null;
   if (token) {
@@ -1085,31 +1108,8 @@ const initDashboardPage = () => {
     }
   };
 
-  const setButtonLoading = (button, loading, loadingText = "Memproses...") => {
-    if (!button) {
-      return;
-    }
-
-    if (loading) {
-      if (button.dataset.originalText === undefined) {
-        button.dataset.originalText = button.textContent || "";
-      }
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-      button.textContent = loadingText;
-      return;
-    }
-
-    button.disabled = false;
-    button.removeAttribute("aria-busy");
-    if (button.dataset.originalText !== undefined) {
-      button.textContent = button.dataset.originalText;
-      delete button.dataset.originalText;
-    }
-  };
-
-  const closeDetail = (options = {}) => {
-    const { preserveUrl = false } = options;
+    const closeDetail = (options = {}) => {
+      const { preserveUrl = false } = options;
 
     if (detailEscapeHandler) {
       document.removeEventListener("keydown", detailEscapeHandler);
