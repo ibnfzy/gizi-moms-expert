@@ -355,6 +355,49 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertSame('schedule-reminder', $notifications[0]['type']);
     }
 
+    public function testScheduleReminderCommandCancelsExpiredSchedules(): void
+    {
+        $expert       = $this->createUser('pakar', 'expert-reminder-expired@example.com');
+        $motherBundle = $this->createMotherWithUser('mother-reminder-expired@example.com');
+
+        $now = Time::createFromFormat('Y-m-d H:i:s', '2024-05-01 09:00:00', 'Asia/Makassar');
+        Time::setTestNow($now);
+
+        $confirmedPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(1)->toDateTimeString(),
+            'status'       => 'confirmed',
+        ]);
+
+        $pendingPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(2)->toDateTimeString(),
+            'status'       => 'pending',
+        ]);
+
+        $completedPast = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => $now->copy()->subHours(3)->toDateTimeString(),
+            'status'       => 'completed',
+        ]);
+
+        $result = $this->command('schedule:reminder');
+
+        $this->assertStringContainsString('2 jadwal yang sudah lewat dibatalkan.', $result->output());
+
+        $updatedConfirmed = $this->schedules->find($confirmedPast['id']);
+        $this->assertSame('cancelled', $updatedConfirmed['status']);
+
+        $updatedPending = $this->schedules->find($pendingPast['id']);
+        $this->assertSame('cancelled', $updatedPending['status']);
+
+        $updatedCompleted = $this->schedules->find($completedPast['id']);
+        $this->assertSame('completed', $updatedCompleted['status']);
+    }
+
     /**
      * @return array{status: bool, message: string, data: mixed}
      */

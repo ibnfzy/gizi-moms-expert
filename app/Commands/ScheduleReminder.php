@@ -24,6 +24,12 @@ class ScheduleReminder extends BaseCommand
 
         $scheduleModel = new ScheduleModel();
 
+        $cancelled = $this->cancelExpiredSchedules($scheduleModel, $now);
+
+        if ($cancelled > 0) {
+            CLI::write("{$cancelled} jadwal yang sudah lewat dibatalkan.", 'yellow');
+        }
+
         $schedules = $scheduleModel
             ->where('status', 'confirmed')
             ->where('reminder_sent', 0)
@@ -60,5 +66,26 @@ class ScheduleReminder extends BaseCommand
         }
 
         CLI::write("Selesai: {$processed} pengingat dikirim.", 'green');
+    }
+
+    private function cancelExpiredSchedules(ScheduleModel $scheduleModel, Time $now): int
+    {
+        $expiredSchedules = $scheduleModel
+            ->where('scheduled_at <', $now->toDateTimeString())
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->findAll();
+
+        if ($expiredSchedules === []) {
+            return 0;
+        }
+
+        $cancelled = 0;
+
+        foreach ($expiredSchedules as $schedule) {
+            $scheduleModel->update((int) $schedule['id'], ['status' => 'cancelled']);
+            $cancelled++;
+        }
+
+        return $cancelled;
     }
 }
