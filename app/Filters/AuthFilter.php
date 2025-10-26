@@ -45,7 +45,7 @@ class AuthFilter implements FilterInterface
 
         if (($user['role'] ?? null) === 'ibu') {
             $motherModel = new MotherModel();
-            $mother = $motherModel->where('user_id', $user['id'])->first();
+            $mother = $motherModel->where('user_id', $user['id'])->get()->getRowArray();
             $user['motherId'] = $mother['id'] ?? null;
         }
 

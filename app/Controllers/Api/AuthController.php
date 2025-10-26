@@ -45,7 +45,7 @@ class AuthController extends BaseController
         }
 
         if (($user['role'] ?? null) === 'ibu') {
-            $mother = $this->mothers->where('user_id', $user['id'])->first();
+            $mother = $this->mothers->where('user_id', $user['id'])->get()->getRowArray();
             $user['mother_id'] = $mother['id'] ?? null;
         }
 
