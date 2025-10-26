@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Libraries\JWTService;
+use App\Models\MotherModel;
 use App\Models\UserModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
@@ -41,6 +42,12 @@ class AuthFilter implements FilterInterface
         }
 
         unset($user['password_hash']);
+
+        if (($user['role'] ?? null) === 'ibu') {
+            $motherModel = new MotherModel();
+            $mother = $motherModel->where('user_id', $user['id'])->first();
+            $user['motherId'] = $mother['id'] ?? null;
+        }
 
         set_auth_user($user);
 
