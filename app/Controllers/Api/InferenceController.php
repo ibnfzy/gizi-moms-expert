@@ -99,7 +99,7 @@ class InferenceController extends BaseController
 
         $motherRecord = $this->mothers
             ->withUser()
-            ->where('mothers.id', $motherId)
+            ->where('mothers.user_id', $motherId)
             ->get()->getRowArray();
 
         if (! is_array($motherRecord)) {
