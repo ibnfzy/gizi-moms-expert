@@ -21,6 +21,11 @@ class AuthController extends BaseController
         helper('auth');
     }
 
+    public function options()
+    {
+        return $this->response->setStatusCode(200);
+    }
+
     public function login()
     {
         $data = get_request_data($this->request);
