@@ -61,6 +61,79 @@ class PakarConsultationController extends BaseController
         ]));
     }
 
+    public function start(): ResponseInterface
+    {
+        $session  = session();
+        $pakarId  = (int) ($session->get('user_id') ?? 0);
+        $userRole = (string) ($session->get('user_role') ?? '');
+
+        if ($pakarId <= 0 || $userRole !== 'pakar') {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_FORBIDDEN)->setJSON([
+                'status'  => false,
+                'message' => 'Anda tidak diizinkan memulai konsultasi.',
+            ]);
+        }
+
+        $payload  = $this->request->getJSON(true) ?? [];
+        $motherId = isset($payload['mother_id']) ? (int) $payload['mother_id'] : null;
+        if ($motherId === null || $motherId <= 0) {
+            $motherId = (int) ($this->request->getPost('mother_id') ?? 0);
+        }
+
+        if ($motherId <= 0) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_UNPROCESSABLE_ENTITY)->setJSON([
+                'status'  => false,
+                'message' => 'Data ibu tidak valid untuk memulai konsultasi.',
+            ]);
+        }
+
+        $mother = $this->mothers->find($motherId);
+        if (! is_array($mother)) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)->setJSON([
+                'status'  => false,
+                'message' => 'Data ibu menyusui tidak ditemukan.',
+            ]);
+        }
+
+        $consultation = $this->consultations
+            ->where('pakar_id', $pakarId)
+            ->where('mother_id', $motherId)
+            ->first();
+
+        if (! is_array($consultation)) {
+            $consultationId = $this->consultations->insert([
+                'mother_id' => $motherId,
+                'pakar_id'  => $pakarId,
+                'status'    => 'pending',
+            ], true);
+
+            if (! is_int($consultationId) || $consultationId <= 0) {
+                return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)->setJSON([
+                    'status'  => false,
+                    'message' => 'Gagal membuat sesi konsultasi.',
+                ]);
+            }
+
+            $consultation = $this->consultations->find($consultationId);
+        }
+
+        $consultationId = isset($consultation['id']) ? (int) $consultation['id'] : 0;
+
+        if ($consultationId <= 0) {
+            return $this->response->setStatusCode(ResponseInterface::HTTP_INTERNAL_SERVER_ERROR)->setJSON([
+                'status'  => false,
+                'message' => 'Sesi konsultasi tidak valid.',
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'           => true,
+            'message'          => 'Sesi konsultasi siap dibuka.',
+            'consultation_id'  => $consultationId,
+            'redirect'         => site_url('pakar/consultations/' . $consultationId),
+        ]);
+    }
+
     public function sendMessage(int $consultationId): ResponseInterface
     {
         $session  = session();

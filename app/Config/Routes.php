@@ -16,6 +16,7 @@ $routes->get('/pakar/dashboard/mothers/close', 'PakarDashboardController::clearD
 $routes->get('/pakar/consultations', 'PakarConsultationController::index', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/consultations/(:num)', 'PakarConsultationController::conversation/$1', ['filter' => 'pakarfilter']);
 $routes->post('/pakar/consultations/(:num)/messages', 'PakarConsultationController::sendMessage/$1', ['filter' => 'pakarfilter']);
+$routes->post('/pakar/consultations/start', 'PakarConsultationController::start', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules', 'PakarScheduleController::index', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules/table', 'PakarScheduleController::table', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules/rows/(:num)', 'PakarScheduleController::row/$1', ['filter' => 'pakarfilter']);
@@ -55,6 +56,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
 
             $routes->get('consultations', 'ConsultationController::index');
             $routes->post('consultations', 'ConsultationController::create');
+            $routes->get('consultations/(:num)', 'ConsultationController::show/$1');
             $routes->get('consultations/(:num)/messages', 'MessageController::index/$1');
 
             $routes->post('messages', 'MessageController::create');

@@ -228,6 +228,69 @@ class ConsultationController extends BaseController
         );
     }
 
+    public function show(int $consultationId)
+    {
+        $user = auth_user();
+
+        if ($user === null) {
+            return errorResponse('Unauthorized.', ResponseInterface::HTTP_UNAUTHORIZED);
+        }
+
+        $consultation = $this->consultations->find($consultationId);
+
+        if (! is_array($consultation)) {
+            return errorResponse('Consultation not found.', ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        $role = strtolower((string) ($user['role'] ?? ''));
+
+        if ($role === 'pakar') {
+            if ((int) $consultation['pakar_id'] !== (int) $user['id']) {
+                return errorResponse(
+                    'You do not have permission to view this consultation.',
+                    ResponseInterface::HTTP_FORBIDDEN
+                );
+            }
+        } elseif ($role === 'ibu') {
+            $mother = $this->mothers->find($consultation['mother_id']);
+
+            if (! is_array($mother) || (int) $mother['user_id'] !== (int) $user['id']) {
+                return errorResponse(
+                    'You do not have permission to view this consultation.',
+                    ResponseInterface::HTTP_FORBIDDEN
+                );
+            }
+        } else {
+            return errorResponse(
+                'You do not have permission to view this consultation.',
+                ResponseInterface::HTTP_FORBIDDEN
+            );
+        }
+
+        $motherRecord = $this->mothers
+            ->withUser()
+            ->where('mothers.id', $consultation['mother_id'])
+            ->get()->getRowArray();
+
+        $pakarRecord = $this->users
+            ->select('id, name, email, role')
+            ->find($consultation['pakar_id']);
+
+        $motherDetails = [];
+        if (is_array($motherRecord)) {
+            $motherDetails[(int) $consultation['mother_id']] = $motherRecord;
+        }
+
+        $pakarMap = [];
+        if (is_array($pakarRecord)) {
+            $pakarMap[(int) $consultation['pakar_id']] = $pakarRecord;
+        }
+
+        $payload = $this->formatConsultationRecord($consultation, $motherDetails, $pakarMap);
+
+        return successResponse($payload, 'Detail konsultasi berhasil dimuat.');
+    }
+
     /**
      * @param array<string, mixed> $consultation
      * @param array<int, array<string, mixed>> $motherDetails

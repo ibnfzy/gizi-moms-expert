@@ -12,6 +12,7 @@
         ? site_url('pakar/dashboard/mothers/0')
         : site_url('pakar/dashboard/mothers/' . $motherId);
     $inferenceEndpoint = site_url('api/inference/run');
+    $consultationStartEndpoint = site_url('pakar/consultations/start');
 
     $formatValue = static function ($value, string $suffix = ''): string {
         if ($value === null || $value === '' || $value === []) {
@@ -240,6 +241,12 @@
                 data-inference-endpoint="<?= esc($inferenceEndpoint) ?>"
                 data-mother-id="<?= esc((string) ($motherId ?? '')) ?>"
             >Jalankan Inferensi</button>
+            <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-md border border-emerald-600 bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:border-emerald-700 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+                data-start-consultation="<?= esc($consultationStartEndpoint) ?>"
+                data-mother-id="<?= esc((string) ($motherId ?? '')) ?>"
+            >Mulai Konsultasi</button>
             <button
                 type="button"
                 class="inline-flex items-center rounded-md border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:border-blue-700 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
