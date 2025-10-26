@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
 use App\Libraries\JWTService;
+use App\Models\MotherModel;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use DateInterval;
@@ -11,10 +12,12 @@ use DateInterval;
 class AuthController extends BaseController
 {
     protected UserModel $users;
+    protected MotherModel $mothers;
 
     public function __construct()
     {
         $this->users = new UserModel();
+        $this->mothers = new MotherModel();
         helper('auth');
     }
 
@@ -39,6 +42,11 @@ class AuthController extends BaseController
 
         if (! $user || ! password_verify($data['password'], $user['password_hash'])) {
             return errorResponse('Invalid email or password.', ResponseInterface::HTTP_UNAUTHORIZED);
+        }
+
+        if (($user['role'] ?? null) === 'ibu') {
+            $mother = $this->mothers->where('user_id', $user['id'])->get()->getRowArray();
+            $user['mother_id'] = $mother['id'] ?? null;
         }
 
         try {
@@ -117,6 +125,12 @@ class AuthController extends BaseController
     private function formatUser(array $user): array
     {
         unset($user['password_hash']);
+
+        if (array_key_exists('mother_id', $user)) {
+            $motherId = $user['mother_id'];
+            unset($user['mother_id']);
+            $user['motherId'] = $motherId !== null ? (int) $motherId : null;
+        }
 
         return $user;
     }
