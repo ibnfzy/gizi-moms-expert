@@ -1267,7 +1267,7 @@ const initDashboardPage = () => {
     );
   };
 
-  const applyInferenceFeedback = (modal, type, message) => {
+  const updateDetailFeedback = (modal, type, message) => {
     if (!modal) {
       return;
     }
@@ -1399,9 +1399,9 @@ const initDashboardPage = () => {
 
     const { feedback } = options;
     if (feedback && feedback.type && feedback.message) {
-      applyInferenceFeedback(modal, feedback.type, feedback.message);
+      updateDetailFeedback(modal, feedback.type, feedback.message);
     } else {
-      applyInferenceFeedback(modal);
+      updateDetailFeedback(modal);
     }
 
     const inferenceButton = modal.querySelector("[data-run-inference]");
@@ -1414,10 +1414,10 @@ const initDashboardPage = () => {
         const motherId =
           inferenceButton.dataset.motherId || currentMotherId;
 
-        applyInferenceFeedback(modal);
+        updateDetailFeedback(modal);
 
         if (!endpoint) {
-          applyInferenceFeedback(
+          updateDetailFeedback(
             modal,
             "error",
             "Endpoint inferensi tidak tersedia."
@@ -1426,7 +1426,7 @@ const initDashboardPage = () => {
         }
 
         if (!motherId) {
-          applyInferenceFeedback(
+          updateDetailFeedback(
             modal,
             "error",
             "Data ibu tidak valid untuk inferensi."
@@ -1448,7 +1448,7 @@ const initDashboardPage = () => {
               (data && data.message) ||
               message ||
               "Gagal menjalankan inferensi.";
-            applyInferenceFeedback(modal, "error", errorMessage);
+            updateDetailFeedback(modal, "error", errorMessage);
             return;
           }
 
@@ -1467,14 +1467,14 @@ const initDashboardPage = () => {
               : { feedback: reloadFailedFeedback };
             await loadMotherDetail(detailUrl, detailOptions);
           } else if (!dashboardUpdated) {
-            applyInferenceFeedback(
+            updateDetailFeedback(
               modal,
               reloadFailedFeedback.type,
               reloadFailedFeedback.message
             );
           }
         } catch (error) {
-          applyInferenceFeedback(
+          updateDetailFeedback(
             modal,
             "error",
             error?.message || "Gagal menjalankan inferensi."
@@ -1482,6 +1482,84 @@ const initDashboardPage = () => {
         } finally {
           if (inferenceButton?.isConnected) {
             setButtonLoading(inferenceButton, false);
+          }
+        }
+      });
+    }
+
+    const consultationButton = modal.querySelector(
+      "[data-start-consultation]"
+    );
+
+    if (consultationButton && !consultationButton.dataset.startConsultationBound) {
+      consultationButton.dataset.startConsultationBound = "true";
+      consultationButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        const endpoint =
+          consultationButton.dataset.startConsultation || "";
+        const motherId =
+          consultationButton.dataset.motherId || currentMotherId;
+
+        updateDetailFeedback(modal);
+
+        if (!endpoint) {
+          updateDetailFeedback(
+            modal,
+            "error",
+            "Endpoint konsultasi tidak tersedia."
+          );
+          return;
+        }
+
+        if (!motherId) {
+          updateDetailFeedback(
+            modal,
+            "error",
+            "Data ibu tidak valid untuk konsultasi."
+          );
+          return;
+        }
+
+        setButtonLoading(consultationButton, true, "Mengalihkan...");
+
+        try {
+          const { ok, data, message } = await fetchJson(endpoint, {
+            method: "POST",
+            body: JSON.stringify({ mother_id: Number(motherId) }),
+            acceptErrorResponse: true,
+          });
+
+          if (!ok || !data || data.status !== true) {
+            const errorMessage =
+              (data && data.message) ||
+              message ||
+              "Gagal memulai konsultasi.";
+            updateDetailFeedback(modal, "error", errorMessage);
+            return;
+          }
+
+          const redirectUrl = data.redirect || data.url || null;
+
+          if (!redirectUrl) {
+            updateDetailFeedback(
+              modal,
+              "error",
+              "Respon konsultasi tidak valid."
+            );
+            return;
+          }
+
+          window.location.href = redirectUrl;
+        } catch (error) {
+          updateDetailFeedback(
+            modal,
+            "error",
+            error?.message || "Gagal memulai konsultasi."
+          );
+        } finally {
+          if (consultationButton?.isConnected) {
+            setButtonLoading(consultationButton, false);
           }
         }
       });
