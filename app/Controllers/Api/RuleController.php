@@ -42,8 +42,9 @@ class RuleController extends BaseController
         $usingJsonRule = array_key_exists('json_rule', $payload);
 
         $validationRules = [
-            'name'    => 'required|string',
-            'version' => 'required|string',
+            'name'           => 'required|string',
+            'version'        => 'required|string',
+            'komentar_pakar' => 'permit_empty|string',
         ];
 
         if ($usingJsonRule) {
@@ -86,6 +87,9 @@ class RuleController extends BaseController
             'is_active'      => array_key_exists('is_active', $payload)
                 ? (bool) $payload['is_active']
                 : true,
+            'komentar_pakar' => array_key_exists('komentar_pakar', $payload)
+                ? ($payload['komentar_pakar'] !== '' ? $payload['komentar_pakar'] : null)
+                : null,
         ], true);
 
         if (! $ruleId) {
@@ -121,6 +125,7 @@ class RuleController extends BaseController
             'json_rule',
             'effective_from',
             'is_active',
+            'komentar_pakar',
         ]));
 
         $detailPayload = array_intersect_key($payload, array_flip([
@@ -153,6 +158,9 @@ class RuleController extends BaseController
         if (array_key_exists('is_active', $fields)) {
             $fields['is_active'] = (bool) $fields['is_active'];
         }
+
+        $fields['version'] = $this->incrementVersion((string) ($existing['version'] ?? ''));
+        $fields['komentar_pakar'] = null;
 
         if (! $this->rules->update($id, $fields)) {
             return errorResponse('Gagal memperbarui rule.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
@@ -210,7 +218,34 @@ class RuleController extends BaseController
             'created_at'     => $rule['created_at'] ?? null,
             'updated_at'     => $rule['updated_at'] ?? null,
             'details'        => $details,
+            'komentar_pakar' => $rule['komentar_pakar'] ?? null,
         ];
+    }
+
+    private function incrementVersion(string $current): string
+    {
+        $trimmed = trim($current);
+
+        if ($trimmed === '') {
+            return '1.0.0';
+        }
+
+        if (preg_match('/^(?<prefix>[^0-9]*)(?<numbers>\d+(?:\.\d+)*)(?<suffix>.*)$/', $trimmed, $matches) === 1) {
+            $numbers = array_map('intval', explode('.', $matches['numbers']));
+
+            if ($numbers !== []) {
+                $lastIndex = count($numbers) - 1;
+                $numbers[$lastIndex]++;
+
+                return $matches['prefix'] . implode('.', $numbers) . $matches['suffix'];
+            }
+        }
+
+        if (is_numeric($trimmed)) {
+            return (string) ((int) $trimmed + 1);
+        }
+
+        return $trimmed . '.1';
     }
 
     private function decodeRuleDetails(?string $json): array

@@ -86,6 +86,7 @@ final class RuleApiTest extends FeatureTestCase
         $this->assertSame('Daftar rule berhasil dimuat.', $payload['message']);
         $this->assertNotEmpty($payload['data']);
         $this->assertSame('Existing Rule', $payload['data'][0]['name']);
+        $this->assertArrayHasKey('komentar_pakar', $payload['data'][0]);
     }
 
     public function testCreateRequiresAuthentication(): void
@@ -138,11 +139,13 @@ final class RuleApiTest extends FeatureTestCase
         $this->assertSame('Rule berhasil ditambahkan.', $data['message']);
         $this->assertSame('New Rule', $data['data']['name']);
         $this->assertSame('v2', $data['data']['version']);
+        $this->assertNull($data['data']['komentar_pakar']);
 
         $stored = $this->rules->find($data['data']['id']);
         $this->assertIsArray($stored);
         $this->assertSame('New Rule', $stored['name']);
         $this->assertSame('v2', $stored['version']);
+        $this->assertNull($stored['komentar_pakar']);
     }
 
     public function testUpdateRequiresAuthentication(): void
@@ -197,6 +200,8 @@ final class RuleApiTest extends FeatureTestCase
         $data = $this->getResponseArray($response);
         $this->assertTrue($data['status']);
         $this->assertSame('Rule berhasil diperbarui.', $data['message']);
+        $this->assertSame('v2', $data['data']['version']);
+        $this->assertNull($data['data']['komentar_pakar']);
 
         $updated = $this->rules->find($rule['id']);
         $this->assertIsArray($updated);
@@ -204,6 +209,42 @@ final class RuleApiTest extends FeatureTestCase
         $this->assertSame('if bmi > 25', $details['condition']);
         $this->assertSame('Consult doctor', $details['recommendation']);
         $this->assertSame('health', $details['category']);
+        $this->assertSame('v2', $updated['version']);
+        $this->assertNull($updated['komentar_pakar']);
+    }
+
+    public function testAdminUpdateClearsKomentarPakarAndIncrementsVersion(): void
+    {
+        $rule = $this->createRule([
+            'version' => '1.2',
+        ]);
+
+        $this->rules->update($rule['id'], ['komentar_pakar' => 'Perlu review pakar']);
+        $ruleWithComment = $this->rules->find($rule['id']);
+        $this->assertIsArray($ruleWithComment);
+        $this->assertSame('Perlu review pakar', $ruleWithComment['komentar_pakar']);
+
+        $admin = $this->createUser('admin', 'admin-clear-comment@example.com');
+
+        $payload = [
+            'name' => 'Updated Name',
+        ];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders($this->jsonHeadersFor($admin))
+            ->put('api/rules/' . $rule['id']);
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertTrue($data['status']);
+        $this->assertSame('Rule berhasil diperbarui.', $data['message']);
+        $this->assertSame('1.3', $data['data']['version']);
+        $this->assertNull($data['data']['komentar_pakar']);
+
+        $updated = $this->rules->find($rule['id']);
+        $this->assertIsArray($updated);
+        $this->assertSame('1.3', $updated['version']);
+        $this->assertNull($updated['komentar_pakar']);
     }
 
     public function testDeleteRequiresAuthentication(): void
