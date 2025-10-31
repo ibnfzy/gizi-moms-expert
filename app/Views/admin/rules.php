@@ -19,11 +19,17 @@
             </button>
         </div>
 
-        <div
-            id="admin-rules-notification"
-            class="hidden rounded-lg border border-transparent px-4 py-3 text-sm font-medium transition-all duration-200"
-            role="status"
-            aria-live="polite"></div>
+        <div class="mt-4 space-y-2" aria-live="polite" aria-atomic="true">
+            <div class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">
+                Status Review Pakar
+            </div>
+            <div>
+                <div
+                    id="admin-rules-notification"
+                    class="hidden"
+                    role="status"></div>
+            </div>
+        </div>
 
         <div class="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-slate-100 ring-1 ring-gray-100 dark:border-black/70 dark:bg-slate-950/70 dark:shadow-black/40 dark:ring-black/60">
             <div class="border-b border-gray-100 px-6 py-6 dark:border-black/70 md:hidden" data-rules-card-wrapper>
@@ -38,18 +44,19 @@
             </div>
             <div class="hidden border-t border-gray-100 dark:border-black/70 md:block">
                 <div class="overflow-x-auto">
-                    <table class="min-w-[64rem] border-collapse border border-black/40 text-left text-sm dark:border-gray-300">
+                    <table class="min-w-[72rem] border-collapse border border-black/40 text-left text-sm dark:border-gray-300">
                         <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:bg-slate-950/70 dark:text-slate-200">
                             <tr>
                                 <th scope="col" class="border border-black/40 px-4 py-3 dark:border-gray-300">Nama Rule</th>
                                 <th scope="col" class="border border-black/40 px-4 py-3 dark:border-gray-300">Versi</th>
                                 <th scope="col" class="border border-black/40 px-4 py-3 dark:border-gray-300">Status</th>
+                                <th scope="col" class="border border-black/40 px-4 py-3 dark:border-gray-300">Catatan Pakar</th>
                                 <th scope="col" class="border border-black/40 px-4 py-3 text-right dark:border-gray-300">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="rulesTableBody" class="text-gray-700 dark:text-slate-200">
                             <tr data-loader-row>
-                                <td colspan="4" class="border border-black/40 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">
+                                <td colspan="5" class="border border-black/40 px-4 py-6 text-center text-sm text-gray-500 dark:border-gray-300 dark:text-slate-400">
                                     <div class="flex items-center justify-center gap-3">
                                         <div class="h-6 w-6 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" aria-hidden="true"></div>
                                         Memuat data rules...
