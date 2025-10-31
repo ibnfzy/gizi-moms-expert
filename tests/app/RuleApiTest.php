@@ -290,6 +290,64 @@ final class RuleApiTest extends FeatureTestCase
         $this->assertNull($deleted);
     }
 
+    public function testCommentEndpointRequiresAuthentication(): void
+    {
+        $rule = $this->createRule();
+
+        $payload = ['komentar_pakar' => 'Catatan pakar'];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ])
+            ->post('api/rules/' . $rule['id'] . '/comment');
+
+        $this->assertSame(ResponseInterface::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertFalse($data['status']);
+        $this->assertSame('Authorization token missing.', $data['message']);
+    }
+
+    public function testCommentEndpointRejectsAdminRole(): void
+    {
+        $rule = $this->createRule();
+        $admin = $this->createUser('admin', 'admin-comment@example.com');
+
+        $payload = ['komentar_pakar' => 'Catatan pakar'];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders($this->jsonHeadersFor($admin))
+            ->post('api/rules/' . $rule['id'] . '/comment');
+
+        $this->assertSame(ResponseInterface::HTTP_FORBIDDEN, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertFalse($data['status']);
+        $this->assertSame('You do not have permission to access this resource.', $data['message']);
+    }
+
+    public function testCommentEndpointAllowsPakarToSaveComment(): void
+    {
+        $rule = $this->createRule();
+        $pakar = $this->createUser('pakar', 'pakar-comment@example.com');
+
+        $payload = ['komentar_pakar' => 'Catatan tindak lanjut'];
+
+        $response = $this->withBody(json_encode($payload, JSON_THROW_ON_ERROR))
+            ->withHeaders($this->jsonHeadersFor($pakar))
+            ->post('api/rules/' . $rule['id'] . '/comment');
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+        $data = $this->getResponseArray($response);
+        $this->assertTrue($data['status']);
+        $this->assertSame('Komentar pakar berhasil disimpan.', $data['message']);
+        $this->assertSame('Catatan tindak lanjut', $data['data']['komentar_pakar']);
+
+        $stored = $this->rules->find($rule['id']);
+        $this->assertIsArray($stored);
+        $this->assertSame('Catatan tindak lanjut', $stored['komentar_pakar']);
+    }
+
     /**
      * @return array{status: bool, message: string, data: mixed}
      */

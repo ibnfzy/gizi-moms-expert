@@ -1209,6 +1209,262 @@ const initSchedulePage = () => {
   });
 };
 
+const initPakarRulesPage = () => {
+  const container = document.querySelector("[data-pakar-rules]");
+  if (!container) {
+    return;
+  }
+
+  const commentEndpointTemplate =
+    container.dataset.commentEndpointTemplate || "";
+  const feedbackElement = container.querySelector("[data-rules-feedback]");
+  const commentFields =
+    container.querySelectorAll("[data-rule-comment]") || [];
+
+  const successFeedbackClasses = [
+    "border-emerald-200",
+    "bg-emerald-50",
+    "text-emerald-700",
+    "dark:border-emerald-400/40",
+    "dark:bg-emerald-400/10",
+    "dark:text-emerald-200",
+  ];
+
+  const errorFeedbackClasses = [
+    "border-red-200",
+    "bg-red-50",
+    "text-red-700",
+    "dark:border-red-400/40",
+    "dark:bg-red-500/10",
+    "dark:text-red-200",
+  ];
+
+  let feedbackTimeout = null;
+
+  const normalizeComment = (value) => {
+    if (value === undefined || value === null) {
+      return "";
+    }
+
+    return String(value);
+  };
+
+  const hideFeedback = () => {
+    if (!feedbackElement) {
+      return;
+    }
+
+    if (feedbackTimeout) {
+      window.clearTimeout(feedbackTimeout);
+      feedbackTimeout = null;
+    }
+
+    feedbackElement.classList.add("hidden");
+    feedbackElement.textContent = "";
+    feedbackElement.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+  };
+
+  const showFeedback = (type, message) => {
+    if (!feedbackElement || !message) {
+      return;
+    }
+
+    if (feedbackTimeout) {
+      window.clearTimeout(feedbackTimeout);
+    }
+
+    feedbackElement.textContent = message;
+    feedbackElement.classList.remove("hidden");
+    feedbackElement.classList.remove(
+      ...successFeedbackClasses,
+      ...errorFeedbackClasses
+    );
+
+    if (type === "success") {
+      feedbackElement.classList.add(...successFeedbackClasses);
+    } else {
+      feedbackElement.classList.add(...errorFeedbackClasses);
+    }
+
+    feedbackTimeout = window.setTimeout(() => {
+      hideFeedback();
+    }, 6000);
+  };
+
+  const updateButtonState = (textarea) => {
+    if (!textarea) {
+      return;
+    }
+
+    const card = textarea.closest("[data-rule-card]");
+    if (!card) {
+      return;
+    }
+
+    const saveButton = card.querySelector("[data-rule-save]");
+    const resetButton = card.querySelector("[data-rule-reset]");
+    const original = normalizeComment(textarea.dataset.ruleOriginalComment);
+    const current = normalizeComment(textarea.value);
+    const dirty = current !== original;
+
+    if (saveButton) {
+      saveButton.disabled = !dirty;
+      if (dirty) {
+        saveButton.removeAttribute("aria-disabled");
+      } else {
+        saveButton.setAttribute("aria-disabled", "true");
+      }
+    }
+
+    if (resetButton) {
+      resetButton.disabled = !dirty;
+      if (dirty) {
+        resetButton.removeAttribute("aria-disabled");
+      } else {
+        resetButton.setAttribute("aria-disabled", "true");
+      }
+    }
+  };
+
+  const setSavingIndicator = (card, show) => {
+    if (!card) {
+      return;
+    }
+
+    const indicator = card.querySelector("[data-rule-indicator]");
+    if (!indicator) {
+      return;
+    }
+
+    indicator.classList.toggle("hidden", !show);
+    indicator.setAttribute("aria-hidden", show ? "false" : "true");
+  };
+
+  const buildCommentEndpoint = (ruleId) => {
+    if (!ruleId) {
+      return "";
+    }
+
+    if (!commentEndpointTemplate) {
+      return "";
+    }
+
+    return commentEndpointTemplate.replace(
+      "__id__",
+      encodeURIComponent(ruleId)
+    );
+  };
+
+  const handleReset = (button) => {
+    const card = button.closest("[data-rule-card]");
+    if (!card) {
+      return;
+    }
+
+    const textarea = card.querySelector("[data-rule-comment]");
+    if (!textarea) {
+      return;
+    }
+
+    const original = normalizeComment(textarea.dataset.ruleOriginalComment);
+    textarea.value = original;
+    textarea.focus();
+    updateButtonState(textarea);
+    showFeedback("success", "Perubahan komentar dibatalkan.");
+  };
+
+  const handleSave = async (button) => {
+    const card = button.closest("[data-rule-card]");
+    if (!card) {
+      return;
+    }
+
+    const textarea = card.querySelector("[data-rule-comment]");
+    if (!textarea) {
+      showFeedback("error", "Kolom komentar tidak ditemukan.");
+      return;
+    }
+
+    const ruleId = card.dataset.ruleId;
+    if (!ruleId) {
+      showFeedback("error", "Identitas rule tidak ditemukan.");
+      return;
+    }
+
+    const original = normalizeComment(textarea.dataset.ruleOriginalComment);
+    const current = normalizeComment(textarea.value);
+
+    if (current === original) {
+      showFeedback(
+        "error",
+        "Tidak ada perubahan komentar yang perlu disimpan."
+      );
+      return;
+    }
+
+    const endpoint = buildCommentEndpoint(ruleId);
+
+    if (!endpoint) {
+      showFeedback("error", "Endpoint komentar tidak tersedia.");
+      return;
+    }
+
+    setButtonLoading(button, true, "Menyimpan...");
+    setSavingIndicator(card, true);
+
+    try {
+      const payload = { komentar_pakar: current };
+      const { ok, message, data } = await fetchJson(endpoint, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        acceptErrorResponse: true,
+      });
+
+      if (!ok) {
+        throw new Error(message || "Gagal menyimpan komentar.");
+      }
+
+      const storedComment = normalizeComment(data?.komentar_pakar);
+      textarea.value = storedComment;
+      textarea.dataset.ruleOriginalComment = storedComment;
+      updateButtonState(textarea);
+
+      showFeedback("success", message || "Komentar berhasil disimpan.");
+    } catch (error) {
+      showFeedback("error", error?.message || "Gagal menyimpan komentar.");
+    } finally {
+      setButtonLoading(button, false);
+      setSavingIndicator(card, false);
+      updateButtonState(textarea);
+    }
+  };
+
+  commentFields.forEach((textarea) => {
+    updateButtonState(textarea);
+    textarea.addEventListener("input", () => {
+      updateButtonState(textarea);
+    });
+  });
+
+  container.addEventListener("click", (event) => {
+    const saveButton = event.target.closest("[data-rule-save]");
+    if (saveButton) {
+      event.preventDefault();
+      handleSave(saveButton);
+      return;
+    }
+
+    const resetButton = event.target.closest("[data-rule-reset]");
+    if (resetButton) {
+      event.preventDefault();
+      handleReset(resetButton);
+    }
+  });
+};
+
 const initDashboardPage = () => {
   const page = document.querySelector("[data-pakar-dashboard]");
   if (!page) {
@@ -1708,6 +1964,7 @@ const initConsultationPage = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   initStatusGuidanceModal();
+  initPakarRulesPage();
   initSchedulePage();
   initDashboardPage();
   initConsultationPage();
