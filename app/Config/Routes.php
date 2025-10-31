@@ -49,6 +49,13 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->get('notifications', 'NotificationController::index', ['filter' => 'role:pakar,ibu,admin']);
         $routes->post('notifications', 'NotificationController::create', ['filter' => 'role:pakar,admin']);
 
+        $routes->group('rules', static function ($routes) {
+            $routes->get('/', 'RuleController::index');
+            $routes->post('/', 'RuleController::create');
+            $routes->put('(:num)', 'RuleController::update/$1');
+            $routes->delete('(:num)', 'RuleController::delete/$1');
+        });
+
         $routes->group('', ['filter' => 'role:pakar,ibu'], static function ($routes) {
             $routes->get('mothers', 'MotherController::index');
             $routes->get('mothers/(:num)', 'MotherController::show/$1');
@@ -80,12 +87,5 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
                 $routes->delete('(:num)', 'AdminUserController::delete/$1');
             });
         });
-    });
-
-    $routes->group('rules', static function ($routes) {
-        $routes->get('/', 'RuleController::index');
-        $routes->post('/', 'RuleController::create');
-        $routes->put('(:num)', 'RuleController::update/$1');
-        $routes->delete('(:num)', 'RuleController::delete/$1');
     });
 });
