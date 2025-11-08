@@ -186,6 +186,39 @@ final class ScheduleApiTest extends FeatureTestCase
         $this->assertSame('confirmed', $updated['status']);
     }
 
+    public function testUpdateAttendanceAcceptsFormEncodedPayload(): void
+    {
+        $expert       = $this->createUser('pakar', 'expert-attendance-form@example.com');
+        $motherBundle = $this->createMotherWithUser('mother-attendance-form@example.com');
+        $schedule     = $this->createSchedule([
+            'mother_id'    => $motherBundle['mother']['id'],
+            'expert_id'    => $expert['id'],
+            'scheduled_at' => '2024-06-19 09:00:00',
+        ]);
+
+        $token = $this->generateTokenForUser($motherBundle['user']);
+
+        $response = $this->withBody('attendance=confirmed')
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/x-www-form-urlencoded',
+                'Accept'        => 'application/json',
+            ])
+            ->put('api/schedules/' . $schedule['id'] . '/attendance');
+
+        $this->assertSame(ResponseInterface::HTTP_OK, $response->getStatusCode());
+
+        $data = $this->getResponseArray($response);
+        $this->assertTrue($data['status']);
+        $this->assertSame('Kehadiran berhasil diperbarui.', $data['message']);
+        $this->assertSame('confirmed', $data['data']['attendance']);
+        $this->assertSame('confirmed', $data['data']['status']);
+
+        $updated = $this->schedules->find($schedule['id']);
+        $this->assertSame('confirmed', $updated['attendance']);
+        $this->assertSame('confirmed', $updated['status']);
+    }
+
     public function testUpdateAttendanceDeclinedCancelsSchedule(): void
     {
         $expert       = $this->createUser('pakar', 'expert-attendance-decline@example.com');

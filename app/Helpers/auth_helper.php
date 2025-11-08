@@ -17,6 +17,10 @@ if (! function_exists('get_request_data')) {
             $data = $request->getPost();
         }
 
+        if (! is_array($data) || $data === []) {
+            $data = $request->getRawInput();
+        }
+
         return is_array($data) ? $data : [];
     }
 }
