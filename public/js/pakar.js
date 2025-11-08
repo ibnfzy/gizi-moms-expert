@@ -319,6 +319,27 @@ const initSchedulePage = () => {
   const followUpField = evaluationModal?.querySelector(
     "[data-modal-follow-up]"
   );
+  const motherBbField = evaluationModal?.querySelector(
+    "[data-modal-mother-bb]"
+  );
+  const motherTbField = evaluationModal?.querySelector(
+    "[data-modal-mother-tb]"
+  );
+  const motherUmurField = evaluationModal?.querySelector(
+    "[data-modal-mother-umur]"
+  );
+  const motherUsiaBayiField = evaluationModal?.querySelector(
+    "[data-modal-mother-usia-bayi]"
+  );
+  const motherLaktasiField = evaluationModal?.querySelector(
+    "[data-modal-mother-laktasi]"
+  );
+  const motherAktivitasField = evaluationModal?.querySelector(
+    "[data-modal-mother-aktivitas]"
+  );
+  const motherAllergyField = evaluationModal?.querySelector(
+    "[data-modal-mother-alergi]"
+  );
   const evaluationTitle = evaluationModal?.querySelector("[data-modal-title]");
   const evaluationSchedule = evaluationModal?.querySelector(
     "[data-modal-schedule]"
@@ -365,6 +386,17 @@ const initSchedulePage = () => {
     "dark:border-red-400/40",
     "dark:bg-red-500/10",
     "dark:text-red-200",
+  ];
+
+  const allergyHighlightClasses = [
+    "border-emerald-300",
+    "bg-emerald-50",
+    "focus:border-emerald-400",
+    "focus:ring-emerald-200",
+    "dark:border-emerald-400/60",
+    "dark:bg-emerald-400/10",
+    "dark:focus:border-emerald-300",
+    "dark:focus:ring-emerald-300/40",
   ];
 
   const allowedStatuses = new Set([
@@ -513,6 +545,19 @@ const initSchedulePage = () => {
     }
   };
 
+  const updateAllergyFormatting = () => {
+    if (!motherAllergyField) {
+      return;
+    }
+
+    const value = motherAllergyField.value || "";
+    const hasComma = value.includes(",");
+
+    allergyHighlightClasses.forEach((className) => {
+      motherAllergyField.classList.toggle(className, hasComma);
+    });
+  };
+
   const closeEvaluationModal = () => {
     if (!evaluationModal) {
       return;
@@ -528,6 +573,8 @@ const initSchedulePage = () => {
       delete evaluationForm.dataset.scheduleId;
       delete evaluationForm.dataset.evaluationUrl;
     }
+
+    updateAllergyFormatting();
 
     if (evaluationSchedule) {
       evaluationSchedule.textContent = "";
@@ -554,6 +601,7 @@ const initSchedulePage = () => {
       datetime = "",
       summary = "",
       followUp = false,
+      mother = {},
     } = options;
 
     if (!scheduleId || !evaluationUrl) {
@@ -600,6 +648,24 @@ const initSchedulePage = () => {
     if (followUpField) {
       followUpField.checked = Boolean(followUp);
     }
+
+    const setFieldValue = (field, value) => {
+      if (!field) {
+        return;
+      }
+
+      field.value = value ?? "";
+    };
+
+    setFieldValue(motherBbField, mother.bb ?? "");
+    setFieldValue(motherTbField, mother.tb ?? "");
+    setFieldValue(motherUmurField, mother.umur ?? "");
+    setFieldValue(motherUsiaBayiField, mother.usia_bayi_bln ?? "");
+    setFieldValue(motherLaktasiField, mother.laktasi_tipe ?? "");
+    setFieldValue(motherAktivitasField, mother.aktivitas ?? "");
+    setFieldValue(motherAllergyField, mother.alergi ?? "");
+
+    updateAllergyFormatting();
 
     if (evaluationEscapeHandler) {
       document.removeEventListener("keydown", evaluationEscapeHandler);
@@ -894,6 +960,11 @@ const initSchedulePage = () => {
     });
   });
 
+  if (motherAllergyField) {
+    motherAllergyField.addEventListener("input", updateAllergyFormatting);
+    updateAllergyFormatting();
+  }
+
   if (evaluationForm) {
     evaluationForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -926,11 +997,31 @@ const initSchedulePage = () => {
 
       const followUp = formData.get("evaluation[follow_up]") === "1";
 
+      const getFieldValue = (name) => {
+        const value = formData.get(name);
+        return typeof value === "string" ? value.trim() : "";
+      };
+
+      const motherPayload = {
+        bb: getFieldValue("mother[bb]"),
+        tb: getFieldValue("mother[tb]"),
+        umur: getFieldValue("mother[umur]"),
+        usia_bayi_bln: getFieldValue("mother[usia_bayi_bln]"),
+        laktasi_tipe: getFieldValue("mother[laktasi_tipe]"),
+        aktivitas: getFieldValue("mother[aktivitas]"),
+        alergi: getFieldValue("mother[alergi]"),
+      };
+
+      Object.keys(motherPayload).forEach((key) => {
+        motherPayload[key] = motherPayload[key] === "" ? null : motherPayload[key];
+      });
+
       const payload = {
         evaluation: {
           summary,
           follow_up: followUp,
         },
+        mother: motherPayload,
       };
 
       toggleEvaluationIndicator(true);
@@ -1175,6 +1266,15 @@ const initSchedulePage = () => {
       datetime: button.dataset.scheduleDatetime || "",
       summary: button.dataset.evaluationSummary || "",
       followUp: button.dataset.evaluationFollowUp === "1",
+      mother: {
+        bb: button.dataset.motherBb || "",
+        tb: button.dataset.motherTb || "",
+        umur: button.dataset.motherUmur || "",
+        usia_bayi_bln: button.dataset.motherUsiaBayi || "",
+        laktasi_tipe: button.dataset.motherLaktasi || "",
+        aktivitas: button.dataset.motherAktivitas || "",
+        alergi: button.dataset.motherAlergi || "",
+      },
     });
   });
 

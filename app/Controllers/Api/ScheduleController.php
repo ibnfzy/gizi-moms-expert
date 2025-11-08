@@ -301,6 +301,7 @@ class ScheduleController extends BaseController
 
         $payload = get_request_data($this->request);
         $evaluationPayload = $payload['evaluation'] ?? null;
+        $motherPayload     = $payload['mother'] ?? null;
 
         $evaluationJson = null;
         $jsonError = JSON_ERROR_NONE;
@@ -326,6 +327,23 @@ class ScheduleController extends BaseController
 
         if (! $updated) {
             return errorResponse('Failed to update evaluation.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        if (is_array($motherPayload) && isset($schedule['mother_id']) && (int) $schedule['mother_id'] > 0) {
+            $motherUpdate = $this->prepareMotherUpdateData($motherPayload);
+
+            if ($motherUpdate !== []) {
+                try {
+                    $motherUpdated = $this->mothers->update((int) $schedule['mother_id'], $motherUpdate);
+                } catch (Throwable $exception) {
+                    log_message('error', 'Failed to update mother profile during evaluation: ' . $exception->getMessage());
+                    $motherUpdated = false;
+                }
+
+                if ($motherUpdated === false) {
+                    return errorResponse('Failed to update mother profile.', ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            }
         }
 
         $this->notifyMother(
@@ -410,6 +428,163 @@ class ScheduleController extends BaseController
         $record['reminder_sent'] = isset($record['reminder_sent']) ? (bool) $record['reminder_sent'] : false;
 
         return $record;
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     *
+     * @return array<string, mixed>
+     */
+    private function prepareMotherUpdateData(array $input): array
+    {
+        $bbRaw       = $this->sanitizeScalar($input['bb'] ?? null);
+        $tbRaw       = $this->sanitizeScalar($input['tb'] ?? null);
+        $umurRaw     = $this->sanitizeScalar($input['umur'] ?? null);
+        $usiaBayiRaw = $this->sanitizeScalar($input['usia_bayi_bln'] ?? null);
+
+        $data = [
+            'bb'            => $this->toNullableFloat($bbRaw),
+            'tb'            => $this->toNullableFloat($tbRaw),
+            'umur'          => $this->toNullableInt($umurRaw),
+            'usia_bayi_bln' => $this->toNullableInt($usiaBayiRaw),
+        ];
+
+        $laktasi = $this->sanitizeString($input['laktasi_tipe'] ?? null);
+        if ($laktasi !== null && in_array($laktasi, ['eksklusif', 'parsial'], true)) {
+            $data['laktasi_tipe'] = $laktasi;
+        }
+
+        $aktivitas = $this->sanitizeString($input['aktivitas'] ?? null);
+        if ($aktivitas !== null && in_array($aktivitas, ['ringan', 'sedang', 'berat'], true)) {
+            $data['aktivitas'] = $aktivitas;
+        }
+
+        $alergi = $this->normalizeList($input['alergi'] ?? $input['alergi_json'] ?? null);
+        $data['alergi_json'] = $this->encodeList($alergi);
+
+        return $data;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function sanitizeScalar($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+
+            return $value === '' ? null : $value;
+        }
+
+        if (is_numeric($value)) {
+            return (string) $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function sanitizeString($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $value = strtolower(trim((string) $value));
+
+        return $value === '' ? null : $value;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return array<int, string>|null
+     */
+    private function normalizeList($value): ?array
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+
+            if ($value === '') {
+                return null;
+            }
+
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $value = $decoded;
+            } else {
+                $value = array_map('trim', explode(',', $value));
+            }
+        }
+
+        if (! is_array($value)) {
+            $value = [$value];
+        }
+
+        $output = [];
+        foreach ($value as $item) {
+            if (is_string($item)) {
+                $item = trim($item);
+            }
+
+            if ($item === null || $item === '') {
+                continue;
+            }
+
+            $output[] = is_string($item) ? $item : (string) $item;
+        }
+
+        if ($output === []) {
+            return null;
+        }
+
+        return array_values(array_unique($output));
+    }
+
+    /**
+     * @param string|null $value
+     */
+    private function toNullableFloat(?string $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (float) $value : null;
+    }
+
+    /**
+     * @param string|null $value
+     */
+    private function toNullableInt(?string $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (int) $value : null;
+    }
+
+    /**
+     * @param array<int, string>|null $list
+     */
+    private function encodeList(?array $list): ?string
+    {
+        if ($list === null) {
+            return null;
+        }
+
+        return json_encode(array_values($list), JSON_UNESCAPED_UNICODE);
     }
 
     private function parseDateTime($value): ?string

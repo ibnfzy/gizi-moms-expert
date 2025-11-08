@@ -9,6 +9,13 @@ $notes             = trim((string) ($schedule['notes'] ?? ''));
 $mother            = $schedule['mother'] ?? [];
 $motherName        = $mother['name'] ?? 'Tanpa Nama';
 $motherEmail       = $mother['email'] ?? null;
+$motherBb          = $mother['bb'] ?? null;
+$motherTb          = $mother['tb'] ?? null;
+$motherUmur        = $mother['umur'] ?? null;
+$motherUsiaBayi    = $mother['usia_bayi_bln'] ?? null;
+$motherLaktasi     = $mother['laktasi_tipe'] ?? null;
+$motherAktivitas   = $mother['aktivitas'] ?? null;
+$motherAlergiText  = $mother['alergi_text'] ?? '';
 $status            = $schedule['status'] ?? 'pending';
 $attendance        = $schedule['attendance'] ?? 'pending';
 $evaluation        = $schedule['evaluation'] ?? null;
@@ -49,6 +56,13 @@ $attendanceBadgeLabel = $attendanceLabels[$attendance] ?? ucfirst($attendance);
 
 $evaluationButtonLabel = $hasEvaluation ? 'Kelola Evaluasi' : 'Tandai Selesai';
 $evaluationDatetime    = $schedule['scheduled_at']['display'] ?? $scheduledDisplay;
+$motherBbAttr          = $motherBb === null ? '' : rtrim(rtrim(sprintf('%.2f', (float) $motherBb), '0'), '.');
+$motherTbAttr          = $motherTb === null ? '' : rtrim(rtrim(sprintf('%.2f', (float) $motherTb), '0'), '.');
+$motherUmurAttr        = $motherUmur === null ? '' : (string) (int) $motherUmur;
+$motherUsiaBayiAttr    = $motherUsiaBayi === null ? '' : (string) (int) $motherUsiaBayi;
+$motherLaktasiAttr     = $motherLaktasi ?? '';
+$motherAktivitasAttr   = $motherAktivitas ?? '';
+$motherAlergiAttr      = $motherAlergiText ?? '';
 ?>
 <tr id="schedule-row-<?= esc($scheduleId) ?>" data-schedule-row>
     <td class="px-6 py-4 align-top">
@@ -136,6 +150,13 @@ $evaluationDatetime    = $schedule['scheduled_at']['display'] ?? $scheduledDispl
                 data-evaluation-summary="<?= esc($evaluationSummary, 'attr') ?>"
                 data-evaluation-follow-up="<?= $needsFollowUp ? '1' : '0' ?>"
                 data-schedule-evaluation-url="<?= esc(site_url('api/schedules/' . $scheduleId . '/evaluation'), 'attr') ?>"
+                data-mother-bb="<?= esc($motherBbAttr, 'attr') ?>"
+                data-mother-tb="<?= esc($motherTbAttr, 'attr') ?>"
+                data-mother-umur="<?= esc($motherUmurAttr, 'attr') ?>"
+                data-mother-usia-bayi="<?= esc($motherUsiaBayiAttr, 'attr') ?>"
+                data-mother-laktasi="<?= esc($motherLaktasiAttr, 'attr') ?>"
+                data-mother-aktivitas="<?= esc($motherAktivitasAttr, 'attr') ?>"
+                data-mother-alergi="<?= esc($motherAlergiAttr, 'attr') ?>"
             ><?= esc($evaluationButtonLabel) ?></button>
         </div>
     </td>

@@ -86,6 +86,13 @@ class PakarScheduleController extends BaseController
             ->select([
                 'schedules.*',
                 'mothers.user_id as mother_user_id',
+                'mothers.bb as mother_bb',
+                'mothers.tb as mother_tb',
+                'mothers.umur as mother_umur',
+                'mothers.usia_bayi_bln as mother_usia_bayi_bln',
+                'mothers.laktasi_tipe as mother_laktasi_tipe',
+                'mothers.aktivitas as mother_aktivitas',
+                'mothers.alergi_json as mother_alergi_json',
                 'users.name as mother_name',
                 'users.email as mother_email',
             ])
@@ -118,6 +125,13 @@ class PakarScheduleController extends BaseController
             ->select([
                 'schedules.*',
                 'mothers.user_id as mother_user_id',
+                'mothers.bb as mother_bb',
+                'mothers.tb as mother_tb',
+                'mothers.umur as mother_umur',
+                'mothers.usia_bayi_bln as mother_usia_bayi_bln',
+                'mothers.laktasi_tipe as mother_laktasi_tipe',
+                'mothers.aktivitas as mother_aktivitas',
+                'mothers.alergi_json as mother_alergi_json',
                 'users.name as mother_name',
                 'users.email as mother_email',
             ])
@@ -143,13 +157,24 @@ class PakarScheduleController extends BaseController
 
         $evaluation = $this->decodeEvaluation($record['evaluation_json'] ?? null);
 
+        $motherAlergiList = $this->decodeList($record['mother_alergi_json'] ?? null);
+        $motherAlergiText = $motherAlergiList === [] ? '' : implode(', ', $motherAlergiList);
+
         return [
             'id'         => isset($record['id']) ? (int) $record['id'] : null,
             'mother'     => [
-                'id'     => isset($record['mother_id']) ? (int) $record['mother_id'] : null,
-                'userId' => isset($record['mother_user_id']) ? (int) $record['mother_user_id'] : null,
-                'name'   => $record['mother_name'] ?? 'Tanpa Nama',
-                'email'  => $record['mother_email'] ?? null,
+                'id'            => isset($record['mother_id']) ? (int) $record['mother_id'] : null,
+                'userId'        => isset($record['mother_user_id']) ? (int) $record['mother_user_id'] : null,
+                'name'          => $record['mother_name'] ?? 'Tanpa Nama',
+                'email'         => $record['mother_email'] ?? null,
+                'bb'            => isset($record['mother_bb']) ? (float) $record['mother_bb'] : null,
+                'tb'            => isset($record['mother_tb']) ? (float) $record['mother_tb'] : null,
+                'umur'          => isset($record['mother_umur']) ? (int) $record['mother_umur'] : null,
+                'usia_bayi_bln' => isset($record['mother_usia_bayi_bln']) ? (int) $record['mother_usia_bayi_bln'] : null,
+                'laktasi_tipe'  => $record['mother_laktasi_tipe'] ?? null,
+                'aktivitas'     => $record['mother_aktivitas'] ?? null,
+                'alergi_text'   => $motherAlergiText,
+                'alergi'        => $motherAlergiList,
             ],
             'status'     => $record['status'] ?? 'pending',
             'attendance' => $record['attendance'] ?? 'pending',
@@ -203,6 +228,40 @@ class PakarScheduleController extends BaseController
             'summary'   => $summary,
             'follow_up' => (bool) $followUp,
         ];
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return array<int, string>
+     */
+    private function decodeList($value): array
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+        if (! is_array($decoded)) {
+            return [];
+        }
+
+        $output = [];
+        foreach ($decoded as $item) {
+            if (is_string($item)) {
+                $item = trim($item);
+            } elseif ($item !== null) {
+                $item = (string) $item;
+            }
+
+            if (! is_string($item) || $item === '') {
+                continue;
+            }
+
+            $output[] = $item;
+        }
+
+        return array_values($output);
     }
 
     private function normalizeStatus(string $status): ?string

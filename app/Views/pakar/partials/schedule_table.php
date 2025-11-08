@@ -13,6 +13,13 @@ if (! empty($schedules)) {
         $mother           = $schedule['mother'] ?? [];
         $motherName       = $mother['name'] ?? 'Tanpa Nama';
         $motherEmail      = $mother['email'] ?? null;
+        $motherBb         = $mother['bb'] ?? null;
+        $motherTb         = $mother['tb'] ?? null;
+        $motherUmur       = $mother['umur'] ?? null;
+        $motherUsiaBayi   = $mother['usia_bayi_bln'] ?? null;
+        $motherLaktasi    = $mother['laktasi_tipe'] ?? null;
+        $motherAktivitas  = $mother['aktivitas'] ?? null;
+        $motherAlergiText = $mother['alergi_text'] ?? '';
         $status           = $schedule['status'] ?? 'pending';
         $attendance       = $schedule['attendance'] ?? 'pending';
         $evaluation       = $schedule['evaluation'] ?? null;
@@ -124,7 +131,15 @@ if (! empty($schedules)) {
                 </form>';
         }
 
-        $evaluationButton = '<button type="button" class="inline-flex items-center rounded-lg border border-giziblue bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-giziblue shadow-sm transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/70 dark:bg-slate-900 dark:text-giziblue dark:hover:bg-slate-800 dark:focus:ring-offset-slate-900" data-schedule-evaluation-button data-schedule-id="' . esc((string) $scheduleId, 'attr') . '" data-schedule-name="' . esc($motherName, 'attr') . '" data-schedule-datetime="' . esc($evaluationDatetime, 'attr') . '" data-evaluation-summary="' . esc($evaluationSummary, 'attr') . '" data-evaluation-follow-up="' . ($needsFollowUp ? '1' : '0') . '" data-schedule-evaluation-url="' . esc(site_url('api/schedules/' . $scheduleId . '/evaluation'), 'attr') . '">' . esc($evaluationButtonLabel) . '</button>';
+        $motherBbAttr        = $motherBb === null ? '' : rtrim(rtrim(sprintf('%.2f', (float) $motherBb), '0'), '.');
+        $motherTbAttr        = $motherTb === null ? '' : rtrim(rtrim(sprintf('%.2f', (float) $motherTb), '0'), '.');
+        $motherUmurAttr      = $motherUmur === null ? '' : (string) (int) $motherUmur;
+        $motherUsiaBayiAttr  = $motherUsiaBayi === null ? '' : (string) (int) $motherUsiaBayi;
+        $motherLaktasiAttr   = $motherLaktasi ?? '';
+        $motherAktivitasAttr = $motherAktivitas ?? '';
+        $motherAlergiAttr    = $motherAlergiText ?? '';
+
+        $evaluationButton = '<button type="button" class="inline-flex items-center rounded-lg border border-giziblue bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-giziblue shadow-sm transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-giziblue focus:ring-offset-2 dark:border-giziblue/70 dark:bg-slate-900 dark:text-giziblue dark:hover:bg-slate-800 dark:focus:ring-offset-slate-900" data-schedule-evaluation-button data-schedule-id="' . esc((string) $scheduleId, 'attr') . '" data-schedule-name="' . esc($motherName, 'attr') . '" data-schedule-datetime="' . esc($evaluationDatetime, 'attr') . '" data-evaluation-summary="' . esc($evaluationSummary, 'attr') . '" data-evaluation-follow-up="' . ($needsFollowUp ? '1' : '0') . '" data-schedule-evaluation-url="' . esc(site_url('api/schedules/' . $scheduleId . '/evaluation'), 'attr') . '" data-mother-bb="' . esc($motherBbAttr, 'attr') . '" data-mother-tb="' . esc($motherTbAttr, 'attr') . '" data-mother-umur="' . esc($motherUmurAttr, 'attr') . '" data-mother-usia-bayi="' . esc($motherUsiaBayiAttr, 'attr') . '" data-mother-laktasi="' . esc($motherLaktasiAttr, 'attr') . '" data-mother-aktivitas="' . esc($motherAktivitasAttr, 'attr') . '" data-mother-alergi="' . esc($motherAlergiAttr, 'attr') . '">' . esc($evaluationButtonLabel) . '</button>';
 
         $actions = [];
 
