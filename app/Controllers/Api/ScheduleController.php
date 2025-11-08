@@ -217,7 +217,7 @@ class ScheduleController extends BaseController
         }
 
         $role = strtolower((string) ($user['role'] ?? ''));
-        if ($role !== 'ibu' || $role !== 'pakar') {
+        if (! in_array($role, ['ibu', 'pakar'], true)) {
             return errorResponse('Only mothers and experts can update attendance.', ResponseInterface::HTTP_FORBIDDEN);
         }
 
@@ -226,8 +226,12 @@ class ScheduleController extends BaseController
             return errorResponse('Schedule not found.', ResponseInterface::HTTP_NOT_FOUND);
         }
 
-        $mother = $this->mothers->find($schedule['mother_id']);
-        if (! is_array($mother) || (int) $mother['user_id'] !== (int) $user['id']) {
+        if ($role === 'ibu') {
+            $mother = $this->mothers->find($schedule['mother_id']);
+            if (! is_array($mother) || (int) $mother['user_id'] !== (int) $user['id']) {
+                return errorResponse('You are not allowed to update this attendance.', ResponseInterface::HTTP_FORBIDDEN);
+            }
+        } elseif ((int) $schedule['expert_id'] !== (int) $user['id']) {
             return errorResponse('You are not allowed to update this attendance.', ResponseInterface::HTTP_FORBIDDEN);
         }
 
