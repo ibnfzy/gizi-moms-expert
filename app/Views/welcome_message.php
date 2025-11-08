@@ -16,7 +16,7 @@
       <a href="#contact" class="nav-link text-white/80 transition hover:text-white">Kontak</a>
     </nav>
     <div class="flex items-center space-x-4">
-      <a href="/login"
+      <a href="/login" id="loginToggle"
         class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">Login</a>
       <a id="downloadHeader" href="#download"
         class="rounded-full bg-gizigreen px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-green-500/20 transition hover:scale-105 hover:shadow-green-500/40">Download
@@ -176,8 +176,8 @@
     <p class="mt-4 text-lg text-white/80">Gabung bersama ribuan ibu menyusui yang merasakan manfaat panduan gizi
       personal dari GiziChain.</p>
     <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-      <a href="#"
-        class="inline-flex items-center justify-center rounded-full bg-gizigreen px-8 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:-translate-y-1 hover:shadow-emerald-500/50">Download
+      <a href="https://drive.google.com/file/d/1jY6lqKDX9ssKSrgWwKHCRJHN2yVsiyNI/view?usp=sharing"
+        class="inline-flex items-center justify-center rounded-full bg-gizigreen px-8 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:-translate-y-1 hover:shadow-emerald-500/50" target="_blank">Download
         Aplikasi Android</a>
       <a href="/login"
         class="inline-flex items-center justify-center rounded-full border border-white/70 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10">Login
@@ -196,89 +196,87 @@
 
 <?= $this->section('scripts') ?>
 <script>
-  (function() {
-    const header = document.getElementById('siteHeader');
-    const loginToggle = document.getElementById('loginToggle');
-    const loginDropdown = document.getElementById('loginDropdown');
-    const mobileButton = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileLinks = mobileMenu?.querySelectorAll('[data-mobile-link="primary"]');
-    const mobileLoginLink = mobileMenu?.querySelector('[data-mobile-link="login"]');
-    const downloadHeader = document.getElementById('downloadHeader');
+(function() {
+  const header = document.getElementById('siteHeader');
+  const loginToggle = document.getElementById('loginToggle');
+  const loginDropdown = document.getElementById('loginDropdown');
+  const mobileButton = document.getElementById('mobileMenuButton');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileLinks = mobileMenu?.querySelectorAll('[data-mobile-link="primary"]');
+  const mobileLoginLink = mobileMenu?.querySelector('[data-mobile-link="login"]');
+  const downloadHeader = document.getElementById('downloadHeader');
 
-    if (!header) {
-      return;
+  if (!header) {
+    return;
+  }
+
+  const setHeaderState = () => {
+    const scrolled = window.scrollY > 10;
+    header.classList.toggle('bg-white/95', scrolled);
+    header.classList.toggle('shadow-lg', scrolled);
+    header.classList.toggle('backdrop-blur-xl', scrolled);
+
+    const links = header.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.classList.toggle('text-slate-800', scrolled);
+      link.classList.toggle('text-white/80', !scrolled);
+      link.classList.toggle('hover:text-giziblue', scrolled);
+      link.classList.toggle('hover:text-white', !scrolled);
+    });
+
+    const logo = header.querySelector('a[href="#hero"]');
+    logo?.classList.toggle('text-slate-900', scrolled);
+    logo?.classList.toggle('text-white', !scrolled);
+
+    if (scrolled) {
+      loginToggle?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
+      loginToggle?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      mobileButton?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
+      mobileButton?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      downloadHeader?.classList.add('shadow-green-500/30');
+    } else {
+      loginToggle?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
+      loginToggle?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      mobileButton?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
+      mobileButton?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
+      downloadHeader?.classList.remove('shadow-green-500/30');
     }
 
-    const setHeaderState = () => {
-      const scrolled = window.scrollY > 10;
-      header.classList.toggle('bg-white/95', scrolled);
-      header.classList.toggle('shadow-lg', scrolled);
-      header.classList.toggle('backdrop-blur-xl', scrolled);
+    mobileLinks?.forEach(link => {
+      link.classList.toggle('text-slate-800', scrolled);
+      link.classList.toggle('hover:bg-slate-100', scrolled);
+      link.classList.toggle('hover:text-slate-900', scrolled);
+      link.classList.toggle('text-white/80', !scrolled);
+      link.classList.toggle('hover:bg-white/10', !scrolled);
+      link.classList.toggle('hover:text-white', !scrolled);
+    });
 
-      const links = header.querySelectorAll('.nav-link');
-      links.forEach(link => {
-        link.classList.toggle('text-slate-800', scrolled);
-        link.classList.toggle('text-white/80', !scrolled);
-        link.classList.toggle('hover:text-giziblue', scrolled);
-        link.classList.toggle('hover:text-white', !scrolled);
-      });
-
-      const logo = header.querySelector('a[href="#hero"]');
-      logo?.classList.toggle('text-slate-900', scrolled);
-      logo?.classList.toggle('text-white', !scrolled);
-
+    if (mobileLoginLink) {
       if (scrolled) {
-        loginToggle?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
-        loginToggle?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-        mobileButton?.classList.remove('border-white/20', 'text-white', 'hover:bg-white/10');
-        mobileButton?.classList.add('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-        downloadHeader?.classList.add('shadow-green-500/30');
+        mobileLoginLink.classList.remove('bg-white/20', 'text-white', 'hover:bg-white/30');
+        mobileLoginLink.classList.add('border', 'border-slate-200', 'bg-white', 'text-slate-900', 'hover:bg-slate-100');
       } else {
-        loginToggle?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
-        loginToggle?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-        mobileButton?.classList.add('border-white/20', 'text-white', 'hover:bg-white/10');
-        mobileButton?.classList.remove('border-slate-200', 'text-slate-800', 'hover:bg-slate-100');
-        downloadHeader?.classList.remove('shadow-green-500/30');
+        mobileLoginLink.classList.add('bg-white/20', 'text-white', 'hover:bg-white/30');
+        mobileLoginLink.classList.remove('border', 'border-slate-200', 'bg-white', 'text-slate-900', 'hover:bg-slate-100');
       }
+    }
+  };
 
-      mobileLinks?.forEach(link => {
-        link.classList.toggle('text-slate-800', scrolled);
-        link.classList.toggle('hover:bg-slate-100', scrolled);
-        link.classList.toggle('hover:text-slate-900', scrolled);
-        link.classList.toggle('text-white/80', !scrolled);
-        link.classList.toggle('hover:bg-white/10', !scrolled);
-        link.classList.toggle('hover:text-white', !scrolled);
-      });
+  setHeaderState();
+  window.addEventListener('scroll', setHeaderState);
 
-      if (mobileLoginLink) {
-        if (scrolled) {
-          mobileLoginLink.classList.remove('bg-white/20', 'text-white', 'hover:bg-white/30');
-          mobileLoginLink.classList.add('border', 'border-slate-200', 'bg-white', 'text-slate-900',
-            'hover:bg-slate-100');
-        } else {
-          mobileLoginLink.classList.add('bg-white/20', 'text-white', 'hover:bg-white/30');
-          mobileLoginLink.classList.remove('border', 'border-slate-200', 'bg-white', 'text-slate-900',
-            'hover:bg-slate-100');
-        }
-      }
-    };
+  document.addEventListener('click', (event) => {
+    if (loginToggle?.contains(event.target)) {
+      event.preventDefault();
+      loginDropdown?.classList.toggle('hidden');
+    } else if (!loginDropdown?.contains(event.target)) {
+      loginDropdown?.classList.add('hidden');
+    }
+  });
 
-    setHeaderState();
-    window.addEventListener('scroll', setHeaderState);
-
-    document.addEventListener('click', (event) => {
-      if (loginToggle?.contains(event.target)) {
-        event.preventDefault();
-        loginDropdown?.classList.toggle('hidden');
-      } else if (!loginDropdown?.contains(event.target)) {
-        loginDropdown?.classList.add('hidden');
-      }
-    });
-
-    mobileButton?.addEventListener('click', () => {
-      mobileMenu?.classList.toggle('hidden');
-    });
-  })();
+  mobileButton?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+})();
 </script>
 <?= $this->endSection() ?>

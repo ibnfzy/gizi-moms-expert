@@ -16,26 +16,8 @@ class RuleModel extends Model
         'version',
         'effective_from',
         'is_active',
-        'komentar_pakar',
     ];
     protected $useTimestamps = true;
-
-    protected $beforeInsert = ['ensureKomentarPakar'];
-
-    protected function ensureKomentarPakar(array $data): array
-    {
-        if (! isset($data['data']) || ! is_array($data['data'])) {
-            $data['data'] = ['komentar_pakar' => null];
-
-            return $data;
-        }
-
-        if (! array_key_exists('komentar_pakar', $data['data'])) {
-            $data['data']['komentar_pakar'] = null;
-        }
-
-        return $data;
-    }
 
     public function withInferenceResults(): BaseBuilder
     {

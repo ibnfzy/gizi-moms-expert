@@ -119,15 +119,6 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'adminfilter' => ['before' => ['admin/dashboard', 'admin/rules']],
-        'pakarfilter' => [
-            'before' => [
-                'pakar/dashboard',
-                'pakar/consultations',
-                'pakar/schedules',
-                'pakar/schedules/*',
-                'pakar/rules',
-                'pakar/rules/*',
-            ],
-        ],
+        'pakarfilter' => ['before' => ['pakar/dashboard', 'pakar/consultations', 'pakar/schedules', 'pakar/schedules/*']],
     ];
 }

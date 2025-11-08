@@ -43,10 +43,6 @@ class CreateRules extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'komentar_pakar' => [
-                'type' => 'TEXT',
-                'null' => true
-            ]
         ]);
 
         $this->forge->addKey('id', true);

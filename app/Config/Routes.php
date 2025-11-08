@@ -17,7 +17,6 @@ $routes->get('/pakar/consultations', 'PakarConsultationController::index', ['fil
 $routes->get('/pakar/consultations/(:num)', 'PakarConsultationController::conversation/$1', ['filter' => 'pakarfilter']);
 $routes->post('/pakar/consultations/(:num)/messages', 'PakarConsultationController::sendMessage/$1', ['filter' => 'pakarfilter']);
 $routes->post('/pakar/consultations/start', 'PakarConsultationController::start', ['filter' => 'pakarfilter']);
-$routes->get('/pakar/rules', 'PakarRulesController::index', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules', 'PakarScheduleController::index', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules/table', 'PakarScheduleController::table', ['filter' => 'pakarfilter']);
 $routes->get('/pakar/schedules/rows/(:num)', 'PakarScheduleController::row/$1', ['filter' => 'pakarfilter']);
@@ -50,18 +49,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->get('notifications', 'NotificationController::index', ['filter' => 'role:pakar,ibu,admin']);
         $routes->post('notifications', 'NotificationController::create', ['filter' => 'role:pakar,admin']);
 
-        $routes->group('rules', static function ($routes) {
-            $routes->get('/', 'RuleController::index');
-            $routes->post('/', 'RuleController::create');
-            $routes->put('(:num)', 'RuleController::update/$1');
-            $routes->delete('(:num)', 'RuleController::delete/$1');
-            $routes->post('(:num)/comment', 'RuleCommentController::store/$1', ['filter' => 'role:pakar']);
-        });
-
         $routes->group('', ['filter' => 'role:pakar,ibu'], static function ($routes) {
             $routes->get('mothers', 'MotherController::index');
             $routes->get('mothers/(:num)', 'MotherController::show/$1');
-            $routes->put('mothers/(:num)', 'MotherController::update/$1');
             $routes->get('inference/latest', 'InferenceController::latest');
 
             $routes->get('consultations', 'ConsultationController::index');
@@ -89,5 +79,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
                 $routes->delete('(:num)', 'AdminUserController::delete/$1');
             });
         });
+    });
+
+    $routes->group('rules', static function ($routes) {
+        $routes->get('/', 'RuleController::index');
+        $routes->post('/', 'RuleController::create');
+        $routes->put('(:num)', 'RuleController::update/$1');
+        $routes->delete('(:num)', 'RuleController::delete/$1');
     });
 });
