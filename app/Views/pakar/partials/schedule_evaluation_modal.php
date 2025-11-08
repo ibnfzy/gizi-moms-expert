@@ -55,6 +55,102 @@
                     <span class="block text-xs text-slate-500 dark:text-slate-400">Centang jika ibu membutuhkan penjadwalan ulang atau aksi lanjutan.</span>
                 </span>
             </label>
+            <div class="border-t border-slate-200 pt-4 dark:border-slate-700">
+                <div class="flex items-baseline justify-between gap-2">
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Data Ibu</h3>
+                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Perbarui profil ibu saat evaluasi selesai.</p>
+                    </div>
+                </div>
+                <div class="mt-4 grid gap-4 md:grid-cols-2">
+                    <div>
+                        <label for="schedule-mother-bb" class="text-sm font-medium text-slate-700 dark:text-slate-200">Berat Badan (kg)</label>
+                        <input
+                            type="number"
+                            step="0.1"
+                            id="schedule-mother-bb"
+                            name="mother[bb]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            placeholder="Misal: 55"
+                            data-modal-mother-bb
+                        >
+                    </div>
+                    <div>
+                        <label for="schedule-mother-tb" class="text-sm font-medium text-slate-700 dark:text-slate-200">Tinggi Badan (cm)</label>
+                        <input
+                            type="number"
+                            step="0.1"
+                            id="schedule-mother-tb"
+                            name="mother[tb]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            placeholder="Misal: 160"
+                            data-modal-mother-tb
+                        >
+                    </div>
+                    <div>
+                        <label for="schedule-mother-umur" class="text-sm font-medium text-slate-700 dark:text-slate-200">Usia Ibu (tahun)</label>
+                        <input
+                            type="number"
+                            id="schedule-mother-umur"
+                            name="mother[umur]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            placeholder="Misal: 28"
+                            data-modal-mother-umur
+                        >
+                    </div>
+                    <div>
+                        <label for="schedule-mother-usia-bayi" class="text-sm font-medium text-slate-700 dark:text-slate-200">Usia Bayi (bulan)</label>
+                        <input
+                            type="number"
+                            id="schedule-mother-usia-bayi"
+                            name="mother[usia_bayi_bln]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            placeholder="Misal: 6"
+                            data-modal-mother-usia-bayi
+                        >
+                    </div>
+                    <div>
+                        <label for="schedule-mother-laktasi" class="text-sm font-medium text-slate-700 dark:text-slate-200">Tipe Laktasi</label>
+                        <select
+                            id="schedule-mother-laktasi"
+                            name="mother[laktasi_tipe]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            data-modal-mother-laktasi
+                        >
+                            <option value="">Pilih tipe laktasi</option>
+                            <option value="eksklusif">Eksklusif</option>
+                            <option value="parsial">Parsial</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="schedule-mother-aktivitas" class="text-sm font-medium text-slate-700 dark:text-slate-200">Aktivitas Harian</label>
+                        <select
+                            id="schedule-mother-aktivitas"
+                            name="mother[aktivitas]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            data-modal-mother-aktivitas
+                        >
+                            <option value="">Pilih tingkat aktivitas</option>
+                            <option value="ringan">Ringan</option>
+                            <option value="sedang">Sedang</option>
+                            <option value="berat">Berat</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="schedule-mother-alergi" class="text-sm font-medium text-slate-700 dark:text-slate-200">Alergi (pisahkan dengan koma)</label>
+                        <input
+                            type="text"
+                            id="schedule-mother-alergi"
+                            name="mother[alergi]"
+                            class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-giziblue focus:outline-none focus:ring-2 focus:ring-giziblue/40 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                            placeholder="Misal: Kacang, Telur"
+                            data-modal-mother-alergi
+                            data-allergy-input
+                        >
+                        <small class="mt-1 block text-xs text-slate-500 dark:text-slate-400">Pisahkan alergi dengan koma (,)</small>
+                    </div>
+                </div>
+            </div>
             <div class="flex items-center justify-end gap-3 pt-2">
                 <button
                     type="button"
