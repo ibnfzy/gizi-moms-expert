@@ -217,8 +217,8 @@ class ScheduleController extends BaseController
         }
 
         $role = strtolower((string) ($user['role'] ?? ''));
-        if ($role !== 'ibu') {
-            return errorResponse('Only mothers can update attendance.', ResponseInterface::HTTP_FORBIDDEN);
+        if ($role !== 'ibu' || $role !== 'pakar') {
+            return errorResponse('Only mothers and experts can update attendance.', ResponseInterface::HTTP_FORBIDDEN);
         }
 
         $schedule = $this->schedules->find($id);
