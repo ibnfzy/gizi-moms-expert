@@ -52,6 +52,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->group('', ['filter' => 'role:pakar,ibu'], static function ($routes) {
             $routes->get('mothers', 'MotherController::index');
             $routes->get('mothers/(:num)', 'MotherController::show/$1');
+            $routes->put('mothers/(:num)', 'MotherController::update/$1', ['filter' => 'role:ibu']);
             $routes->get('inference/latest', 'InferenceController::latest');
 
             $routes->get('consultations', 'ConsultationController::index');
