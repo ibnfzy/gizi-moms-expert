@@ -42,7 +42,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->get('schedules', 'ScheduleController::index', ['filter' => 'role:pakar,ibu']);
         $routes->post('schedules', 'ScheduleController::create', ['filter' => 'role:pakar']);
         $routes->put('schedules/(:num)', 'ScheduleController::update/$1', ['filter' => 'role:pakar']);
-        $routes->put('schedules/(:num)/attendance', 'ScheduleController::updateAttendance/$1', ['filter' => 'role:ibu']);
+        $routes->put('schedules/(:num)/attendance', 'ScheduleController::updateAttendance/$1', ['filter' => 'role:ibu,pakar']);
         $routes->put('schedules/(:num)/evaluation', 'ScheduleController::updateEvaluation/$1', ['filter' => 'role:pakar']);
         $routes->get('schedules/reminder-due', 'ScheduleController::reminderDue', ['filter' => 'role:pakar,admin']);
 
