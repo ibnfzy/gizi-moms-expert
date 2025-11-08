@@ -79,12 +79,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
                 $routes->delete('(:num)', 'AdminUserController::delete/$1');
             });
         });
-    });
 
-    $routes->group('rules', static function ($routes) {
-        $routes->get('/', 'RuleController::index');
-        $routes->post('/', 'RuleController::create');
-        $routes->put('(:num)', 'RuleController::update/$1');
-        $routes->delete('(:num)', 'RuleController::delete/$1');
+        $routes->group('rules', ['filter' => 'role:admin'], static function ($routes) {
+            $routes->get('/', 'RuleController::index');
+            $routes->post('/', 'RuleController::create');
+            $routes->put('(:num)', 'RuleController::update/$1');
+            $routes->delete('(:num)', 'RuleController::delete/$1');
+        });
     });
 });
