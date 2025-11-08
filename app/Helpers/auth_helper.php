@@ -1,12 +1,17 @@
 <?php
 
 use App\Libraries\JWTService;
+use CodeIgniter\HTTP\Exceptions\HTTPException;
 use CodeIgniter\HTTP\IncomingRequest;
 
 if (! function_exists('get_request_data')) {
     function get_request_data(IncomingRequest $request): array
     {
-        $data = $request->getJSON(true);
+        try {
+            $data = $request->getJSON(true) ?? [];
+        } catch (HTTPException $exception) {
+            $data = [];
+        }
 
         if (! is_array($data) || $data === []) {
             $data = $request->getPost();
