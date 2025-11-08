@@ -62,6 +62,44 @@
                         <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Perbarui profil ibu saat evaluasi selesai.</p>
                     </div>
                 </div>
+                <div
+                    class="mt-4 hidden rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-300"
+                    data-modal-mother-summary
+                >
+                    <div class="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                        Data ibu saat ini
+                    </div>
+                    <dl class="mt-3 grid gap-2 text-sm">
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="bb">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Berat Badan</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="tb">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Tinggi Badan</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="umur">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Usia Ibu</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="usia_bayi_bln">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Usia Bayi</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="laktasi_tipe">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Tipe Laktasi</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="aktivitas">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Aktivitas Harian</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-3" data-modal-mother-item="alergi">
+                            <dt class="text-xs text-slate-500 dark:text-slate-400">Alergi</dt>
+                            <dd class="text-sm font-medium text-slate-700 dark:text-slate-100" data-modal-mother-value>—</dd>
+                        </div>
+                    </dl>
+                </div>
                 <div class="mt-4 grid gap-4 md:grid-cols-2">
                     <div>
                         <label for="schedule-mother-bb" class="text-sm font-medium text-slate-700 dark:text-slate-200">Berat Badan (kg)</label>

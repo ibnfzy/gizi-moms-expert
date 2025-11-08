@@ -340,6 +340,26 @@ const initSchedulePage = () => {
   const motherAllergyField = evaluationModal?.querySelector(
     "[data-modal-mother-alergi]"
   );
+  const motherSummarySection = evaluationModal?.querySelector(
+    "[data-modal-mother-summary]"
+  );
+  const motherSummaryItems = {};
+
+  if (evaluationModal) {
+    evaluationModal
+      .querySelectorAll("[data-modal-mother-item]")
+      .forEach((element) => {
+        const key = element.getAttribute("data-modal-mother-item");
+        if (!key) {
+          return;
+        }
+
+        motherSummaryItems[key] = {
+          container: element,
+          value: element.querySelector("[data-modal-mother-value]"),
+        };
+      });
+  }
   const evaluationTitle = evaluationModal?.querySelector("[data-modal-title]");
   const evaluationSchedule = evaluationModal?.querySelector(
     "[data-modal-schedule]"
@@ -545,6 +565,90 @@ const initSchedulePage = () => {
     }
   };
 
+  const formatWithUnit = (value, unit) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    const text = value.toString().trim();
+    if (text === "") {
+      return "";
+    }
+
+    return unit ? `${text} ${unit}` : text;
+  };
+
+  const motherLaktasiLabels = {
+    eksklusif: "Eksklusif",
+    parsial: "Parsial",
+  };
+
+  const motherAktivitasLabels = {
+    ringan: "Ringan",
+    sedang: "Sedang",
+    berat: "Berat",
+  };
+
+  const formatMotherSummaryValue = (key, rawValue) => {
+    if (rawValue === null || rawValue === undefined) {
+      return "";
+    }
+
+    const value = rawValue.toString().trim();
+    if (value === "") {
+      return "";
+    }
+
+    switch (key) {
+      case "bb":
+        return formatWithUnit(value, "kg");
+      case "tb":
+        return formatWithUnit(value, "cm");
+      case "umur":
+        return formatWithUnit(value, "tahun");
+      case "usia_bayi_bln":
+        return formatWithUnit(value, "bulan");
+      case "laktasi_tipe": {
+        const normalized = value.toLowerCase();
+        return motherLaktasiLabels[normalized] || value;
+      }
+      case "aktivitas": {
+        const normalized = value.toLowerCase();
+        return motherAktivitasLabels[normalized] || value;
+      }
+      case "alergi":
+        return value;
+      default:
+        return value;
+    }
+  };
+
+  const updateMotherSummary = (motherData = {}) => {
+    let hasValue = false;
+
+    Object.entries(motherSummaryItems).forEach(([key, refs]) => {
+      if (!refs?.container || !refs?.value) {
+        return;
+      }
+
+      const formatted = formatMotherSummaryValue(key, motherData[key]);
+      if (formatted) {
+        refs.container.classList.remove("hidden");
+        refs.value.textContent = formatted;
+        hasValue = true;
+      } else {
+        refs.container.classList.add("hidden");
+        refs.value.textContent = "—";
+      }
+    });
+
+    if (motherSummarySection) {
+      motherSummarySection.classList.toggle("hidden", !hasValue);
+    }
+  };
+
+  updateMotherSummary();
+
   const updateAllergyFormatting = () => {
     if (!motherAllergyField) {
       return;
@@ -574,6 +678,7 @@ const initSchedulePage = () => {
       delete evaluationForm.dataset.evaluationUrl;
     }
 
+    updateMotherSummary();
     updateAllergyFormatting();
 
     if (evaluationSchedule) {
@@ -665,6 +770,7 @@ const initSchedulePage = () => {
     setFieldValue(motherAktivitasField, mother.aktivitas ?? "");
     setFieldValue(motherAllergyField, mother.alergi ?? "");
 
+    updateMotherSummary(mother);
     updateAllergyFormatting();
 
     if (evaluationEscapeHandler) {
@@ -1259,21 +1365,26 @@ const initSchedulePage = () => {
       return;
     }
 
+    const getDatasetValue = (key) => {
+      const value = button.dataset[key];
+      return typeof value === "string" ? value.trim() : "";
+    };
+
     openEvaluationModal({
       scheduleId,
       evaluationUrl,
-      name: button.dataset.scheduleName || "",
-      datetime: button.dataset.scheduleDatetime || "",
-      summary: button.dataset.evaluationSummary || "",
-      followUp: button.dataset.evaluationFollowUp === "1",
+      name: getDatasetValue("scheduleName"),
+      datetime: getDatasetValue("scheduleDatetime"),
+      summary: getDatasetValue("evaluationSummary"),
+      followUp: getDatasetValue("evaluationFollowUp") === "1",
       mother: {
-        bb: button.dataset.motherBb || "",
-        tb: button.dataset.motherTb || "",
-        umur: button.dataset.motherUmur || "",
-        usia_bayi_bln: button.dataset.motherUsiaBayi || "",
-        laktasi_tipe: button.dataset.motherLaktasi || "",
-        aktivitas: button.dataset.motherAktivitas || "",
-        alergi: button.dataset.motherAlergi || "",
+        bb: getDatasetValue("motherBb"),
+        tb: getDatasetValue("motherTb"),
+        umur: getDatasetValue("motherUmur"),
+        usia_bayi_bln: getDatasetValue("motherUsiaBayi"),
+        laktasi_tipe: getDatasetValue("motherLaktasi"),
+        aktivitas: getDatasetValue("motherAktivitas"),
+        alergi: getDatasetValue("motherAlergi"),
       },
     });
   });
