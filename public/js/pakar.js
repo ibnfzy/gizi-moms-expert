@@ -74,6 +74,24 @@ const getAuthToken = () => {
   }
 };
 
+if (window.htmx) {
+  document.body.addEventListener("htmx:configRequest", (event) => {
+    const token = getAuthToken();
+    if (!token) {
+      return;
+    }
+
+    const headers = event.detail?.headers;
+    if (!headers) {
+      return;
+    }
+
+    if (!headers.Authorization) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+  });
+}
+
 const fetchHtml = async (url, options = {}) => {
   if (!url) {
     throw new Error("Endpoint tidak tersedia.");
